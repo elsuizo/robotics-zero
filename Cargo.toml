@@ -1,0 +1,7 @@
+[package]
+name = "robotics-zero"
+version = "0.1.0"
+authors = ["elsuizo <mnoblia@disroot.org>"]
+edition = "2018"
+
+[dependencies]
