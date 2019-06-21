@@ -5,3 +5,4 @@ authors = ["elsuizo <mnoblia@disroot.org>"]
 edition = "2018"
 
 [dependencies]
+num = "*"
