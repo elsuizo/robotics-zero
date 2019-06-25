@@ -7,3 +7,6 @@ edition = "2018"
 [dependencies]
 num = "*"
 num-traits = "*"
+
+[dev-dependencies]
+approx = "*"

@@ -36,6 +36,40 @@ impl Matrix3x3 {
     pub fn new(data_input: [[f64; 3]; 3]) -> Matrix3x3 {
         Matrix3x3(data_input)
     }
+
+    pub fn identity() -> Matrix3x3 {
+        <Matrix3x3 as One>::one()
+    }
+
+    pub fn zeros() -> Matrix3x3 {
+        <Matrix3x3 as Zero>::zero()
+    }
+
+    pub fn trace(&self) -> f64 {
+        return self[0][0] + self[1][1] + self[2][2];
+    }
+
+    pub fn det(&self) -> f64 {
+        ( self[0][0] * (self[1][1] * self[2][2] - self[2][1] * self[1][2])
+        - self[0][1] * (self[1][0] * self[2][2] - self[1][2] * self[2][0])
+        + self[0][2] * (self[1][0] * self[2][1] - self[1][1] * self[2][0]))
+    }
+
+    pub fn transpose(&self) -> Matrix3x3 {
+        Matrix3x3::new([
+            [self[0][0], self[1][0], self[2][0]],
+            [self[0][1], self[1][1], self[2][1]],
+            [self[0][2], self[1][2], self[2][2]],
+        ])
+    }
+
+    pub fn norm2(&self) -> f64 {
+        f64::sqrt(
+            self[0][0] * self[0][0] + self[1][0] * self[1][0] + self[2][0] * self[2][0] +
+            self[0][1] * self[0][1] + self[1][1] * self[1][1] + self[2][1] * self[2][1] +
+            self[0][2] * self[0][2] + self[1][2] * self[1][2] + self[2][2] * self[2][2]
+        )
+    }
 }
 
 impl Add for Matrix3x3 {
