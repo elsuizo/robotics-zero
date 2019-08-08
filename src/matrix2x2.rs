@@ -28,6 +28,7 @@ use num_traits::{One, Zero, Float};
 use std::ops::{Add, Div, Mul, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix2x2<T>([[T; 2]; 2]);
 
@@ -58,18 +59,23 @@ impl<T: Float> Matrix2x2<T> {
     }
 
     pub fn transpose(&self) -> Matrix2x2<T> {
+        let a = self[0][0];
+        let b = self[0][1];
+        let c = self[1][0];
+        let d = self[1][1];
         Matrix2x2::new([
-            [self[0][0], self[1][0], self[2][0]],
-            [self[0][1], self[1][1], self[2][1]],
-            [self[0][2], self[1][2], self[2][2]],
+            [a, c],
+            [b, d]
         ])
     }
 
     pub fn norm2(&self) -> T {
+        let a = self[0][0];
+        let b = self[0][1];
+        let c = self[1][0];
+        let d = self[1][1];
         T::sqrt(
-            self[0][0] * self[0][0] + self[1][0] * self[1][0] + self[2][0] * self[2][0] +
-            self[0][1] * self[0][1] + self[1][1] * self[1][1] + self[2][1] * self[2][1] +
-            self[0][2] * self[0][2] + self[1][2] * self[1][2] + self[2][2] * self[2][2]
+            a * a + b * b + c * c + d * d
         )
     }
 }
@@ -78,10 +84,18 @@ impl<T: Float> Add for Matrix2x2<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
+        let a1 = self[0][0];
+        let b1 = self[0][1];
+        let c1 = self[1][0];
+        let d1 = self[1][1];
+
+        let a2 = rhs[0][0];
+        let b2 = rhs[0][1];
+        let c2 = rhs[1][0];
+        let d2 = rhs[1][1];
         Matrix2x2::new([
-            [self[0][0] + rhs[0][0], self[0][1] + rhs[0][1], self[0][2] + rhs[0][2]],
-            [self[1][0] + rhs[1][0], self[1][1] + rhs[1][1], self[1][2] + rhs[1][2]],
-            [self[2][0] + rhs[2][0], self[2][1] + rhs[2][1], self[2][2] + rhs[2][2]],
+            [a1 + a2, b1 + b2],
+            [c1 + c2, d1 + d2],
         ])
     }
 }
@@ -89,30 +103,33 @@ impl<T: Float> Add for Matrix2x2<T> {
 impl<T: Float> Mul for Matrix2x2<T> {
     type Output = Self;
 
+
     fn mul(self, rhs: Self) -> Self {
-        let m00 = self[0][0] * rhs[0][0] + self[0][1] * rhs[1][0] + self[0][2] * rhs[2][0];
-        let m01 = self[0][0] * rhs[0][1] + self[0][1] * rhs[1][1] + self[0][2] * rhs[2][1];
-        let m02 = self[0][0] * rhs[0][2] + self[0][1] * rhs[1][2] + self[0][2] * rhs[2][2];
+        let a1 = self[0][0];
+        let b1 = self[0][1];
+        let c1 = self[1][0];
+        let d1 = self[1][1];
 
-        let m10 = self[1][0] * rhs[0][0] + self[1][1] * rhs[1][0] + self[1][2] * rhs[2][0];
-        let m11 = self[1][0] * rhs[0][1] + self[1][1] * rhs[1][1] + self[1][2] * rhs[2][1];
-        let m12 = self[1][0] * rhs[0][2] + self[1][1] * rhs[1][2] + self[1][2] * rhs[2][2];
+        let a2 = rhs[0][0];
+        let b2 = rhs[0][1];
+        let c2 = rhs[1][0];
+        let d2 = rhs[1][1];
 
-        let m20 = self[2][0] * rhs[0][0] + self[2][1] * rhs[1][0] + self[2][2] * rhs[2][0];
-        let m21 = self[2][0] * rhs[0][1] + self[2][1] * rhs[1][1] + self[2][2] * rhs[2][1];
-        let m22 = self[2][0] * rhs[0][2] + self[2][1] * rhs[1][2] + self[2][2] * rhs[2][2];
+        let m00 = a1 * a2 + b1 * c2;
+        let m01 = a1 * b2 + b1 * d2;
 
+        let m10 = c1 * a2 + d1 * c2;
+        let m11 = c1 * b2 + d1 * d2;
         Matrix2x2::new([
-            [m00, m01, m02],
-            [m10, m11, m12],
-            [m20, m21, m22],
+            [m00, m01],
+            [m10, m11],
         ])
     }
 }
 
 impl<T: Float> Zero for Matrix2x2<T> {
     fn zero() -> Matrix2x2<T> {
-        Matrix2x2::new([[T::zero(); 3]; 3])
+        Matrix2x2::new([[T::zero(); 2]; 2])
     }
 
     fn is_zero(&self) -> bool {
@@ -125,7 +142,7 @@ impl<T: Float> One for Matrix2x2<T> {
     fn one() -> Matrix2x2<T> {
         let one = T::one();
         let zero = T::zero();
-        Matrix2x2::new([[one, zero, zero], [zero, one, zero], [zero, zero, one]])
+        Matrix2x2::new([[one, zero], [zero, one]])
     }
 }
 //

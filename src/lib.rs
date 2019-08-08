@@ -1,7 +1,12 @@
 /// A Robotics crate
 ///
+#[cfg(test)]
+#[macro_use]
+extern crate approx;
 
-pub mod matrix;
+pub mod matrix3x3;
+pub mod matrix2x2;
+pub mod matrix4x4;
 
 //-------------------------------------------------------------------------
 //                        auxiliar functions
@@ -11,9 +16,48 @@ pub mod matrix;
 //                        tests
 //-------------------------------------------------------------------------
 #[cfg(test)]
-mod test_matrix {
-    use approx::{AbsDiffEq, RelativeEq, UlpsEq, assert_ulps_eq};
-    use crate::matrix::Matrix3x3;
+mod test_matrix2x2 {
+    use crate::matrix2x2::Matrix2x2;
+
+    #[test]
+    fn create_matrix() {
+        let matrix = Matrix2x2::new([[0.0, 1.0],
+                                     [2.0, 3.0]]);
+        assert_eq!(matrix[0][0], 0.0);
+    }
+
+    #[test]
+    fn test_identity_creation() {
+        let expected = Matrix2x2::new([[1.0, 0.0],
+                                     [0.0, 1.0]]);
+        let I: Matrix2x2<f64> = Matrix2x2::identity();
+        assert_eq!(&I[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &I[..], &expected[..]);
+    }
+
+    #[test]
+    fn add_matrix() {
+        let expected = Matrix2x2::new([[6.0, 8.0],
+                                     [10.0, 12.0]]);
+        let m1 = Matrix2x2::new([[1.0, 2.0],
+                                 [3.0, 4.0]]);
+        let m2 = Matrix2x2::new([[5.0, 6.0],
+                                 [7.0, 8.0]]);
+        let m = m1 + m2;
+        assert_eq!(&m[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &m[..], &expected[..]);
+    }
+
+    #[test]
+    fn test_determinant() {
+        let m1 = Matrix2x2::new([[1.0, 2.0],
+                                 [3.0, 4.0]]);
+        let d = m1.det();
+        assert_ulps_eq!(d, -2.0);
+    }
+}
+
+mod test_matrix3x3 {
+    use super::*;
+    use crate::matrix3x3::Matrix3x3;
 
     #[test]
     fn create_matrix() {
@@ -99,5 +143,18 @@ mod test_matrix {
                                     [6.0, 7.0, 8.0],
                                  ]);
         assert_ulps_eq!(m.norm2(), 14.2828568570857);
+    }
+}
+mod test_matrix4x4 {
+    use super::*;
+    use crate::matrix4x4::Matrix4x4;
+    #[test]
+    fn create_matrix4x4_test() {
+        let m = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+
+        assert_eq!(m[0][0], 1.0);
     }
 }
