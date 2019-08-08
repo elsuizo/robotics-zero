@@ -148,6 +148,7 @@ mod test_matrix3x3 {
 mod test_matrix4x4 {
     use super::*;
     use crate::matrix4x4::Matrix4x4;
+
     #[test]
     fn create_matrix4x4_test() {
         let m = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
@@ -156,5 +157,104 @@ mod test_matrix4x4 {
                                 [13.0, 14.0, 15.0, 16.0]]);
 
         assert_eq!(m[0][0], 1.0);
+    }
+
+    #[test]
+    fn identity_creation_test() {
+        let expected = Matrix4x4::new([[1.0, 0.0, 0.0, 0.0],
+                                       [0.0, 1.0, 0.0, 0.0],
+                                       [0.0, 0.0, 1.0, 0.0],
+                                       [0.0, 0.0, 0.0, 1.0]]);
+        let I: Matrix4x4<f64> = Matrix4x4::identity();
+        assert_eq!(&I[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &I[..], &expected[..]);
+    }
+
+    #[test]
+    fn sum_test() {
+        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+
+        let m2 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+
+        let expected = Matrix4x4::new([[2.0, 4.0, 6.0, 8.0],
+                                [10.0, 12.0, 14.0, 16.0],
+                                [18.0, 20.0, 22.0, 24.0],
+                                [26.0, 28.0, 30.0, 32.0]]);
+        let result = m1 + m2;
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn product_test() {
+        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                 [5.0, 6.0, 7.0, 8.0],
+                                 [9.0, 10.0, 11.0, 12.0],
+                                 [13.0, 14.0, 15.0, 16.0]]);
+
+        let m2 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                 [5.0, 6.0, 7.0, 8.0],
+                                 [9.0, 10.0, 11.0, 12.0],
+                                 [13.0, 14.0, 15.0, 16.0]]);
+
+        let expected = Matrix4x4::new([[90.0, 100.0, 110.0, 120.0],
+                                       [202.0, 228.0, 254.0, 280.0],
+                                       [314.0, 356.0, 398.0, 440.0],
+                                       [426.0, 484.0, 542.0, 600.0]]);
+        let result = m1 * m2;
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn det_test() {
+        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+
+        let expected = 0.0;
+        let result = m1.det();
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn norm_test() {
+        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+        // NOTE(elsuizo:2019-08-08): el resultado lo calculo con Julia
+        let expected = 38.67815921162743;
+        let result = m1.norm2();
+        assert_ulps_eq!(result, expected);
+    }
+
+    #[test]
+    fn transpose_test() {
+        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                 [5.0, 6.0, 7.0, 8.0],
+                                 [9.0, 10.0, 11.0, 12.0],
+                                 [13.0, 14.0, 15.0, 16.0]]);
+
+        let expected = Matrix4x4::new([[1.0, 5.0, 9.0, 13.0],
+                                       [2.0, 6.0, 10.0, 14.0],
+                                       [3.0, 7.0, 11.0, 15.0],
+                                       [4.0, 8.0, 12.0, 16.0]]);
+        let result = m1.transpose();
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn zeros_test() {
+        let expected = Matrix4x4::new([[0.0, 0.0, 0.0, 0.0],
+                                       [0.0, 0.0, 0.0, 0.0],
+                                       [0.0, 0.0, 0.0, 0.0],
+                                       [0.0, 0.0, 0.0, 0.0]]);
+        let result: Matrix4x4<f64> = Matrix4x4::zeros();
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }

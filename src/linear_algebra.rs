@@ -23,14 +23,7 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 
-trait<T> LinearAlgebra {
 
-    fn identity() -> Self;
-    fn zeros() -> Self;
-    fn trace(&mut self) -> T;
-    fn det(&mut self) -> T;
-    fn transpose(&mut self) -> Self
-}
 
 
 
