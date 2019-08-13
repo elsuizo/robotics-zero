@@ -28,6 +28,7 @@ use num_traits::{One, Zero, Float};
 use std::ops::{Add, Div, Mul, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
+use crate::vector2::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix2x2<T>([[T; 2]; 2]);
@@ -77,6 +78,21 @@ impl<T: Float> Matrix2x2<T> {
         T::sqrt(
             a * a + b * b + c * c + d * d
         )
+    }
+}
+
+impl<T: Float> Mul<Vector2<T>> for Matrix2x2<T> {
+    type Output = Vector2<T>;
+
+    fn mul(self, rhs: Vector2<T>) -> Vector2<T> {
+        let a1 = self[0][0];
+        let b1 = self[0][1];
+        let c1 = self[1][0];
+        let d1 = self[1][1];
+
+        let v1 = rhs[0];
+        let v2 = rhs[1];
+        Vector2::new([a1 * v1 + b1 * v2, c1 * v1 + d1 * v2])
     }
 }
 

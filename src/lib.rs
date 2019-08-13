@@ -7,6 +7,7 @@ extern crate approx;
 pub mod matrix3x3;
 pub mod matrix2x2;
 pub mod matrix4x4;
+pub mod vector2;
 
 //-------------------------------------------------------------------------
 //                        auxiliar functions
@@ -18,6 +19,7 @@ pub mod matrix4x4;
 #[cfg(test)]
 mod test_matrix2x2 {
     use crate::matrix2x2::Matrix2x2;
+    use crate::vector2::Vector2;
 
     #[test]
     fn create_matrix() {
@@ -52,6 +54,17 @@ mod test_matrix2x2 {
                                  [3.0, 4.0]]);
         let d = m1.det();
         assert_ulps_eq!(d, -2.0);
+    }
+
+    #[test]
+    fn product_with_Vector2_test() {
+        let m1 = Matrix2x2::new([[1.0, 2.0],
+                                 [3.0, 4.0]]);
+        let v = Vector2::new([1.0, 2.0]);
+
+        let result = m1 * v;
+        let expected = Vector2::new([5.0, 11.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }
 
@@ -258,3 +271,48 @@ mod test_matrix4x4 {
         assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }
+
+mod Vector2_test {
+    use super::*;
+    use crate::vector2::Vector2;
+
+    #[test]
+    fn create_vector2_test() {
+        let v = Vector2::new([1.0, 1.0]);
+        assert_eq!(v[0], 1.0);
+    }
+
+    #[test]
+    fn zero_Vector2_test() {
+        let result: Vector2<f64> = Vector2::zeros();
+        let expected = Vector2::new([0.0, 0.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn product_test() {
+        let v1 = Vector2::new([1.0, 2.0]);
+        let v2 = Vector2::new([3.0, 4.0]);
+        let result = v1 * v2;
+        let expected = 11.0;
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn add_test() {
+        let v1 = Vector2::new([1.0, 2.0]);
+        let v2 = Vector2::new([3.0, 4.0]);
+        let result = v1 + v2;
+        let expected = Vector2::new([4.0, 6.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn norm2_test() {
+        let v1 = Vector2::new([1.0, 2.0]);
+        let expected = 2.23606797749979;
+        let result = v1.norm2();
+        assert_eq!(result, expected);
+    }
+}
+
