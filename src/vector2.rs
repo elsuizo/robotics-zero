@@ -28,6 +28,8 @@ use num_traits::{One, Zero, Float};
 use std::ops::{Add, Div, Mul, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
+use crate::matrix2x2::*;
+
 //-------------------------------------------------------------------------
 //                        code
 //-------------------------------------------------------------------------
@@ -65,6 +67,20 @@ impl<T: Float> Mul for Vector2<T> {
     }
 }
 
+impl<T: Float> Mul<Matrix2x2<T>> for Vector2<T> {
+    type Output = Vector2<T>;
+
+    fn mul(self, rhs: Matrix2x2<T>) -> Vector2<T> {
+        let a1 = rhs[0][0];
+        let b1 = rhs[0][1];
+        let c1 = rhs[1][0];
+        let d1 = rhs[1][1];
+
+        let v1 = self[0];
+        let v2 = self[1];
+        Vector2::new([v1 * a1 + v2 * c1, v1 * b1 + v2 * d1])
+    }
+}
 
 impl<T: Float> Add for Vector2<T> {
     type Output = Self;

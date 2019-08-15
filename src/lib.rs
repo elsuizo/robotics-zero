@@ -57,13 +57,23 @@ mod test_matrix2x2 {
     }
 
     #[test]
-    fn product_with_Vector2_test() {
+    fn product_with_Vector2_rhs_test() {
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
         let v = Vector2::new([1.0, 2.0]);
 
         let result = m1 * v;
         let expected = Vector2::new([5.0, 11.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn product_with_Matrix2x2_rhs_test() {
+        let v = Vector2::new([1.0, 2.0]);
+        let m1 = Matrix2x2::new([[1.0, 2.0],
+                                 [3.0, 4.0]]);
+        let result = v * m1;
+        let expected = Vector2::new([7.0, 10.0]);
         assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }
@@ -270,6 +280,7 @@ mod test_matrix4x4 {
         let result: Matrix4x4<f64> = Matrix4x4::zeros();
         assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
+
 }
 
 mod Vector2_test {
