@@ -33,11 +33,13 @@ use crate::vector2::*;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix2x2<T>([[T; 2]; 2]);
 
-impl<T: Float> Matrix2x2<T> {
-
+impl<T> Matrix2x2<T> {
     pub fn new(data_input: [[T; 2]; 2]) -> Matrix2x2<T> {
         Matrix2x2(data_input)
     }
+}
+
+impl<T: Float> Matrix2x2<T> {
 
     pub fn identity() -> Matrix2x2<T> {
         <Matrix2x2<T> as One>::one()
