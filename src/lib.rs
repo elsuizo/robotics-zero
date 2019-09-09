@@ -283,7 +283,7 @@ mod test_matrix4x4 {
 
 }
 
-mod Vector2_test {
+mod vector2_test {
     use super::*;
     use crate::vector2::Vector2;
 

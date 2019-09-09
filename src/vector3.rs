@@ -1,15 +1,15 @@
 //-------------------------------------------------------------------------
-// @file types.rs
+// @file vector3.rs
 //
-// @date 06/13/19 11:51:30
+// @date 09/08/19 21:55:08
 // @author Martin Noblia
 // @email mnoblia@disroot.org
 //
 // @brief
-// A principal types for robotics proposites
+// Static vector of three dimentions
 // @detail
 //
-// Licence:
+//  Licence:
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or (at
@@ -21,19 +21,23 @@
 // General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-//---------------------------------------------------------------------------
-// NOTE(elsuizo:2019-09-08): lo que quiero hacer es tener un type que sea un punto en dos
-// dimensiones y que tenga asociado un frame a el y que solo se pueda operar con otro type si es
-// que estan expresados en el mismo frame
-struct Point2D<T> {
-    x: T,
-    y: T,
-    frame_name: String,
-}
+//--------------------------------------------------------------------------
+// imports
+use std::ops::{Deref, DerefMut};
+use num_traits::{One, Zero, Float};
 
-struct Point<T> {
-    x: T,
-    y: T,
-    z: T,
-    frame_name: String,
+use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
+
+use crate::matrix3x3::*;
+
+//-------------------------------------------------------------------------
+//                        code
+//-------------------------------------------------------------------------
+pub struct Vector3<T>([T; 3]);
+
+impl<T> Vector3<T> {
+    pub fn new(input: [T; 3]) -> Vector3<T> {
+        Vector3(input)
+    }
 }

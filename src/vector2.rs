@@ -36,10 +36,14 @@ use crate::matrix2x2::*;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vector2<T>([T; 2]);
 
-impl<T: Float> Vector2<T> {
+// NOTE(elsuizo:2019-09-08): podemos crear cualquier vector de cualquier type T
+impl<T> Vector2<T> {
     pub fn new(input: [T; 2]) -> Vector2<T> {
         Vector2(input)
     }
+}
+
+impl<T: Float> Vector2<T> {
 
     pub fn zeros() -> Vector2<T> {
         <Vector2<T> as Zero>::zero()
