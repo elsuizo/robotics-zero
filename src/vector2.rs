@@ -23,7 +23,7 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 use std::ops::{Deref, DerefMut};
-use num_traits::{One, Zero, Float};
+use num_traits::{Zero, Float};
 
 use std::ops::{Add, Div, Mul, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -110,14 +110,6 @@ impl<T: Float> Zero for Vector2<T> {
     }
 
 }
-
-// impl<T: Float> One for Vector2<T> {
-//     /// Create an identity matrix
-//     fn one() -> Vector2<T> {
-//         let one = T::one();
-//         Vector2::new([one, one])
-//     }
-// }
 
 impl<T> Deref for Vector2<T> {
     type Target = [T; 2];
