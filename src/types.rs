@@ -26,10 +26,12 @@
 // dimensiones y que tenga asociado un frame a el y que solo se pueda operar con otro type si es
 // que estan expresados en el mismo frame
 
-struct Point2D<T> {
-    x: T,
-    y: T,
-    frame_name: String,
+// NOTE(elsuizo:2019-09-10): no se si quiero que todos los elementos sean publicos, lo dejo para
+// los tests
+pub struct Point2D<T> {
+    pub x: T,
+    pub y: T,
+    pub frame_name: String,
 }
 
 impl<T> Point2D<T> {
@@ -42,10 +44,10 @@ impl<T> Point2D<T> {
     }
 }
 
-struct Point<T> {
-    x: T,
-    y: T,
-    z: T,
+pub struct Point<T> {
+    pub x: T,
+    pub y: T,
+    pub z: T,
     frame_name: String,
 }
 

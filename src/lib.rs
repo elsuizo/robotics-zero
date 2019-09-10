@@ -34,8 +34,8 @@ mod test_matrix2x2 {
     fn test_identity_creation() {
         let expected = Matrix2x2::new([[1.0, 0.0],
                                      [0.0, 1.0]]);
-        let I: Matrix2x2<f64> = Matrix2x2::identity();
-        assert_eq!(&I[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &I[..], &expected[..]);
+        let identity: Matrix2x2<f64> = Matrix2x2::identity();
+        assert_eq!(&identity[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &identity[..], &expected[..]);
     }
 
     #[test]
@@ -59,7 +59,7 @@ mod test_matrix2x2 {
     }
 
     #[test]
-    fn product_with_Vector2_rhs_test() {
+    fn product_with_vector2_rhs_test() {
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
         let v = Vector2::new([1.0, 2.0]);
@@ -70,7 +70,7 @@ mod test_matrix2x2 {
     }
 
     #[test]
-    fn product_with_Matrix2x2_rhs_test() {
+    fn product_with_matrix2x2_rhs_test() {
         let v = Vector2::new([1.0, 2.0]);
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
@@ -81,7 +81,6 @@ mod test_matrix2x2 {
 }
 
 mod test_matrix3x3 {
-    use super::*;
     use crate::matrix3x3::Matrix3x3;
 
     #[test]
@@ -132,14 +131,14 @@ mod test_matrix3x3 {
     #[test]
     fn test_identity_creation() {
 
-        let I: Matrix3x3<f64> = Matrix3x3::identity();
+        let identity: Matrix3x3<f64> = Matrix3x3::identity();
 
         let expected = Matrix3x3::new([
                                     [1.0, 0.0, 0.0],
                                     [0.0, 1.0, 0.0],
                                     [0.0, 0.0, 1.0],
                                  ]);
-        assert_eq!(&I[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &I[..], &expected[..]);
+        assert_eq!(&identity[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &identity[..], &expected[..]);
     }
 
     #[test]
@@ -171,7 +170,6 @@ mod test_matrix3x3 {
     }
 }
 mod test_matrix4x4 {
-    use super::*;
     use crate::matrix4x4::Matrix4x4;
 
     #[test]
@@ -190,8 +188,8 @@ mod test_matrix4x4 {
                                        [0.0, 1.0, 0.0, 0.0],
                                        [0.0, 0.0, 1.0, 0.0],
                                        [0.0, 0.0, 0.0, 1.0]]);
-        let I: Matrix4x4<f64> = Matrix4x4::identity();
-        assert_eq!(&I[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &I[..], &expected[..]);
+        let identity: Matrix4x4<f64> = Matrix4x4::identity();
+        assert_eq!(&identity[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &identity[..], &expected[..]);
     }
 
     #[test]
@@ -286,7 +284,6 @@ mod test_matrix4x4 {
 }
 
 mod vector2_test {
-    use super::*;
     use crate::vector2::Vector2;
 
     #[test]
@@ -330,7 +327,6 @@ mod vector2_test {
 }
 
 mod vector3_test {
-    use super::*;
     use crate::vector3::Vector3;
 
     #[test]
@@ -374,3 +370,15 @@ mod vector3_test {
         assert_eq!(result, expected);
     }
 }
+
+mod types_tests {
+    use crate::types::{Point2D, Point};
+
+    #[test]
+    fn point2d_test() {
+        let p = Point2D::new(1, 2, "A");
+
+        assert_eq!(1, p.x);
+    }
+}
+
