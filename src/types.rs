@@ -25,10 +25,21 @@
 // NOTE(elsuizo:2019-09-08): lo que quiero hacer es tener un type que sea un punto en dos
 // dimensiones y que tenga asociado un frame a el y que solo se pueda operar con otro type si es
 // que estan expresados en el mismo frame
+
 struct Point2D<T> {
     x: T,
     y: T,
     frame_name: String,
+}
+
+impl<T> Point2D<T> {
+    pub fn new(x: T, y: T, name: &str) -> Self {
+        Point2D {
+            x: x,
+            y: y,
+            frame_name: name.to_string()
+        }
+    }
 }
 
 struct Point<T> {
@@ -36,4 +47,15 @@ struct Point<T> {
     y: T,
     z: T,
     frame_name: String,
+}
+
+impl<T> Point<T> {
+    pub fn new(x: T, y: T, z: T, name: &str) -> Self {
+        Point {
+            x: x,
+            y: y,
+            z: z,
+            frame_name: name.to_string()
+        }
+    }
 }

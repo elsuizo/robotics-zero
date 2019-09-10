@@ -29,11 +29,13 @@ use num_traits::{One, Zero, Float};
 use std::ops::{Add, Div, Mul, Sub};
 use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
+// TODO(elsuizo:2019-09-10): no se si esta bien importar asi
 use crate::matrix3x3::*;
 
 //-------------------------------------------------------------------------
 //                        code
 //-------------------------------------------------------------------------
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vector3<T>([T; 3]);
 
 impl<T> Vector3<T> {
@@ -101,15 +103,15 @@ impl<T: Float> Add for Vector3<T> {
         let v2 = self[1];
         let v3 = self[2];
 
-        let a1 = self[0];
-        let a2 = self[1];
-        let a3 = self[2];
+        let a1 = rhs[0];
+        let a2 = rhs[1];
+        let a3 = rhs[2];
 
         Vector3::new([v1 + a1, v2 + a2, v3 + a3])
     }
 }
 
-impl<T> Zero for Vector3<T> {
+impl<T: Float> Zero for Vector3<T> {
 
     fn zero() -> Vector3<T> {
         Vector3::new([T::zero(); 3])
@@ -136,7 +138,7 @@ impl<T> DerefMut for Vector3<T> {
     }
 }
 
-impl<T> From([T; 3]) for Vector3<T> {
+impl<T> From<[T; 3]> for Vector3<T> {
     fn from(data: [T; 3]) -> Vector3<T> {
         Vector3(data)
     }

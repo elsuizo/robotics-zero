@@ -8,6 +8,8 @@ pub mod matrix3x3;
 pub mod matrix2x2;
 pub mod matrix4x4;
 pub mod vector2;
+pub mod vector3;
+pub mod types;
 
 //-------------------------------------------------------------------------
 //                        auxiliar functions
@@ -327,3 +329,48 @@ mod vector2_test {
     }
 }
 
+mod vector3_test {
+    use super::*;
+    use crate::vector3::Vector3;
+
+    #[test]
+    fn create_vector3_test() {
+        let v = Vector3::new([1.0, 1.0, 1.0]);
+        let v_bool = Vector3::new([true, true, true]);
+        assert_eq!(v[0], 1.0);
+        assert_eq!(v_bool[0], true);
+    }
+
+    #[test]
+    fn zero_vector3_test() {
+        let result: Vector3<f64> = Vector3::zeros();
+        let expected = Vector3::new([0.0, 0.0, 0.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn product_test() {
+        let v1 = Vector3::new([1.0, 2.0, 3.0]);
+        let v2 = Vector3::new([4.0, 5.0, 6.0]);
+        let result = v1 * v2;
+        let expected = 32.0;
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn add_test() {
+        let v1 = Vector3::new([1.0, 2.0, 3.0]);
+        let v2 = Vector3::new([4.0, 5.0, 6.0]);
+        let result = v1 + v2;
+        let expected = Vector3::new([5.0, 7.0, 9.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+
+    #[test]
+    fn norm2_test() {
+        let v1 = Vector3::new([1.0, 2.0, 3.0]);
+        let expected = 3.7416573867739413;
+        let result = v1.norm2();
+        assert_eq!(result, expected);
+    }
+}
