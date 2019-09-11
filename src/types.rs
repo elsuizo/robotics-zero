@@ -39,7 +39,7 @@ impl<T> Point2D<T> {
         Point2D {
             x: x,
             y: y,
-            frame_name: name.to_string()
+            frame_name: name.to_string(),
         }
     }
 }
@@ -57,7 +57,7 @@ impl<T> Point<T> {
             x: x,
             y: y,
             z: z,
-            frame_name: name.to_string()
+            frame_name: name.to_string(),
         }
     }
 }
