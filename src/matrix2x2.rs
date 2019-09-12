@@ -24,6 +24,7 @@
 //---------------------------------------------------------------------------
 // TODO(elsuizo:2019-09-12): cosas que faltarian para este type:
 // - [ ] Implementar RangeFull para poder hacer matrix[..]
+// - [ ] Implementar Iterator
 // - [ ] Implementar std::fmt::Display para visualizar cuando imprimimos resultados
 use std::ops::{Deref, DerefMut, Index, IndexMut, RangeFull};
 use num_traits::{One, Zero, Float};

@@ -2,7 +2,6 @@
 ///
 #[cfg(test)]
 #[macro_use]
-extern crate approx;
 
 pub mod matrix3x3;
 pub mod matrix2x2;
@@ -35,7 +34,8 @@ mod test_matrix2x2 {
         let expected = Matrix2x2::new([[1.0, 0.0],
                                      [0.0, 1.0]]);
         let identity: Matrix2x2<f64> = Matrix2x2::identity();
-        assert_eq!(&identity[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &identity[(.., ..)], &expected[(.., ..)]);
+        // assert_eq!(&identity[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &identity[(.., ..)], &expected[(.., ..)]);
+        assert_eq(
     }
 
     #[test]
