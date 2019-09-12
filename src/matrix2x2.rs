@@ -22,11 +22,15 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-use std::ops::{Deref, DerefMut};
+// TODO(elsuizo:2019-09-12): cosas que faltarian para este type:
+// - [ ] Implementar RangeFull para poder hacer matrix[..]
+// - [ ] Implementar std::fmt::Display para visualizar cuando imprimimos resultados
+use std::ops::{Deref, DerefMut, Index, IndexMut, RangeFull};
 use num_traits::{One, Zero, Float};
 
 use std::ops::{Add, Div, Mul, Sub};
-use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
+// TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
+// use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 use crate::vector2::*;
 
@@ -50,22 +54,22 @@ impl<T: Float> Matrix2x2<T> {
     }
 
     pub fn trace(&self) -> T {
-        return self[0][0] + self[1][1];
+        return self[(0, 0)] + self[(1, 1)];
     }
 
     pub fn det(&self) -> T {
-        let a = self[0][0];
-        let b = self[0][1];
-        let c = self[1][0];
-        let d = self[1][1];
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
         return (a * d) - (c * b)
     }
 
     pub fn transpose(&self) -> Matrix2x2<T> {
-        let a = self[0][0];
-        let b = self[0][1];
-        let c = self[1][0];
-        let d = self[1][1];
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
         Matrix2x2::new([
             [a, c],
             [b, d]
@@ -73,10 +77,10 @@ impl<T: Float> Matrix2x2<T> {
     }
 
     pub fn norm2(&self) -> T {
-        let a = self[0][0];
-        let b = self[0][1];
-        let c = self[1][0];
-        let d = self[1][1];
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
         T::sqrt(
             a * a + b * b + c * c + d * d
         )
@@ -87,10 +91,10 @@ impl<T: Float> Mul<Vector2<T>> for Matrix2x2<T> {
     type Output = Vector2<T>;
 
     fn mul(self, rhs: Vector2<T>) -> Vector2<T> {
-        let a1 = self[0][0];
-        let b1 = self[0][1];
-        let c1 = self[1][0];
-        let d1 = self[1][1];
+        let a1 = self[(0, 0)];
+        let b1 = self[(0, 1)];
+        let c1 = self[(1, 0)];
+        let d1 = self[(1, 1)];
 
         let v1 = rhs[0];
         let v2 = rhs[1];
@@ -102,15 +106,15 @@ impl<T: Float> Add for Matrix2x2<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        let a1 = self[0][0];
-        let b1 = self[0][1];
-        let c1 = self[1][0];
-        let d1 = self[1][1];
+        let a1 = self[(0, 0)];
+        let b1 = self[(0, 1)];
+        let c1 = self[(1, 0)];
+        let d1 = self[(1, 1)];
 
-        let a2 = rhs[0][0];
-        let b2 = rhs[0][1];
-        let c2 = rhs[1][0];
-        let d2 = rhs[1][1];
+        let a2 = rhs[(0, 0)];
+        let b2 = rhs[(0, 1)];
+        let c2 = rhs[(1, 0)];
+        let d2 = rhs[(1, 1)];
         Matrix2x2::new([
             [a1 + a2, b1 + b2],
             [c1 + c2, d1 + d2],
@@ -123,15 +127,15 @@ impl<T: Float> Mul for Matrix2x2<T> {
 
 
     fn mul(self, rhs: Self) -> Self {
-        let a1 = self[0][0];
-        let b1 = self[0][1];
-        let c1 = self[1][0];
-        let d1 = self[1][1];
+        let a1 = self[(0, 0)];
+        let b1 = self[(0, 1)];
+        let c1 = self[(1, 0)];
+        let d1 = self[(1, 1)];
 
-        let a2 = rhs[0][0];
-        let b2 = rhs[0][1];
-        let c2 = rhs[1][0];
-        let d2 = rhs[1][1];
+        let a2 = rhs[(0, 0)];
+        let b2 = rhs[(0, 1)];
+        let c2 = rhs[(1, 0)];
+        let d2 = rhs[(1, 1)];
 
         let m00 = a1 * a2 + b1 * c2;
         let m01 = a1 * b2 + b1 * d2;
@@ -182,5 +186,18 @@ impl<T> DerefMut for Matrix2x2<T> {
 impl<T> From<[[T; 2]; 2]> for Matrix2x2<T> {
     fn from(data: [[T; 2]; 2]) -> Matrix2x2<T> {
         Matrix2x2(data)
+    }
+}
+
+impl<T> Index<(usize, usize)> for Matrix2x2<T> {
+    type Output = T;
+    fn index(&self, index: (usize, usize)) -> &T {
+        &self.0[index.0][index.1]
+    }
+}
+
+impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
+    fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
+            &mut self.0[index.0][index.1]
     }
 }

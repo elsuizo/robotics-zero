@@ -27,7 +27,7 @@ mod test_matrix2x2 {
     fn create_matrix() {
         let matrix = Matrix2x2::new([[0.0, 1.0],
                                      [2.0, 3.0]]);
-        assert_eq!(matrix[0][0], 0.0);
+        assert_eq!(matrix[(0, 0)], 0.0);
     }
 
     #[test]
@@ -35,7 +35,7 @@ mod test_matrix2x2 {
         let expected = Matrix2x2::new([[1.0, 0.0],
                                      [0.0, 1.0]]);
         let identity: Matrix2x2<f64> = Matrix2x2::identity();
-        assert_eq!(&identity[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &identity[..], &expected[..]);
+        assert_eq!(&identity[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &identity[(.., ..)], &expected[(.., ..)]);
     }
 
     #[test]
@@ -47,7 +47,7 @@ mod test_matrix2x2 {
         let m2 = Matrix2x2::new([[5.0, 6.0],
                                  [7.0, 8.0]]);
         let m = m1 + m2;
-        assert_eq!(&m[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &m[..], &expected[..]);
+        assert_eq!(&m[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &m[(.., ..)], &expected[(.., ..)]);
     }
 
     #[test]
@@ -66,7 +66,7 @@ mod test_matrix2x2 {
 
         let result = m1 * v;
         let expected = Vector2::new([5.0, 11.0]);
-        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+        assert_eq!(&result[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &result[(.., ..)], &expected[(.., ..)]);
     }
 
     #[test]
@@ -76,7 +76,7 @@ mod test_matrix2x2 {
                                  [3.0, 4.0]]);
         let result = v * m1;
         let expected = Vector2::new([7.0, 10.0]);
-        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+        assert_eq!(&result[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &result[(.., ..)], &expected[(.., ..)]);
     }
 }
 
@@ -381,4 +381,3 @@ mod types_tests {
         assert_eq!(1, p.x);
     }
 }
-
