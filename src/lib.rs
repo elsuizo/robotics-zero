@@ -91,6 +91,7 @@ mod test_matrix2x2 {
 
 #[cfg(test)]
 mod test_matrix3x3 {
+    use num_traits::{Float};
     use crate::matrix3x3::Matrix3x3;
     use super::approx::*;
 
@@ -141,9 +142,9 @@ mod test_matrix3x3 {
                                     [6.0, 8.0, 10.0],
                                     [12.0, 14.0, 16.0],
                                  ]);
-        let m3 = m1 + m2;
+        let result = m1 + m2;
+        check_assert_matrix3x3(&expected, &result);
 
-//         // NOTE(elsuizo:2019-06-24): comparo usando slides
     }
 
     #[test]
@@ -156,6 +157,7 @@ mod test_matrix3x3 {
                                     [0.0, 1.0, 0.0],
                                     [0.0, 0.0, 1.0],
                                  ]);
+        check_assert_matrix3x3(&identity, &expected);
     }
 
     #[test]
@@ -167,6 +169,7 @@ mod test_matrix3x3 {
                                     [0.0, 0.0, 0.0],
                                     [0.0, 0.0, 0.0],
                                     ]);
+        check_assert_matrix3x3(&zero, &expected);
     }
 
     #[test]
@@ -188,7 +191,16 @@ mod test_matrix3x3 {
 
 #[cfg(test)]
 mod test_matrix4x4 {
+    use num_traits::{Float};
     use crate::matrix4x4::Matrix4x4;
+
+    fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2: &Matrix4x4<T>) {
+        for i in 0..m1.rows() {
+            for j in 0..m1.cols() {
+                assert_eq!(m1[(i, j)], m2[(i, j)]);
+            }
+        }
+    }
 
     #[test]
     fn create_matrix4x4_test() {
@@ -197,7 +209,7 @@ mod test_matrix4x4 {
                                 [9.0, 10.0, 11.0, 12.0],
                                 [13.0, 14.0, 15.0, 16.0]]);
 
-        assert_eq!(m[0][0], 1.0);
+        assert_eq!(m[(0, 0)], 1.0);
     }
 
     #[test]
@@ -207,7 +219,7 @@ mod test_matrix4x4 {
                                        [0.0, 0.0, 1.0, 0.0],
                                        [0.0, 0.0, 0.0, 1.0]]);
         let identity: Matrix4x4<f64> = Matrix4x4::identity();
-        assert_eq!(&identity[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &identity[..], &expected[..]);
+        check_assert_matrix4x4(&identity, &expected);
     }
 
     #[test]
@@ -227,7 +239,7 @@ mod test_matrix4x4 {
                                 [18.0, 20.0, 22.0, 24.0],
                                 [26.0, 28.0, 30.0, 32.0]]);
         let result = m1 + m2;
-        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+        check_assert_matrix4x4(&result, &expected);
     }
 
     #[test]
@@ -247,7 +259,7 @@ mod test_matrix4x4 {
                                        [314.0, 356.0, 398.0, 440.0],
                                        [426.0, 484.0, 542.0, 600.0]]);
         let result = m1 * m2;
-        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+        check_assert_matrix4x4(&result, &expected);
     }
 
     #[test]
@@ -286,7 +298,7 @@ mod test_matrix4x4 {
                                        [3.0, 7.0, 11.0, 15.0],
                                        [4.0, 8.0, 12.0, 16.0]]);
         let result = m1.transpose();
-        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+        check_assert_matrix4x4(&result, &expected);
     }
 
     #[test]
@@ -296,7 +308,7 @@ mod test_matrix4x4 {
                                        [0.0, 0.0, 0.0, 0.0],
                                        [0.0, 0.0, 0.0, 0.0]]);
         let result: Matrix4x4<f64> = Matrix4x4::zeros();
-        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+        check_assert_matrix4x4(&result, &expected);
     }
 
 }

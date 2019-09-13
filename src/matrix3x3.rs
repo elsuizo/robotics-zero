@@ -32,11 +32,21 @@ use std::ops::{Add, Div, Mul, Sub};
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix3x3<T>([[T; 3]; 3]);
 
-impl<T: Float> Matrix3x3<T> {
-
+impl<T> Matrix3x3<T> {
     pub fn new(data_input: [[T; 3]; 3]) -> Matrix3x3<T> {
         Matrix3x3(data_input)
     }
+
+    pub fn rows(&self) -> usize {
+        self.0.len()
+    }
+    // NOTE(elsuizo:2019-09-13): si ya se es medio...
+    pub fn cols(&self) -> usize {
+        self.rows()
+    }
+}
+
+impl<T: Float> Matrix3x3<T> {
 
     pub fn identity() -> Matrix3x3<T> {
         <Matrix3x3<T> as One>::one()
