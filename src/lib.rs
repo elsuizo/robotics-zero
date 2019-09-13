@@ -1,10 +1,10 @@
-/// A Robotics crate
-///
 #[cfg(test)]
 #[macro_use]
+extern crate approx;
 
-pub mod matrix3x3;
+/// A Robotics crate
 pub mod matrix2x2;
+pub mod matrix3x3;
 pub mod matrix4x4;
 pub mod vector2;
 pub mod vector3;
@@ -13,14 +13,23 @@ pub mod types;
 //-------------------------------------------------------------------------
 //                        auxiliar functions
 //-------------------------------------------------------------------------
-
 //-------------------------------------------------------------------------
 //                        tests
 //-------------------------------------------------------------------------
 #[cfg(test)]
 mod test_matrix2x2 {
+    use num_traits::{Float};
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
+    use super::approx::*;
+
+    fn check_assert_matrix2x2<T: Float + std::fmt::Debug>(m1: &Matrix2x2<T>, m2: &Matrix2x2<T>) {
+        for i in 0..m1.rows() {
+            for j in 0..m1.cols() {
+                assert_eq!(m1[(i, j)], m2[(i, j)]);
+            }
+        }
+    }
 
     #[test]
     fn create_matrix() {
@@ -34,20 +43,20 @@ mod test_matrix2x2 {
         let expected = Matrix2x2::new([[1.0, 0.0],
                                      [0.0, 1.0]]);
         let identity: Matrix2x2<f64> = Matrix2x2::identity();
-        // assert_eq!(&identity[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &identity[(.., ..)], &expected[(.., ..)]);
-        assert_eq(
+        check_assert_matrix2x2(&expected, &identity);
     }
 
     #[test]
     fn add_matrix() {
-        let expected = Matrix2x2::new([[6.0, 8.0],
-                                     [10.0, 12.0]]);
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
         let m2 = Matrix2x2::new([[5.0, 6.0],
                                  [7.0, 8.0]]);
+        let expected = Matrix2x2::new([[6.0, 8.0],
+                                       [10.0, 12.0]]);
         let m = m1 + m2;
-        assert_eq!(&m[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &m[(.., ..)], &expected[(.., ..)]);
+
+        check_assert_matrix2x2(&expected, &m);
     }
 
     #[test]
@@ -66,7 +75,7 @@ mod test_matrix2x2 {
 
         let result = m1 * v;
         let expected = Vector2::new([5.0, 11.0]);
-        assert_eq!(&result[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &result[(.., ..)], &expected[(.., ..)]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 
     #[test]
@@ -76,12 +85,22 @@ mod test_matrix2x2 {
                                  [3.0, 4.0]]);
         let result = v * m1;
         let expected = Vector2::new([7.0, 10.0]);
-        assert_eq!(&result[(.., ..)], &expected[(.., ..)], "\nExpected\n{:?}\nfound\n{:?}", &result[(.., ..)], &expected[(.., ..)]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }
 
+#[cfg(test)]
 mod test_matrix3x3 {
     use crate::matrix3x3::Matrix3x3;
+    use super::approx::*;
+
+    fn check_assert_matrix3x3<T: Float + std::fmt::Debug>(m1: &Matrix3x3<T>, m2: &Matrix3x3<T>) {
+        for i in 0..m1.rows() {
+            for j in 0..m1.cols() {
+                assert_eq!(m1[(i, j)], m2[(i, j)]);
+            }
+        }
+    }
 
     #[test]
     fn create_matrix() {
@@ -90,7 +109,7 @@ mod test_matrix3x3 {
                                     [3.0, 4.0, 5.0],
                                     [6.0, 7.0, 8.0],
                                  ]);
-        assert_eq!(matrix[0][2], 2.0);
+        assert_eq!(matrix[(0, 2)], 2.0);
     }
 
     #[test]
@@ -125,7 +144,6 @@ mod test_matrix3x3 {
         let m3 = m1 + m2;
 
 //         // NOTE(elsuizo:2019-06-24): comparo usando slides
-        assert_eq!(&m3[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &m3[..], &expected[..]);
     }
 
     #[test]
@@ -138,7 +156,6 @@ mod test_matrix3x3 {
                                     [0.0, 1.0, 0.0],
                                     [0.0, 0.0, 1.0],
                                  ]);
-        assert_eq!(&identity[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &identity[..], &expected[..]);
     }
 
     #[test]
@@ -150,7 +167,6 @@ mod test_matrix3x3 {
                                     [0.0, 0.0, 0.0],
                                     [0.0, 0.0, 0.0],
                                     ]);
-        assert_eq!(&zero[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &zero[..], &expected[..]);
     }
 
     #[test]
@@ -169,6 +185,8 @@ mod test_matrix3x3 {
         assert_ulps_eq!(m.norm2(), 14.2828568570857);
     }
 }
+
+#[cfg(test)]
 mod test_matrix4x4 {
     use crate::matrix4x4::Matrix4x4;
 
@@ -283,6 +301,7 @@ mod test_matrix4x4 {
 
 }
 
+#[cfg(test)]
 mod vector2_test {
     use crate::vector2::Vector2;
 
@@ -293,7 +312,7 @@ mod vector2_test {
     }
 
     #[test]
-    fn zero_Vector2_test() {
+    fn zero_vector2_test() {
         let result: Vector2<f64> = Vector2::zeros();
         let expected = Vector2::new([0.0, 0.0]);
         assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
@@ -326,6 +345,7 @@ mod vector2_test {
     }
 }
 
+#[cfg(test)]
 mod vector3_test {
     use crate::vector3::Vector3;
 
@@ -371,6 +391,7 @@ mod vector3_test {
     }
 }
 
+#[cfg(test)]
 mod types_tests {
     use crate::types::{Point2D, Point};
 

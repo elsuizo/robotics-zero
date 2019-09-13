@@ -38,9 +38,17 @@ use crate::vector2::*;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix2x2<T>([[T; 2]; 2]);
 
+
 impl<T> Matrix2x2<T> {
     pub fn new(data_input: [[T; 2]; 2]) -> Matrix2x2<T> {
         Matrix2x2(data_input)
+    }
+    pub fn rows(&self) -> usize {
+        self.0.len()
+    }
+    // NOTE(elsuizo:2019-09-13): si ya se es medio...
+    pub fn cols(&self) -> usize {
+        self.rows()
     }
 }
 

@@ -24,14 +24,13 @@
 //--------------------------------------------------------------------------
 // imports
 use std::ops::{Deref, DerefMut};
-use num_traits::{One, Zero, Float};
+use num_traits::{Zero, Float};
 
-use std::ops::{Add, Div, Mul, Sub};
-use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
+use std::ops::{Add, Mul};
+// use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 // TODO(elsuizo:2019-09-10): no se si esta bien importar asi
-use crate::matrix3x3::*;
-
+use crate::matrix3x3::Matrix3x3;
 //-------------------------------------------------------------------------
 //                        code
 //-------------------------------------------------------------------------
@@ -77,15 +76,15 @@ impl<T: Float> Mul<Matrix3x3<T>> for Vector3<T> {
     type Output = Vector3<T>;
 
     fn mul(self, rhs: Matrix3x3<T>) -> Vector3<T> {
-        let a11 = rhs[0][0];
-        let a12 = rhs[0][1];
-        let a13 = rhs[0][2];
-        let a21 = rhs[1][0];
-        let a22 = rhs[1][1];
-        let a23 = rhs[1][2];
-        let a31 = rhs[2][0];
-        let a32 = rhs[2][1];
-        let a33 = rhs[2][2];
+        let a11 = rhs[(0, 0)];
+        let a12 = rhs[(0, 1)];
+        let a13 = rhs[(0, 2)];
+        let a21 = rhs[(1, 0)];
+        let a22 = rhs[(1, 1)];
+        let a23 = rhs[(1, 2)];
+        let a31 = rhs[(2, 0)];
+        let a32 = rhs[(2, 1)];
+        let a33 = rhs[(2, 2)];
 
         let v1 = self[0];
         let v2 = self[1];
