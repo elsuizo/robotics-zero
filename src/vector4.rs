@@ -37,8 +37,8 @@ use crate::matrix4x4::Matrix4x4;
 pub struct Vector4<T>([T; 4]);
 
 impl<T> Vector4<T> {
-    pub fn new(input: [T; 3]) -> Vector3<T> {
-        Vector3(input)
+    pub fn new(input: [T; 4]) -> Vector4<T> {
+        Vector4(input)
     }
 }
 
@@ -56,7 +56,7 @@ impl<T: Float> Vector4<T> {
     }
 }
 
-impl<T: Float> Mul for Vector3<T> {
+impl<T: Float> Mul for Vector4<T> {
     type Output = T;
 
     fn mul(self, rhs: Self) -> T {
@@ -75,7 +75,7 @@ impl<T: Float> Mul for Vector3<T> {
 }
 
 impl<T: Float> Mul<Matrix4x4<T>> for Vector4<T> {
-    type Output = Vector3<T>;
+    type Output = Vector4<T>;
 
     fn mul(self, rhs: Matrix4x4<T>) -> Vector4<T> {
         let a11  = rhs[(0, 0)];
@@ -121,18 +121,18 @@ impl<T: Float> Add for Vector4<T> {
         let a3 = rhs[2];
         let a4 = rhs[3];
 
-        Vector3::new([v1 + a1, v2 + a2, v3 + a3, v4 + a4])
+        Vector4::new([v1 + a1, v2 + a2, v3 + a3, v4 + a4])
     }
 }
 
 impl<T: Float> Zero for Vector4<T> {
 
     fn zero() -> Vector4<T> {
-        Vector3::new([T::zero(); 4])
+        Vector4::new([T::zero(); 4])
     }
 
     fn is_zero(&self) -> bool {
-        *self == Vector3::zero()
+        *self == Vector4::zero()
     }
 
 }

@@ -8,6 +8,7 @@ pub mod matrix3x3;
 pub mod matrix4x4;
 pub mod vector2;
 pub mod vector3;
+pub mod vector4;
 pub mod types;
 
 //-------------------------------------------------------------------------
@@ -399,6 +400,46 @@ mod vector3_test {
         let v1 = Vector3::new([1.0, 2.0, 3.0]);
         let expected = 3.7416573867739413;
         let result = v1.norm2();
+        assert_eq!(result, expected);
+    }
+}
+
+#[cfg(test)]
+mod vector4_test {
+    use crate::vector4::Vector4;
+
+    #[test]
+    fn vector4_creation_test() {
+        let v = Vector4::new([1, 1, 1, 1]);
+        assert_eq!(v[0], 1);
+    }
+    #[test]
+    fn vector4_zeros_test() {
+        let result: Vector4<f32> = Vector4::zeros();
+        let expected = Vector4::new([0.0, 0.0, 0.0, 0.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+    #[test]
+    fn vector4_sum_test() {
+        let v1 = Vector4::new([1.0, 2.0, 3.0, 4.0]);
+        let v2 = Vector4::new([5.0, 6.0, 7.0, 8.0]);
+        let result = v1 + v2;
+        let expected = Vector4::new([6.0, 8.0, 10.0, 12.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+    #[test]
+    fn vector4_product_test() {
+        let v1 = Vector4::new([1.0, 2.0, 3.0, 4.0]);
+        let v2 = Vector4::new([5.0, 6.0, 7.0, 8.0]);
+        let result = v1 * v2;
+        let expected = 70.0;
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn vector4_norm_test() {
+        let v1 = Vector4::new([1.0, 2.0, 3.0, 4.0]);
+        let result = v1.norm2();
+        let expected = 5.477225575051661;
         assert_eq!(result, expected);
     }
 }
