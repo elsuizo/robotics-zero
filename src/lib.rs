@@ -64,7 +64,8 @@ mod test_matrix2x2 {
     fn test_determinant() {
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
-        let d = m1.det();
+        let d = m1.det().unwrap();
+        println!("d: {:?}", d);
         assert_ulps_eq!(d, -2.0);
     }
 
@@ -87,6 +88,17 @@ mod test_matrix2x2 {
         let result = v * m1;
         let expected = Vector2::new([7.0, 10.0]);
         assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+    #[test]
+    fn inverse_test() {
+        let m1 = Matrix2x2::new([[1.0, 2.0],
+                                 [3.0, 4.0]]);
+        let result = m1.inverse();
+        let expected = Matrix2x2::new([[-2.0, 1.0],
+                                       [1.5, -0.5]]);
+        if let Some(result) = m1.inverse() {
+            check_assert_matrix2x2(&expected, &result);
+        }
     }
 }
 

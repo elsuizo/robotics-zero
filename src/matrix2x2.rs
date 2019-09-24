@@ -66,12 +66,17 @@ impl<T: Float> Matrix2x2<T> {
         return self[(0, 0)] + self[(1, 1)];
     }
 
-    pub fn det(&self) -> T {
+    pub fn det(&self) -> Option<T> {
         let a = self[(0, 0)];
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
-        return (a * d) - (c * b)
+        let det = (a * d) - (c * b);
+        if det == T::zero() {
+            None
+        } else {
+            Some(det)
+        }
     }
 
     pub fn transpose(&self) -> Matrix2x2<T> {
@@ -93,6 +98,22 @@ impl<T: Float> Matrix2x2<T> {
         T::sqrt(
             a * a + b * b + c * c + d * d
         )
+    }
+}
+
+// NOTE(elsuizo:2019-09-23): en realidad aca tengo que tirar un error me parece en lugar de Option
+impl<T: Float> Matrix2x2<T> {
+    pub fn inverse(&self) -> Option<Matrix2x2<T>> {
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
+
+        match self.det() {
+            None      => None,
+            Some(det) => Some(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]]))
+        }
+
     }
 }
 
