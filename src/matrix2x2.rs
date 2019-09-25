@@ -72,10 +72,10 @@ impl<T: Float> Matrix2x2<T> {
         let c = self[(1, 0)];
         let d = self[(1, 1)];
         let det = (a * d) - (c * b);
-        if det == T::zero() {
-            None
-        } else {
+        if det.abs() > T::epsilon() {
             Some(det)
+        } else {
+            None
         }
     }
 

@@ -200,6 +200,21 @@ mod test_matrix3x3 {
                                  ]);
         assert_ulps_eq!(m.norm2(), 14.2828568570857);
     }
+
+    #[test]
+    fn inverse_test() {
+        let m = Matrix3x3::new([[1.0, 0.0, 3.0],
+                                [2.0, 1.0, 6.0],
+                                [1.0, 0.0, 9.0],]);
+        // NOTE(elsuizo:2019-09-25): hay que buscar una que tenga una inversa mas facil jasjdfjas
+        let expected = Matrix3x3::new([[1.5, 0.0, -0.5],
+                                      [-2.0, 1.0, 0.0],
+                                      [-0.16666666666666666, 0.0, 0.16666666666666666],]);
+
+        if let Some(result) = m.inverse() {
+            check_assert_matrix3x3(&expected, &result);
+        }
+    }
 }
 
 #[cfg(test)]

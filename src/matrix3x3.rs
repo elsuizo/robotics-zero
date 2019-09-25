@@ -60,10 +60,16 @@ impl<T: Float> Matrix3x3<T> {
         return self[(0, 0)] + self[(1, 1)] + self[(2, 2)];
     }
 
-    pub fn det(&self) -> T {
-        ( self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)])
-        - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
-        + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)]))
+    // TODO(elsuizo:2019-09-25): aca tendria que devolver un error
+    pub fn det(&self) -> Option<T> {
+        let det = self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)])
+                  - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
+                  + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)]);
+        if det.abs() > T::epsilon() {
+            Some(det)
+        } else {
+            None
+        }
     }
 
     pub fn transpose(&self) -> Matrix3x3<T> {
@@ -80,6 +86,30 @@ impl<T: Float> Matrix3x3<T> {
             self[(0, 1)] * self[(0, 1)] + self[(1, 1)] * self[(1, 1)] + self[(2, 1)] * self[(2, 1)] +
             self[(0, 2)] * self[(0, 2)] + self[(1, 2)] * self[(1, 2)] + self[(2, 2)] * self[(2, 2)]
         )
+    }
+}
+
+impl<T: Float> Matrix3x3<T> {
+
+    pub fn inverse(&self) -> Option<Matrix3x3<T>> {
+        let det = self.det();
+        match self.det() {
+             None => None,
+             Some(det) => {
+                 let invdet = T::one() / det;
+                 let mut res = Matrix3x3::zero();
+                 res[(0, 0)] = (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)]) * invdet;
+                 res[(0, 1)] = (self[(0, 2)] * self[(2, 1)] - self[(0, 1)] * self[(2, 2)]) * invdet;
+                 res[(0, 2)] = (self[(0, 1)] * self[(1, 2)] - self[(0, 2)] * self[(1, 1)]) * invdet;
+                 res[(1, 0)] = (self[(1, 2)] * self[(2, 0)] - self[(1, 0)] * self[(2, 2)]) * invdet;
+                 res[(1, 1)] = (self[(0, 0)] * self[(2, 2)] - self[(0, 2)] * self[(2, 0)]) * invdet;
+                 res[(1, 2)] = (self[(1, 0)] * self[(0, 2)] - self[(0, 0)] * self[(1, 2)]) * invdet;
+                 res[(2, 0)] = (self[(1, 0)] * self[(2, 1)] - self[(2, 0)] * self[(1, 1)]) * invdet;
+                 res[(2, 1)] = (self[(2, 0)] * self[(0, 1)] - self[(0, 0)] * self[(2, 1)]) * invdet;
+                 res[(2, 2)] = (self[(0, 0)] * self[(1, 1)] - self[(1, 0)] * self[(0, 1)]) * invdet;
+                 Some(res)
+             }
+        }
     }
 }
 
