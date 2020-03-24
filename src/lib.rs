@@ -10,7 +10,7 @@ pub mod vector2;
 pub mod vector3;
 pub mod vector4;
 pub mod types;
-pub mod utils;
+mod utils;
 
 //-------------------------------------------------------------------------
 //                        tests
@@ -309,13 +309,29 @@ mod test_matrix4x4 {
                                 [9.0, 10.0, 11.0, 12.0],
                                 [13.0, 14.0, 15.0, 16.0]]);
 
-        let result = m.get_submatrix((0, 0));
+        let result1 = m.get_submatrix((0, 0));
 
-        let expected = Matrix3x3::new([[6.0, 7.0, 8.0],
+        let expected1 = Matrix3x3::new([[6.0, 7.0, 8.0],
                                        [10.0, 11.0, 12.0],
                                        [14.0, 15.0, 16.0],]);
 
-        check_assert_matrix3x3(&result, &expected);
+        check_assert_matrix3x3(&result1, &expected1);
+
+        let result2 = m.get_submatrix((0, 1));
+
+        let expected2 = Matrix3x3::new([[5.0, 7.0, 8.0],
+                                       [9.0, 11.0, 12.0],
+                                       [13.0, 15.0, 16.0],]);
+
+        check_assert_matrix3x3(&result2, &expected2);
+
+        let result3 = m.get_submatrix((0, 2));
+
+        let expected3 = Matrix3x3::new([[5.0, 6.0, 8.0],
+                                       [9.0, 10.0, 12.0],
+                                       [13.0, 14.0, 16.0],]);
+
+        check_assert_matrix3x3(&result3, &expected3);
     }
 
 }
