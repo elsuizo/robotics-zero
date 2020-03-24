@@ -26,6 +26,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use num_traits::{One, Zero, Float};
 
 use std::ops::{Add, Div, Mul, Sub};
+use crate::matrix3x3::*;
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -48,6 +49,27 @@ impl<T> Matrix4x4<T> {
 }
 
 impl<T: Float> Matrix4x4<T> {
+
+    pub fn convert2vector(&self) -> [T; 16] {
+        let a1  = self[(0, 0)];
+        let a2  = self[(0, 1)];
+        let a3  = self[(0, 2)];
+        let a4  = self[(0, 3)];
+        let a5  = self[(1, 0)];
+        let a6  = self[(1, 1)];
+        let a7  = self[(1, 2)];
+        let a8  = self[(1, 3)];
+        let a9  = self[(2, 0)];
+        let a10 = self[(2, 1)];
+        let a11 = self[(2, 2)];
+        let a12 = self[(2, 3)];
+        let a13 = self[(3, 0)];
+        let a14 = self[(3, 1)];
+        let a15 = self[(3, 2)];
+        let a16 = self[(3, 3)];
+        [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16]
+
+    }
 
     pub fn identity() -> Matrix4x4<T> {
         <Matrix4x4<T> as One>::one()
@@ -126,6 +148,30 @@ impl<T: Float> Matrix4x4<T> {
         T::sqrt(a1 * a1 + a2 * a2 + a3 * a3 + a4 * a4 + a5 * a5 + a6 * a6 + a7 * a7
                 + a8 * a8 + a9 * a9 + a10 * a10 + a11 * a11 + a12 * a12 + a13 * a13
                 + a14 * a14 + a15 * a15 + a16 * a16)
+    }
+
+    pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix3x3<T> {
+        let mut values: Vec<T> = Vec::new();
+        let mut result: Matrix3x3<T> = Matrix3x3::zeros();
+        for i in 0..self.rows() {
+            for j in 0..self.cols() {
+                if !(i == selected.0 || j == selected.1) {
+                    // get the values from the Matrix3x3
+                    values.push(self[(i, j)]);
+                    // println!("m[({:}, {:})]: {:}", i, j, m[(i, j)]);
+                }
+            }
+        }
+        let mut i = 0;
+        for r in 0..result.rows() {
+            for c in 0..result.cols() {
+                // println!("r:{:}, c:{}, i:{:}", r, c, i);
+                result[(r, c)] = values[i];
+                i += 1;
+            }
+        }
+
+        return result;
     }
 }
 

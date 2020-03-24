@@ -26,13 +26,16 @@
 // - [ ] Implementar RangeFull para poder hacer matrix[..]
 // - [ ] Implementar Iterator
 // - [ ] Implementar std::fmt::Display para visualizar cuando imprimimos resultados
-use std::ops::{Deref, DerefMut, Index, IndexMut, RangeFull};
+use std::ops::{Deref, DerefMut, Index, IndexMut};
 use num_traits::{One, Zero, Float};
 
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, Mul};
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
+//-------------------------------------------------------------------------
+//                        imports
+//-------------------------------------------------------------------------
 use crate::vector2::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -46,7 +49,6 @@ impl<T> Matrix2x2<T> {
     pub fn rows(&self) -> usize {
         self.0.len()
     }
-    // NOTE(elsuizo:2019-09-13): si ya se es medio...
     pub fn cols(&self) -> usize {
         self.rows()
     }

@@ -26,7 +26,7 @@
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 use num_traits::{One, Zero, Float};
 
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, Mul};
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -40,7 +40,6 @@ impl<T> Matrix3x3<T> {
     pub fn rows(&self) -> usize {
         self.0.len()
     }
-    // NOTE(elsuizo:2019-09-13): si ya se es medio...
     pub fn cols(&self) -> usize {
         self.rows()
     }

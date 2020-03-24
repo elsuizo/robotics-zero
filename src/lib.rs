@@ -14,6 +14,29 @@ pub mod types;
 //-------------------------------------------------------------------------
 //                        auxiliar functions
 //-------------------------------------------------------------------------
+fn check_assert_matrix2x2<T: Float + std::fmt::Debug>(m1: &Matrix2x2<T>, m2: &Matrix2x2<T>) {
+    for i in 0..m1.rows() {
+        for j in 0..m1.cols() {
+            assert_eq!(m1[(i, j)], m2[(i, j)]);
+        }
+    }
+}
+
+fn check_assert_matrix3x3<T: Float + std::fmt::Debug>(m1: &Matrix3x3<T>, m2: &Matrix3x3<T>) {
+    for i in 0..m1.rows() {
+        for j in 0..m1.cols() {
+            assert_eq!(m1[(i, j)], m2[(i, j)]);
+        }
+    }
+}
+
+fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2: &Matrix4x4<T>) {
+    for i in 0..m1.rows() {
+        for j in 0..m1.cols() {
+            assert_eq!(m1[(i, j)], m2[(i, j)]);
+        }
+    }
+}
 //-------------------------------------------------------------------------
 //                        tests
 //-------------------------------------------------------------------------
@@ -23,14 +46,8 @@ mod test_matrix2x2 {
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
     use super::approx::*;
+    use super::check_assert_matrix2x2;
 
-    fn check_assert_matrix2x2<T: Float + std::fmt::Debug>(m1: &Matrix2x2<T>, m2: &Matrix2x2<T>) {
-        for i in 0..m1.rows() {
-            for j in 0..m1.cols() {
-                assert_eq!(m1[(i, j)], m2[(i, j)]);
-            }
-        }
-    }
 
     #[test]
     fn create_matrix() {
@@ -107,14 +124,7 @@ mod test_matrix3x3 {
     use num_traits::{Float};
     use crate::matrix3x3::Matrix3x3;
     use super::approx::*;
-
-    fn check_assert_matrix3x3<T: Float + std::fmt::Debug>(m1: &Matrix3x3<T>, m2: &Matrix3x3<T>) {
-        for i in 0..m1.rows() {
-            for j in 0..m1.cols() {
-                assert_eq!(m1[(i, j)], m2[(i, j)]);
-            }
-        }
-    }
+    use super::check_assert_matrix3x3;
 
     #[test]
     fn create_matrix() {
@@ -221,14 +231,10 @@ mod test_matrix3x3 {
 mod test_matrix4x4 {
     use num_traits::{Float};
     use crate::matrix4x4::Matrix4x4;
+    use crate::matrix3x3::Matrix3x3;
+    use super::check_assert_matrix4x4;
+    use super::check_assert_matrix3x3;
 
-    fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2: &Matrix4x4<T>) {
-        for i in 0..m1.rows() {
-            for j in 0..m1.cols() {
-                assert_eq!(m1[(i, j)], m2[(i, j)]);
-            }
-        }
-    }
 
     #[test]
     fn create_matrix4x4_test() {
@@ -337,6 +343,23 @@ mod test_matrix4x4 {
                                        [0.0, 0.0, 0.0, 0.0]]);
         let result: Matrix4x4<f64> = Matrix4x4::zeros();
         check_assert_matrix4x4(&result, &expected);
+    }
+
+    #[test]
+    fn get_submatrix_test() {
+
+        let m = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+
+        let result = m.get_submatrix((0, 0));
+
+        let expected = Matrix3x3::new([[6.0, 7.0, 8.0],
+                                       [10.0, 11.0, 12.0],
+                                       [14.0, 15.0, 16.0],]);
+
+        check_assert_matrix3x3(&result, &expected);
     }
 
 }
