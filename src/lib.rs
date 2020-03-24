@@ -10,43 +10,18 @@ pub mod vector2;
 pub mod vector3;
 pub mod vector4;
 pub mod types;
+pub mod utils;
 
-//-------------------------------------------------------------------------
-//                        auxiliar functions
-//-------------------------------------------------------------------------
-fn check_assert_matrix2x2<T: Float + std::fmt::Debug>(m1: &Matrix2x2<T>, m2: &Matrix2x2<T>) {
-    for i in 0..m1.rows() {
-        for j in 0..m1.cols() {
-            assert_eq!(m1[(i, j)], m2[(i, j)]);
-        }
-    }
-}
-
-fn check_assert_matrix3x3<T: Float + std::fmt::Debug>(m1: &Matrix3x3<T>, m2: &Matrix3x3<T>) {
-    for i in 0..m1.rows() {
-        for j in 0..m1.cols() {
-            assert_eq!(m1[(i, j)], m2[(i, j)]);
-        }
-    }
-}
-
-fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2: &Matrix4x4<T>) {
-    for i in 0..m1.rows() {
-        for j in 0..m1.cols() {
-            assert_eq!(m1[(i, j)], m2[(i, j)]);
-        }
-    }
-}
 //-------------------------------------------------------------------------
 //                        tests
 //-------------------------------------------------------------------------
 #[cfg(test)]
 mod test_matrix2x2 {
-    use num_traits::{Float};
+    // use num_traits::{Float};
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
     use super::approx::*;
-    use super::check_assert_matrix2x2;
+    use crate::utils::check_assert_matrix2x2;
 
 
     #[test]
@@ -110,7 +85,6 @@ mod test_matrix2x2 {
     fn inverse_test() {
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
-        let result = m1.inverse();
         let expected = Matrix2x2::new([[-2.0, 1.0],
                                        [1.5, -0.5]]);
         if let Some(result) = m1.inverse() {
@@ -121,50 +95,39 @@ mod test_matrix2x2 {
 
 #[cfg(test)]
 mod test_matrix3x3 {
-    use num_traits::{Float};
     use crate::matrix3x3::Matrix3x3;
     use super::approx::*;
-    use super::check_assert_matrix3x3;
+    use crate::utils::check_assert_matrix3x3;
 
     #[test]
     fn create_matrix() {
-        let matrix = Matrix3x3::new([
-                                    [0.0, 1.0, 2.0],
-                                    [3.0, 4.0, 5.0],
-                                    [6.0, 7.0, 8.0],
-                                 ]);
+        let matrix = Matrix3x3::new([[0.0, 1.0, 2.0],
+                                     [3.0, 4.0, 5.0],
+                                     [6.0, 7.0, 8.0],]);
         assert_eq!(matrix[(0, 2)], 2.0);
     }
 
     #[test]
     fn trace_test() {
-        let matrix = Matrix3x3::new([
-                                    [0.0, 1.0, 2.0],
-                                    [3.0, 4.0, 5.0],
-                                    [6.0, 7.0, 8.0],
-                                 ]);
+        let matrix = Matrix3x3::new([[0.0, 1.0, 2.0],
+                                     [3.0, 4.0, 5.0],
+                                     [6.0, 7.0, 8.0],]);
         assert_eq!(matrix.trace(), 12.0);
     }
 
     #[test]
     fn add_matrix() {
-        let m1 = Matrix3x3::new([
-                                    [0.0, 1.0, 2.0],
-                                    [3.0, 4.0, 5.0],
-                                    [6.0, 7.0, 8.0],
-                                 ]);
+        let m1 = Matrix3x3::new([[0.0, 1.0, 2.0],
+                                 [3.0, 4.0, 5.0],
+                                 [6.0, 7.0, 8.0],]);
 
-        let m2 = Matrix3x3::new([
-                                    [0.0, 1.0, 2.0],
-                                    [3.0, 4.0, 5.0],
-                                    [6.0, 7.0, 8.0],
-                                 ]);
+        let m2 = Matrix3x3::new([[0.0, 1.0, 2.0],
+                                 [3.0, 4.0, 5.0],
+                                 [6.0, 7.0, 8.0],]);
 
-        let expected = Matrix3x3::new([
-                                    [0.0, 2.0, 4.0],
-                                    [6.0, 8.0, 10.0],
-                                    [12.0, 14.0, 16.0],
-                                 ]);
+        let expected = Matrix3x3::new([[0.0, 2.0, 4.0],
+                                       [6.0, 8.0, 10.0],
+                                       [12.0, 14.0, 16.0],]);
         let result = m1 + m2;
         check_assert_matrix3x3(&expected, &result);
 
@@ -175,11 +138,9 @@ mod test_matrix3x3 {
 
         let identity: Matrix3x3<f64> = Matrix3x3::identity();
 
-        let expected = Matrix3x3::new([
-                                    [1.0, 0.0, 0.0],
-                                    [0.0, 1.0, 0.0],
-                                    [0.0, 0.0, 1.0],
-                                 ]);
+        let expected = Matrix3x3::new([[1.0, 0.0, 0.0],
+                                      [0.0, 1.0, 0.0],
+                                      [0.0, 0.0, 1.0],]);
         check_assert_matrix3x3(&identity, &expected);
     }
 
@@ -187,11 +148,9 @@ mod test_matrix3x3 {
     fn test_zeros_creation() {
         let zero: Matrix3x3<f64> = Matrix3x3::zeros();
 
-        let expected = Matrix3x3::new([
-                                    [0.0, 0.0, 0.0],
-                                    [0.0, 0.0, 0.0],
-                                    [0.0, 0.0, 0.0],
-                                    ]);
+        let expected = Matrix3x3::new([[0.0, 0.0, 0.0],
+                                       [0.0, 0.0, 0.0],
+                                       [0.0, 0.0, 0.0],]);
         check_assert_matrix3x3(&zero, &expected);
     }
 
@@ -203,11 +162,9 @@ mod test_matrix3x3 {
 
     #[test]
     fn test_norm2() {
-        let m = Matrix3x3::new([
-                                    [0.0, 1.0, 2.0],
-                                    [3.0, 4.0, 5.0],
-                                    [6.0, 7.0, 8.0],
-                                 ]);
+        let m = Matrix3x3::new([[0.0, 1.0, 2.0],
+                                [3.0, 4.0, 5.0],
+                                [6.0, 7.0, 8.0],]);
         assert_ulps_eq!(m.norm2(), 14.2828568570857);
     }
 
@@ -229,11 +186,10 @@ mod test_matrix3x3 {
 
 #[cfg(test)]
 mod test_matrix4x4 {
-    use num_traits::{Float};
     use crate::matrix4x4::Matrix4x4;
     use crate::matrix3x3::Matrix3x3;
-    use super::check_assert_matrix4x4;
-    use super::check_assert_matrix3x3;
+    use crate::utils::check_assert_matrix4x4;
+    use crate::utils::check_assert_matrix3x3;
 
 
     #[test]
@@ -496,7 +452,7 @@ mod vector4_test {
 
 #[cfg(test)]
 mod types_tests {
-    use crate::types::{Point2D, Point};
+    use crate::types::{Point2D};
 
     #[test]
     fn point2d_test() {
