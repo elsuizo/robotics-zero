@@ -30,6 +30,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use num_traits::{One, Zero, Float};
 
 use std::ops::{Add, Mul};
+use crate::errors::LinAlgebraError;
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
@@ -105,15 +106,15 @@ impl<T: Float> Matrix2x2<T> {
 
 // NOTE(elsuizo:2019-09-23): en realidad aca tengo que tirar un error me parece en lugar de Option
 impl<T: Float> Matrix2x2<T> {
-    pub fn inverse(&self) -> Option<Matrix2x2<T>> {
+    pub fn inverse(&self) -> Result<Matrix2x2<T>, LinAlgebraError> {
         let a = self[(0, 0)];
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
 
         match self.det() {
-            None      => None,
-            Some(det) => Some(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]]))
+            Some(det) => Ok(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]])),
+            None      => Err(LinAlgebraError::DeterminantZero),
         }
 
     }

@@ -25,7 +25,7 @@
 use std::ops::{Deref, DerefMut};
 use num_traits::{Zero, Float};
 
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, Mul};
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
 use crate::matrix2x2::*;

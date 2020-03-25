@@ -28,6 +28,7 @@ use num_traits::{One, Zero, Float};
 
 use std::ops::{Add, Mul};
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
+use crate::errors::LinAlgebraError;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix3x3<T>([[T; 3]; 3]);
@@ -90,11 +91,10 @@ impl<T: Float> Matrix3x3<T> {
 
 impl<T: Float> Matrix3x3<T> {
 
-    pub fn inverse(&self) -> Option<Matrix3x3<T>> {
-        let det = self.det();
+    pub fn inverse(&self) -> Result<Matrix3x3<T>, LinAlgebraError> {
         match self.det() {
-             None => None,
-             Some(det) => {
+            None      => Err(LinAlgebraError::DeterminantZero),
+            Some(det) => {
                  let invdet = T::one() / det;
                  let mut res = Matrix3x3::zero();
                  res[(0, 0)] = (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)]) * invdet;
@@ -106,7 +106,7 @@ impl<T: Float> Matrix3x3<T> {
                  res[(2, 0)] = (self[(1, 0)] * self[(2, 1)] - self[(2, 0)] * self[(1, 1)]) * invdet;
                  res[(2, 1)] = (self[(2, 0)] * self[(0, 1)] - self[(0, 0)] * self[(2, 1)]) * invdet;
                  res[(2, 2)] = (self[(0, 0)] * self[(1, 1)] - self[(1, 0)] * self[(0, 1)]) * invdet;
-                 Some(res)
+                 Ok(res)
              }
         }
     }
