@@ -61,15 +61,11 @@ impl<T: Float> Matrix3x3<T> {
     }
 
     // TODO(elsuizo:2019-09-25): aca tendria que devolver un error
-    pub fn det(&self) -> Option<T> {
+    pub fn det(&self) -> T {
         let det = self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)])
                   - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
                   + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)]);
-        if det.abs() > T::epsilon() {
-            Some(det)
-        } else {
-            None
-        }
+        return det
     }
 
     pub fn transpose(&self) -> Matrix3x3<T> {
@@ -92,22 +88,22 @@ impl<T: Float> Matrix3x3<T> {
 impl<T: Float> Matrix3x3<T> {
 
     pub fn inverse(&self) -> Result<Matrix3x3<T>, LinAlgebraError> {
-        match self.det() {
-            None      => Err(LinAlgebraError::DeterminantZero),
-            Some(det) => {
-                 let invdet = T::one() / det;
-                 let mut res = Matrix3x3::zero();
-                 res[(0, 0)] = (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)]) * invdet;
-                 res[(0, 1)] = (self[(0, 2)] * self[(2, 1)] - self[(0, 1)] * self[(2, 2)]) * invdet;
-                 res[(0, 2)] = (self[(0, 1)] * self[(1, 2)] - self[(0, 2)] * self[(1, 1)]) * invdet;
-                 res[(1, 0)] = (self[(1, 2)] * self[(2, 0)] - self[(1, 0)] * self[(2, 2)]) * invdet;
-                 res[(1, 1)] = (self[(0, 0)] * self[(2, 2)] - self[(0, 2)] * self[(2, 0)]) * invdet;
-                 res[(1, 2)] = (self[(1, 0)] * self[(0, 2)] - self[(0, 0)] * self[(1, 2)]) * invdet;
-                 res[(2, 0)] = (self[(1, 0)] * self[(2, 1)] - self[(2, 0)] * self[(1, 1)]) * invdet;
-                 res[(2, 1)] = (self[(2, 0)] * self[(0, 1)] - self[(0, 0)] * self[(2, 1)]) * invdet;
-                 res[(2, 2)] = (self[(0, 0)] * self[(1, 1)] - self[(1, 0)] * self[(0, 1)]) * invdet;
-                 Ok(res)
-             }
+        let det = self.det();
+        if det.abs() > T::epsilon() {
+            let invdet = T::one() / det;
+            let mut res = Matrix3x3::zero();
+            res[(0, 0)] = (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)]) * invdet;
+            res[(0, 1)] = (self[(0, 2)] * self[(2, 1)] - self[(0, 1)] * self[(2, 2)]) * invdet;
+            res[(0, 2)] = (self[(0, 1)] * self[(1, 2)] - self[(0, 2)] * self[(1, 1)]) * invdet;
+            res[(1, 0)] = (self[(1, 2)] * self[(2, 0)] - self[(1, 0)] * self[(2, 2)]) * invdet;
+            res[(1, 1)] = (self[(0, 0)] * self[(2, 2)] - self[(0, 2)] * self[(2, 0)]) * invdet;
+            res[(1, 2)] = (self[(1, 0)] * self[(0, 2)] - self[(0, 0)] * self[(1, 2)]) * invdet;
+            res[(2, 0)] = (self[(1, 0)] * self[(2, 1)] - self[(2, 0)] * self[(1, 1)]) * invdet;
+            res[(2, 1)] = (self[(2, 0)] * self[(0, 1)] - self[(0, 0)] * self[(2, 1)]) * invdet;
+            res[(2, 2)] = (self[(0, 0)] * self[(1, 1)] - self[(1, 0)] * self[(0, 1)]) * invdet;
+            Ok(res)
+        } else {
+            Err(LinAlgebraError::DeterminantZero)
         }
     }
 }

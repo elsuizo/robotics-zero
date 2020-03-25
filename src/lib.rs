@@ -88,7 +88,7 @@ mod test_matrix2x2 {
                                  [3.0, 4.0]]);
         let expected = Matrix2x2::new([[-2.0, 1.0],
                                        [1.5, -0.5]]);
-        if let Some(result) = m1.inverse() {
+        if let Ok(result) = m1.inverse() {
             check_assert_matrix2x2(&expected, &result);
         }
     }
@@ -170,6 +170,17 @@ mod test_matrix3x3 {
     }
 
     #[test]
+    fn determinant_test() {
+        let m = Matrix3x3::new([[0.0, 1.0, 2.0],
+                                [3.0, 4.0, 5.0],
+                                [6.0, 7.0, 9.0],]);
+        let expected = -3.0;
+        let result = m.det();
+
+        assert_ulps_eq!(result, expected);
+    }
+
+    #[test]
     fn inverse_test() {
         let m = Matrix3x3::new([[1.0, 0.0, 3.0],
                                 [2.0, 1.0, 6.0],
@@ -179,7 +190,7 @@ mod test_matrix3x3 {
                                       [-2.0, 1.0, 0.0],
                                       [-0.16666666666666666, 0.0, 0.16666666666666666],]);
 
-        if let Some(result) = m.inverse() {
+        if let Ok(result) = m.inverse() {
             check_assert_matrix3x3(&expected, &result);
         }
     }
@@ -255,12 +266,12 @@ mod test_matrix4x4 {
 
     #[test]
     fn det_test() {
-        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+        let m1 = Matrix4x4::new([[1.0, 2.0, 3.0, 1.0],
                                 [5.0, 6.0, 7.0, 8.0],
-                                [9.0, 10.0, 11.0, 12.0],
-                                [13.0, 14.0, 15.0, 16.0]]);
+                                [9.0, 0.0, 11.0, 12.0],
+                                [13.0, 1.0, 15.0, 16.0]]);
 
-        let expected = 0.0;
+        let expected = 168.0;
         let result = m1.det();
         assert_eq!(result, expected);
     }
@@ -335,6 +346,20 @@ mod test_matrix4x4 {
         check_assert_matrix3x3(&result3, &expected3);
     }
 
+    #[test]
+    fn inverse_test() {
+        let m = Matrix4x4::new([[1.0, 1.0, 1.0, -1.0],
+                                [1.0, 1.0, -1.0, 1.0],
+                                [1.0, -1.0, 1.0, 1.0],
+                                [-1.0, 1.0, 1.0, 1.0]]);
+
+        let expected = Matrix4x4::new([[1.0/4.0, 1.0/4.0, 1.0/4.0, -1.0/4.0],
+                                      [1.0/4.0, 1.0/4.0, -1.0/4.0, 1.0/4.0],
+                                      [1.0/4.0, -1.0/4.0, 1.0/4.0, 1.0/4.0],
+                                      [-1.0/4.0, 1.0/4.0, 1.0/4.0, 1.0/4.0]]);
+        let result = m.inverse().unwrap();
+        check_assert_matrix4x4(&result, &expected);
+    }
 }
 
 #[cfg(test)]

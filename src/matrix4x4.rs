@@ -84,7 +84,7 @@ impl<T: Float> Matrix4x4<T> {
         return self[(0, 0)] + self[(1, 1)] + self[(2, 2)] + self[(3, 3)];
     }
 
-    pub fn det(&self) -> Option<T> {
+    pub fn det(&self) -> T {
         let a1  = self[(0, 0)];
         let a2  = self[(0, 1)];
         let a3  = self[(0, 2)];
@@ -102,46 +102,46 @@ impl<T: Float> Matrix4x4<T> {
         let a15 = self[(3, 2)];
         let a16 = self[(3, 3)];
 
-        let det = a1*a10*a15*a8 - a1*a10*a16*a7 - a1*a11*a14*a8 + a1*a11*a16*a6 + a1*a12*a14*a7 - a1*a12*a15*a6 - a10*a13*a3*a8 + a10*a13*a4*a7 - a10*a15*a4*a5 + a10*a16*a3*a5 + a11*a13*a2
+        a1*a10*a15*a8 - a1*a10*a16*a7 - a1*a11*a14*a8 + a1*a11*a16*a6 + a1*a12*a14*a7 - a1*a12*a15*a6 - a10*a13*a3*a8 + a10*a13*a4*a7 - a10*a15*a4*a5 + a10*a16*a3*a5 + a11*a13*a2
         *a8 - a11*a13*a4*a6 + a11*a14*a4*a5 - a11*a16*a2*a5 - a12*a13*a2*a7 + a12*a13*a3*a6 - a12*a14*a3*a5 + a12*a15*a2*a5 + a14*a3*a8*a9 - a14*a4*a7*a9 - a15*a2*a8*a9 + a15*a4*
-        a6*a9 + a16*a2*a7*a9 - a16*a3*a6*a9;
+        a6*a9 + a16*a2*a7*a9 - a16*a3*a6*a9
 
-        if det.abs() > T::epsilon() {
-            Some(det)
-        } else {
-            None
-        }
+        // if det.abs() > T::epsilon() {
+        //     Some(det)
+        // } else {
+        //     None
+        // }
     }
 
     pub fn inverse(&self) -> Result<Matrix4x4<T>, LinAlgebraError> {
-        match self.det() {
-            None      => Err(LinAlgebraError::DeterminantZero),
-            Some(det) => {
-                let a1 = self.get_submatrix((0, 0)).det().unwrap();
-                let a2 = -self.get_submatrix((0, 1)).det().unwrap();
-                let a3 = self.get_submatrix((0, 2)).det().unwrap();
-                let a4 = -self.get_submatrix((0, 3)).det().unwrap();
+        let det = self.det();
+        if det.abs() > T::epsilon() {
+            let a1 = self.get_submatrix((0, 0)).det();
+            let a2 = -self.get_submatrix((1, 0)).det();
+            let a3 = self.get_submatrix((2, 0)).det();
+            let a4 = -self.get_submatrix((3, 0)).det();
 
-                let a5 = -self.get_submatrix((1, 0)).det().unwrap();
-                let a6 = self.get_submatrix((1, 1)).det().unwrap();
-                let a7 = -self.get_submatrix((1, 2)).det().unwrap();
-                let a8 = self.get_submatrix((1, 3)).det().unwrap();
+            let a5 = -self.get_submatrix((0, 1)).det();
+            let a6 = self.get_submatrix((1, 1)).det();
+            let a7 = -self.get_submatrix((2, 1)).det();
+            let a8 = self.get_submatrix((3, 1)).det();
 
-                let a9 = self.get_submatrix((2, 0)).det().unwrap();
-                let a10 = -self.get_submatrix((2, 1)).det().unwrap();
-                let a11 = self.get_submatrix((2, 2)).det().unwrap();
-                let a12 = -self.get_submatrix((2, 3)).det().unwrap();
+            let a9 = self.get_submatrix((0, 2)).det();
+            let a10 = -self.get_submatrix((1, 2)).det();
+            let a11 = self.get_submatrix((2, 2)).det();
+            let a12 = -self.get_submatrix((3, 2)).det();
 
-                let a13 = -self.get_submatrix((3, 0)).det().unwrap();
-                let a14 = self.get_submatrix((3, 1)).det().unwrap();
-                let a15 = -self.get_submatrix((3, 2)).det().unwrap();
-                let a16 = self.get_submatrix((3, 3)).det().unwrap();
+            let a13 = -self.get_submatrix((1, 3)).det();
+            let a14 = self.get_submatrix((1, 3)).det();
+            let a15 = -self.get_submatrix((2, 3)).det();
+            let a16 = self.get_submatrix((3, 3)).det();
 
-                Ok(Matrix4x4::new([[a1/det, a5/det, a9/det, a13/det],
-                                   [a2/det, a6/det, a10/det, a14/det],
-                                   [a3/det, a7/det, a11/det, a15/det],
-                                   [a4/det, a8/det, a12/det, a16/det]]))
-            }
+            Ok(Matrix4x4::new([[a1/det, a2/det, a3/det, a4/det],
+                               [a5/det, a6/det, a7/det, a8/det],
+                               [a9/det, a10/det, a11/det, a12/det],
+                               [a13/det, a14/det, a15/det, a16/det]]))
+            } else {
+                Err(LinAlgebraError::DeterminantZero)
         }
     }
     pub fn transpose(&self) -> Matrix4x4<T> {
