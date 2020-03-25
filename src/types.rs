@@ -48,7 +48,7 @@ pub struct Point<T> {
     pub x: T,
     pub y: T,
     pub z: T,
-    frame_name: String,
+    pub frame_name: String,
 }
 
 impl<T> Point<T> {
