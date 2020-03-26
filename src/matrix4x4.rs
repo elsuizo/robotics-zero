@@ -23,9 +23,10 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 use std::ops::{Deref, DerefMut, Index, IndexMut};
-use num_traits::{One, Zero, Float};
-
 use std::ops::{Add, Mul};
+use std::fmt;
+
+use num_traits::{One, Zero, Float};
 use crate::matrix3x3::*;
 use crate::errors::LinAlgebraError;
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -352,4 +353,19 @@ impl<T> IndexMut<(usize, usize)> for Matrix4x4<T> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
             &mut self.0[index.0][index.1]
     }
+}
+
+// TODO(elsuizo:2020-03-26): hay que hacerlo mas "inteligente" para que cuando
+// ponemos un numero de mas de 1 cifra no se rompa
+//-------------------------------------------------------------------------
+//                        Display
+//-------------------------------------------------------------------------
+impl<T: Float + fmt::Display> fmt::Display for Matrix4x4<T> {
+    fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
+                write!(dest, "\n   | {:.2} {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} {:.2} |",
+                      self[(0, 0)], self[(0, 1)], self[(0, 2)], self[(0, 3)],
+                      self[(1, 0)], self[(1, 1)], self[(1, 2)], self[(1, 3)],
+                      self[(2, 0)], self[(2, 1)], self[(2, 2)], self[(2, 3)],
+                      self[(3, 0)], self[(3, 1)], self[(3, 2)], self[(3, 3)])
+        }
 }

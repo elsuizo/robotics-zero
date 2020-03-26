@@ -42,3 +42,4 @@ pub fn rotx<T: Float>(angle: T) -> Matrix3x3<T> {
                     [zero, c, -s],
                     [zero, s,  c]])
 
+}

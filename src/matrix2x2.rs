@@ -28,7 +28,7 @@
 // - [ ] Implementar std::fmt::Display para visualizar cuando imprimimos resultados
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::ops::{Add, Mul};
-use std::fmt::{Display, Formatter, Result};
+use std::fmt;
 
 use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
@@ -75,7 +75,7 @@ impl<T: Float> Matrix2x2<T> {
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
-        (a * d) - (c * b);
+        (a * d) - (c * b)
     }
 
     pub fn transpose(&self) -> Matrix2x2<T> {
@@ -107,12 +107,12 @@ impl<T: Float> Matrix2x2<T> {
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
+        let det = self.det();
         if det.abs() > T::epsilon() {
             Ok(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]]))
         } else {
             Err(LinAlgebraError::DeterminantZero)
         }
-
     }
 }
 
@@ -231,12 +231,13 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
     }
 }
 
+// TODO(elsuizo:2020-03-26): hay que hacerlo mas "inteligente" para que cuando
+// ponemos un numero de mas de 1 cifra no se rompa
 //-------------------------------------------------------------------------
 //                        Display
 //-------------------------------------------------------------------------
-impl<T> Display for Matrix2x2<T> {
-    fn fmt(&self, dest: &mut Formatter) -> Result {
-                write!(dest, "| {} {} |", self[(0, 0)], self[(0, 1)]);
-                write!(dest, "| {} {} |", self[(1, 0)], self[(1, 1)]);
+impl<T: Float + fmt::Display> fmt::Display for Matrix2x2<T> {
+    fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
+                write!(dest, "\n   [ {:.2} {:.2} ]\n   [ {:.2} {:.2} ]", self[(0, 0)], self[(0, 1)], self[(1, 0)], self[(1, 1)])
         }
 }

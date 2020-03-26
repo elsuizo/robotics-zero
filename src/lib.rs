@@ -58,8 +58,7 @@ mod test_matrix2x2 {
     fn test_determinant() {
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
-        let d = m1.det().unwrap();
-        println!("d: {:?}", d);
+        let d = m1.det();
         assert_ulps_eq!(d, -2.0);
     }
 
