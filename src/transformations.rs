@@ -23,5 +23,22 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 
-
+use num_traits::{One, Zero, Float};
+use crate::matrix3x3::Matrix3x3;
+/// brief.
+///
+/// compute the rotation around the `x` axis(in cartesian coordinates)
+///
+/// description
+///
+/// * `angle` - angle of rotation in degrees
+///
+pub fn rotx<T: Float>(angle: T) -> Matrix3x3<T> {
+    let one = T::one();
+    let zero = T::zero();
+    let c = angle.to_radians().cos();
+    let s = angle.to_radians().sin();
+    Matrix3x3::new([[one, zero, zero],
+                    [zero, c, -s],
+                    [zero, s,  c]])
 

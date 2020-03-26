@@ -27,9 +27,10 @@
 // - [ ] Implementar Iterator
 // - [ ] Implementar std::fmt::Display para visualizar cuando imprimimos resultados
 use std::ops::{Deref, DerefMut, Index, IndexMut};
-use num_traits::{One, Zero, Float};
-
 use std::ops::{Add, Mul};
+use std::fmt::{Display, Formatter, Result};
+
+use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -69,17 +70,12 @@ impl<T: Float> Matrix2x2<T> {
         return self[(0, 0)] + self[(1, 1)];
     }
 
-    pub fn det(&self) -> Option<T> {
+    pub fn det(&self) -> T {
         let a = self[(0, 0)];
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
-        let det = (a * d) - (c * b);
-        if det.abs() > T::epsilon() {
-            Some(det)
-        } else {
-            None
-        }
+        (a * d) - (c * b);
     }
 
     pub fn transpose(&self) -> Matrix2x2<T> {
@@ -111,10 +107,10 @@ impl<T: Float> Matrix2x2<T> {
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
-
-        match self.det() {
-            Some(det) => Ok(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]])),
-            None      => Err(LinAlgebraError::DeterminantZero),
+        if det.abs() > T::epsilon() {
+            Ok(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]]))
+        } else {
+            Err(LinAlgebraError::DeterminantZero)
         }
 
     }
@@ -200,7 +196,7 @@ impl<T: Float> One for Matrix2x2<T> {
         Matrix2x2::new([[one, zero], [zero, one]])
     }
 }
-//
+
 impl<T> Deref for Matrix2x2<T> {
     type Target = [[T; 2]; 2];
     #[inline]
@@ -233,4 +229,14 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
             &mut self.0[index.0][index.1]
     }
+}
+
+//-------------------------------------------------------------------------
+//                        Display
+//-------------------------------------------------------------------------
+impl<T> Display for Matrix2x2<T> {
+    fn fmt(&self, dest: &mut Formatter) -> Result {
+                write!(dest, "| {} {} |", self[(0, 0)], self[(0, 1)]);
+                write!(dest, "| {} {} |", self[(1, 0)], self[(1, 1)]);
+        }
 }
