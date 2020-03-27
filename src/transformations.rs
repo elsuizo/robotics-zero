@@ -25,6 +25,11 @@
 
 use num_traits::{One, Zero, Float};
 use crate::matrix3x3::Matrix3x3;
+
+
+//-------------------------------------------------------------------------
+//                        transformations
+//-------------------------------------------------------------------------
 /// brief.
 ///
 /// compute the rotation around the `x` axis(in cartesian coordinates)
@@ -43,3 +48,40 @@ pub fn rotx<T: Float>(angle: T) -> Matrix3x3<T> {
                     [zero, s,  c]])
 
 }
+
+/// Brief.
+///
+/// Compute the rotation around the `y` axis(in cartesian coordinates)
+///
+/// Description
+///
+/// * `angle` - Angle of rotation in degrees
+///
+pub fn roty<T: Float>(angle: T) -> Matrix3x3<T> {
+    let one = T::one();
+    let zero = T::zero();
+    let c = angle.to_radians().cos();
+    let s = angle.to_radians().sin();
+    Matrix3x3::new([[c,   zero,   s],
+                    [zero, one, zero],
+                    [-s,  zero,   c]])
+}
+
+/// Brief.
+///
+/// Compute the rotation around the `z` axis(in cartesian coordinates)
+///
+/// Description
+///
+/// * `angle` - Angle of rotation in degrees
+///
+pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
+    let one = T::one();
+    let zero = T::zero();
+    let c = angle.to_radians().cos();
+    let s = angle.to_radians().sin();
+    Matrix3x3::new([[c,   -s,   zero],
+                    [s,    c,   zero],
+                    [zero,  zero, one]])
+}
+

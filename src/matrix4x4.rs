@@ -132,7 +132,7 @@ impl<T: Float> Matrix4x4<T> {
             let a11 = self.get_submatrix((2, 2)).det();
             let a12 = -self.get_submatrix((3, 2)).det();
 
-            let a13 = -self.get_submatrix((1, 3)).det();
+            let a13 = -self.get_submatrix((0, 3)).det();
             let a14 = self.get_submatrix((1, 3)).det();
             let a15 = -self.get_submatrix((2, 3)).det();
             let a16 = self.get_submatrix((3, 3)).det();
