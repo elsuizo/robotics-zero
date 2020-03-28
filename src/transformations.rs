@@ -96,7 +96,7 @@ pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
 /// Output:
 /// R: Matrix4x4
 ///
-pub fn rot2trans<T: Float>(r: Matrix3x3<T>) -> Matrix4x4<T> {
+pub fn rot2trans<T: Float>(r: &Matrix3x3<T>) -> Matrix4x4<T> {
     let mut R = Matrix4x4::zero();
     for row in 0..r.rows() {
         for column in 0..r.cols() {
@@ -105,4 +105,62 @@ pub fn rot2trans<T: Float>(r: Matrix3x3<T>) -> Matrix4x4<T> {
     }
     R[(3, 3)] = T::one();
     return R;
+}
+
+/// Brief.
+///
+/// Compute the rotation around the `x` axis(in cartesian coordinates)
+///
+/// Function arguments:
+///  `angle`: Float number
+///
+/// Output:
+/// Matrix4x4<Float>
+///
+pub fn trotx<T: Float>(angle: T) -> Matrix4x4<T> {
+    rot2trans(&rotx(angle))
+}
+
+/// Brief.
+///
+/// Compute the rotation around the `y` axis(in cartesian coordinates)
+///
+/// Function arguments:
+/// `angle`: Float number
+///
+/// Output:
+/// Matrix4x4<Float>
+///
+pub fn troty<T: Float>(angle: T) -> Matrix4x4<T> {
+    rot2trans(&roty(angle))
+}
+
+/// Brief.
+///
+/// Compute the rotation around the `z` axis(in cartesian coordinates)
+///
+/// Function arguments:
+///  `angle`: Float number
+///
+/// Output:
+/// Matrix4x4<Float>
+///
+pub fn trotz<T: Float>(angle: T) -> Matrix4x4<T> {
+    rot2trans(&rotz(angle))
+}
+
+/// Brief.
+///
+/// Compute the rotation matrix from euler angles from the convenction(ZYZ)
+///
+/// Function arguments:
+/// phi: first euler angle (Float number)
+/// theta: second euler angle (Float number)
+/// psi: third euler angle (Float number)
+///
+/// Output:
+/// R: Rotation matrix(Matrix4x4<Float>)
+///
+pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> Matrix4x4<T> {
+    rotz(angle_phi) * roty(angle_theta) * rotz(angle_psi)
 }
