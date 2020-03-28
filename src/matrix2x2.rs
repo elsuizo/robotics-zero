@@ -238,6 +238,6 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
 //-------------------------------------------------------------------------
 impl<T: Float + fmt::Display> fmt::Display for Matrix2x2<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
-                write!(dest, "\n   [ {:.2} {:.2} ]\n   [ {:.2} {:.2} ]", self[(0, 0)], self[(0, 1)], self[(1, 0)], self[(1, 1)])
+                write!(dest, "\n   | {:.2} {:.2} |\n   | {:.2} {:.2} |", self[(0, 0)], self[(0, 1)], self[(1, 0)], self[(1, 1)])
         }
 }

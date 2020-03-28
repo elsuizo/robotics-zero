@@ -25,6 +25,7 @@
 
 use num_traits::{One, Zero, Float};
 use crate::matrix3x3::Matrix3x3;
+use crate::matrix4x4::Matrix4x4;
 
 
 //-------------------------------------------------------------------------
@@ -85,3 +86,23 @@ pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
                     [zero,  zero, one]])
 }
 
+/// Brief.
+///
+/// Convert a Rotation Matrix to
+///
+/// Function arguments:
+/// `r`: Matrix3x3<T>
+///
+/// Output:
+/// R: Matrix4x4
+///
+pub fn rot2trans<T: Float>(r: Matrix3x3<T>) -> Matrix4x4<T> {
+    let mut R = Matrix4x4::zero();
+    for row in 0..r.rows() {
+        for column in 0..r.cols() {
+            R[(row, column)] = r[(row, column)]
+        }
+    }
+    R[(3, 3)] = T::one();
+    return R;
+}
