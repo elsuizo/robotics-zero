@@ -503,3 +503,11 @@ mod types_tests {
         assert_eq!(1, p.x);
     }
 }
+
+mod transformations_tests {
+    use crate::transformations;
+
+    #[test]
+    fn rotx_test() {
+    }
+}
