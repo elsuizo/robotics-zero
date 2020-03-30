@@ -9,4 +9,4 @@ num = "*"
 num-traits = "*"
 
 [dev-dependencies]
-approx = "*"
+assert_approx_eq = "1.1.0"

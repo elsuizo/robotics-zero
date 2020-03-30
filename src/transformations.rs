@@ -161,6 +161,6 @@ pub fn trotz<T: Float>(angle: T) -> Matrix4x4<T> {
 /// Output:
 /// R: Rotation matrix(Matrix4x4<Float>)
 ///
-pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> Matrix4x4<T> {
+pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> Matrix3x3<T> {
     rotz(angle_phi) * roty(angle_theta) * rotz(angle_psi)
 }

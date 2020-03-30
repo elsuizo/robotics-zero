@@ -1,6 +1,5 @@
 #[cfg(test)]
 #[macro_use]
-extern crate approx;
 
 /// A Robotics crate
 pub mod matrix2x2;
@@ -22,7 +21,6 @@ mod test_matrix2x2 {
     // use num_traits::{Float};
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
-    use super::approx::*;
     use crate::utils::check_assert_matrix2x2;
 
 
@@ -506,8 +504,13 @@ mod types_tests {
 
 mod transformations_tests {
     use crate::transformations;
+    use crate::utils::check_assert_matrix3x3;
 
     #[test]
     fn rotx_test() {
+        let rot1 = transformations::rotx(0.0);
+        let rot2 = transformations::rotx(360.0);
+
+        check_assert_matrix3x3(&rot1, &rot2);
     }
 }
