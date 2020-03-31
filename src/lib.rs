@@ -1,6 +1,3 @@
-#[cfg(test)]
-#[macro_use]
-
 /// A Robotics crate
 pub mod matrix2x2;
 pub mod matrix3x3;
@@ -11,17 +8,17 @@ pub mod vector4;
 pub mod types;
 pub mod errors;
 pub mod transformations;
-mod utils;
+pub mod utils;
 
 //-------------------------------------------------------------------------
 //                        tests
 //-------------------------------------------------------------------------
 #[cfg(test)]
 mod test_matrix2x2 {
-    // use num_traits::{Float};
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
     use crate::utils::check_assert_matrix2x2;
+    use crate::utils::compare_floats;
 
 
     #[test]
@@ -57,7 +54,7 @@ mod test_matrix2x2 {
         let m1 = Matrix2x2::new([[1.0, 2.0],
                                  [3.0, 4.0]]);
         let d = m1.det();
-        assert_ulps_eq!(d, -2.0);
+        assert_eq!(compare_floats(d, -2.0), true);
     }
 
     #[test]
@@ -95,8 +92,8 @@ mod test_matrix2x2 {
 #[cfg(test)]
 mod test_matrix3x3 {
     use crate::matrix3x3::Matrix3x3;
-    use super::approx::*;
     use crate::utils::check_assert_matrix3x3;
+    use crate::utils::compare_floats;
 
     #[test]
     fn create_matrix() {
@@ -164,7 +161,7 @@ mod test_matrix3x3 {
         let m = Matrix3x3::new([[0.0, 1.0, 2.0],
                                 [3.0, 4.0, 5.0],
                                 [6.0, 7.0, 8.0],]);
-        assert_ulps_eq!(m.norm2(), 14.2828568570857);
+        assert_eq!(compare_floats(m.norm2(), 14.2828568570857), true);
     }
 
     #[test]
@@ -175,7 +172,7 @@ mod test_matrix3x3 {
         let expected = -3.0;
         let result = m.det();
 
-        assert_ulps_eq!(result, expected);
+        assert_eq!(compare_floats(result, expected), true);
     }
 
     #[test]
@@ -200,6 +197,7 @@ mod test_matrix4x4 {
     use crate::matrix3x3::Matrix3x3;
     use crate::utils::check_assert_matrix4x4;
     use crate::utils::check_assert_matrix3x3;
+    use crate::utils::compare_floats;
 
 
     #[test]
@@ -283,7 +281,7 @@ mod test_matrix4x4 {
         // NOTE(elsuizo:2019-08-08): el resultado lo calculo con Julia
         let expected = 38.67815921162743;
         let result = m1.norm2();
-        assert_ulps_eq!(result, expected);
+        assert_eq!(compare_floats(result, expected), true);
     }
 
     #[test]
@@ -453,6 +451,7 @@ mod vector3_test {
 #[cfg(test)]
 mod vector4_test {
     use crate::vector4::Vector4;
+    use crate::utils::compare_floats;
 
     #[test]
     fn vector4_creation_test() {
