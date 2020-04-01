@@ -504,12 +504,41 @@ mod types_tests {
 mod transformations_tests {
     use crate::transformations;
     use crate::utils::check_assert_matrix3x3;
+    use crate::matrix3x3::Matrix3x3;
 
     #[test]
     fn rotx_test() {
         let rot1 = transformations::rotx(0.0);
         let rot2 = transformations::rotx(360.0);
 
+        let i = Matrix3x3::identity();
+
         check_assert_matrix3x3(&rot1, &rot2);
+        check_assert_matrix3x3(&i, &rot2);
+        check_assert_matrix3x3(&i, &rot1);
+    }
+
+    #[test]
+    fn roty_test() {
+        let rot1 = transformations::roty(0.0);
+        let rot2 = transformations::roty(360.0);
+
+        let i = Matrix3x3::identity();
+
+        check_assert_matrix3x3(&rot1, &rot2);
+        check_assert_matrix3x3(&i, &rot2);
+        check_assert_matrix3x3(&i, &rot1);
+    }
+
+    #[test]
+    fn rotz_test() {
+        let rot1 = transformations::rotz(0.0);
+        let rot2 = transformations::rotz(360.0);
+
+        let i = Matrix3x3::identity();
+
+        check_assert_matrix3x3(&rot1, &rot2);
+        check_assert_matrix3x3(&i, &rot2);
+        check_assert_matrix3x3(&i, &rot1);
     }
 }
