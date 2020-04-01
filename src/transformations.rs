@@ -26,6 +26,8 @@
 use num_traits::{One, Zero, Float};
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
+use crate::vector3::Vector3;
+use crate::utils;
 
 
 //-------------------------------------------------------------------------
@@ -164,3 +166,82 @@ pub fn trotz<T: Float>(angle: T) -> Matrix4x4<T> {
 pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> Matrix3x3<T> {
     rotz(angle_phi) * roty(angle_theta) * rotz(angle_psi)
 }
+
+/// Brief.
+///
+/// Compute the Rotation matrix from an arbitrary axis and angle
+///
+/// Function arguments:
+/// theta:  angle of rotation(Float)
+/// vector: axis of rotation(Vector3<Float>)
+///
+/// Return:
+/// R: Rotation matrix(Matrix3x3<Float>)
+///
+pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> {
+    let c = theta.cos();
+    let s = theta.sin();
+    let comp = T::one() - c;
+    let v_x = vector[0];
+    let v_y = vector[1];
+    let v_z = vector[2];
+
+
+    Matrix3x3::new([[v_x * v_x * comp + c, v_y * v_x * comp - v_z * s, v_z * v_x * comp + v_y * s],
+                    [v_x * v_y * comp + v_z * s, v_y * v_y * comp + c, v_z * v_y * comp - v_x * s],
+                    [v_x * v_z * comp - v_y * s, v_y * v_z * comp + v_x * s, v_z * v_z * comp + c],])
+}
+
+/// Brief.
+///
+/// Compute the euler angles from a Rotation matrix(ZYZ convention)
+///
+/// Function arguments:
+/// `R`: Rotation matrix
+///
+/// Output:
+/// A tuple with the angles: phi, theta, psi
+///
+pub fn rot2euler<T: Float>(R: Matrix3x3<T>) -> (T, T, T) {
+
+    if utils::compare_floats(R[(0, 2)], T::zero()) && utils::compare_floats(R[(1, 2)], T::zero()) {
+
+        // singularity
+        let phi   = T::zero();
+        let sp    = T::zero();
+        let cp    = T::one();
+        let theta = (cp * R[(0, 2)] + sp * R[(1, 2)]).atan2(R[(2, 2)]);
+        let psi   = (-sp * R[(0, 0)] + cp * R[(1, 0)]).atan2(-sp * R[(0, 1)] + cp * R[(1, 1)]);
+        return (phi.to_degrees(), theta.to_degrees(), psi.to_degrees());
+    } else {
+        // non-singular
+        let phi   = R[(1, 2)].atan2(R[(0, 2)]);
+        let sp    = phi.sin();
+        let cp    = phi.cos();
+        let theta = (cp * R[(0, 2)] + sp * R[(1, 2)]).atan2(R[(2, 2)]);
+        let psi   = (-sp * R[(0, 0)] + cp * R[(1, 0)]).atan2(-sp * R[(0, 1)] + cp * R[(1, 1)]);
+        return (phi.to_degrees(), theta.to_degrees(), psi.to_degrees());
+    }
+}
+
+
+pub fn rot_euler_zyx<T: Float>(phi: T, theta: T, psi: T) -> Matrix3x3<T> {
+    rotz(phi) * roty(theta) * rotx(psi)
+}
+
+/// Brief.
+///
+/// Compute the rotation matrix from euler angles
+///
+/// Function arguments:
+/// phi: first euler angle(Float)
+/// theta: second euler angle(Float)
+/// psi: third euler angle(Float)
+///
+/// Output:
+/// R: Rotation matrix(Matrix3x3<Float>)
+///
+pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
+    rot2trans(&euler2rot(phi, theta, psi))
+}
+
