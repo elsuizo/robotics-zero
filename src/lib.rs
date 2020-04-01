@@ -13,7 +13,6 @@ pub mod utils;
 //-------------------------------------------------------------------------
 //                        tests
 //-------------------------------------------------------------------------
-#[cfg(test)]
 mod test_matrix2x2 {
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
@@ -89,7 +88,6 @@ mod test_matrix2x2 {
     }
 }
 
-#[cfg(test)]
 mod test_matrix3x3 {
     use crate::matrix3x3::Matrix3x3;
     use crate::utils::check_assert_matrix3x3;
@@ -191,7 +189,6 @@ mod test_matrix3x3 {
     }
 }
 
-#[cfg(test)]
 mod test_matrix4x4 {
     use crate::matrix4x4::Matrix4x4;
     use crate::matrix3x3::Matrix3x3;
@@ -358,7 +355,6 @@ mod test_matrix4x4 {
     }
 }
 
-#[cfg(test)]
 mod vector2_test {
     use crate::vector2::Vector2;
 
@@ -402,7 +398,6 @@ mod vector2_test {
     }
 }
 
-#[cfg(test)]
 mod vector3_test {
     use crate::vector3::Vector3;
 
@@ -448,7 +443,6 @@ mod vector3_test {
     }
 }
 
-#[cfg(test)]
 mod vector4_test {
     use crate::vector4::Vector4;
     use crate::utils::compare_floats;
@@ -489,7 +483,6 @@ mod vector4_test {
     }
 }
 
-#[cfg(test)]
 mod types_tests {
     use crate::types::{Point2D};
 
