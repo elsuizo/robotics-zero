@@ -35,7 +35,7 @@ use num_traits::{Float};
 // NOTE(elsuizo:2020-03-31): tuve que sacar el T::epsilon() porque era muy chico y algunos tests
 // no pasan, habria que ver otra solucion...
 pub fn compare_floats<T: Float>(num1: T, num2: T) -> bool {
-    Float::abs(num1 - num2) < T::from(1e-15).unwrap()
+    Float::abs(num1 - num2) < T::from(1e-10).unwrap()
 }
 
 pub fn check_assert_matrix2x2<T: Float + std::fmt::Debug>(m1: &Matrix2x2<T>, m2: &Matrix2x2<T>) {

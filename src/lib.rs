@@ -503,8 +503,9 @@ mod types_tests {
 
 mod transformations_tests {
     use crate::transformations;
-    use crate::utils::check_assert_matrix3x3;
+    use crate::utils::{check_assert_matrix3x3, check_assert_matrix4x4, compare_floats};
     use crate::matrix3x3::Matrix3x3;
+    use crate::matrix4x4::Matrix4x4;
 
     #[test]
     fn rotx_test() {
@@ -540,5 +541,26 @@ mod transformations_tests {
         check_assert_matrix3x3(&rot1, &rot2);
         check_assert_matrix3x3(&i, &rot2);
         check_assert_matrix3x3(&i, &rot1);
+    }
+
+    #[test]
+    fn rot2trans_test() {
+        let rot = transformations::rotx(0.0);
+        let Rot = transformations::rot2trans(&rot);
+
+        let i = Matrix4x4::identity();
+
+        check_assert_matrix4x4(&i, &Rot);
+    }
+
+    #[test]
+    fn euler_test() {
+        let angles_in = (90.0, 30.0, 30.0);
+        let rot = transformations::euler2rot(angles_in.0, angles_in.1, angles_in.2);
+        let angles_out = transformations::rot2euler(rot);
+
+        assert_eq!(compare_floats(angles_in.0, angles_out.0), true);
+        assert_eq!(compare_floats(angles_in.1, angles_out.1), true);
+        assert_eq!(compare_floats(angles_in.2, angles_out.2), true);
     }
 }
