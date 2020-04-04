@@ -62,3 +62,12 @@ pub fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2:
     }
 }
 
+pub fn is_rotation<T: Float>(R: Matrix3x3<T>) -> bool {
+    let mut result = false;
+    let R2 = R * R;
+    if compare_floats(R.det(), T::one()) && compare_floats(R2.det(), T::one()) {
+        true
+    } else {
+        false
+    }
+}

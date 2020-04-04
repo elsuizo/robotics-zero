@@ -28,6 +28,14 @@
 
 // NOTE(elsuizo:2019-09-10): no se si quiero que todos los elementos sean publicos, lo dejo para
 // los tests
+//
+use crate::matrix3x3::Matrix3x3;
+
+enum ScalarOrMatrix<T> {
+    scalar(T),
+    Matrix(Matrix3x3<T>)
+}
+
 pub struct Point2D<T> {
     pub x: T,
     pub y: T,

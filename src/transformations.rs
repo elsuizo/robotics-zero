@@ -245,3 +245,4 @@ pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
     rot2trans(&euler2rot(phi, theta, psi))
 }
 
+pub fn skew<T: Float>(m: ScalarOrMatrix<T>) ->

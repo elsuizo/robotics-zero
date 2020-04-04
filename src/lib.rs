@@ -496,7 +496,7 @@ mod types_tests {
 
 mod transformations_tests {
     use crate::transformations;
-    use crate::utils::{check_assert_matrix3x3, check_assert_matrix4x4, compare_floats};
+    use crate::utils::{check_assert_matrix3x3, check_assert_matrix4x4, compare_floats, is_rotation};
     use crate::matrix3x3::Matrix3x3;
     use crate::matrix4x4::Matrix4x4;
 
@@ -506,7 +506,8 @@ mod transformations_tests {
         let rot2 = transformations::rotx(360.0);
 
         let i = Matrix3x3::identity();
-
+        assert_eq!(is_rotation(rot1), true);
+        assert_eq!(is_rotation(rot2), true);
         check_assert_matrix3x3(&rot1, &rot2);
         check_assert_matrix3x3(&i, &rot2);
         check_assert_matrix3x3(&i, &rot1);
@@ -519,6 +520,8 @@ mod transformations_tests {
 
         let i = Matrix3x3::identity();
 
+        assert_eq!(is_rotation(rot1), true);
+        assert_eq!(is_rotation(rot2), true);
         check_assert_matrix3x3(&rot1, &rot2);
         check_assert_matrix3x3(&i, &rot2);
         check_assert_matrix3x3(&i, &rot1);
@@ -531,6 +534,8 @@ mod transformations_tests {
 
         let i = Matrix3x3::identity();
 
+        assert_eq!(is_rotation(rot1), true);
+        assert_eq!(is_rotation(rot2), true);
         check_assert_matrix3x3(&rot1, &rot2);
         check_assert_matrix3x3(&i, &rot2);
         check_assert_matrix3x3(&i, &rot1);
