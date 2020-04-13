@@ -26,6 +26,7 @@
 use num_traits::{One, Zero, Float};
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
+use crate::matrix2x2::Matrix2x2;
 use crate::vector3::Vector3;
 use crate::utils;
 
@@ -245,4 +246,17 @@ pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
     rot2trans(&euler2rot(phi, theta, psi))
 }
 
-pub fn skew<T: Float>(m: ScalarOrMatrix<T>) ->
+pub fn skew_from_vec<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
+        let zero = T::zero();
+        Matrix3x3::new([[ zero, -v[2],  v[1]],
+                        [ v[2],  zero, -v[0]],
+                        [-v[1],  v[0],  zero],
+                      ])
+}
+
+pub fn skew<T: Float>(number: T) -> Matrix2x2<T> {
+
+    let zero = T::zero();
+    Matrix2x2::new([[  zero, -number],
+                    [number,    zero],])
+}

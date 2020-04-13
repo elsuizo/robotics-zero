@@ -31,11 +31,6 @@
 //
 use crate::matrix3x3::Matrix3x3;
 
-enum ScalarOrMatrix<T> {
-    scalar(T),
-    Matrix(Matrix3x3<T>)
-}
-
 pub struct Point2D<T> {
     pub x: T,
     pub y: T,
