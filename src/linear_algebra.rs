@@ -25,6 +25,8 @@
 
 trait LinearAlgebra {
     fn inverse(&self) -> self;
+
+    fn rows(&self) -> self
 }
 
 
