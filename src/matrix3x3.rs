@@ -28,7 +28,6 @@ use std::ops::{Add, Mul};
 use std::fmt;
 
 use num_traits::{One, Zero, Float};
-// use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 use crate::errors::LinAlgebraError;
 
 #[derive(Copy, Clone, Debug, PartialEq)]

@@ -31,8 +31,6 @@ use std::ops::{Add, Mul};
 use std::fmt;
 
 use num_traits::{One, Zero, Float};
-use num_traits::real::Real;
-use num_traits::int::PrimInt;
 use crate::errors::LinAlgebraError;
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -58,7 +56,7 @@ impl<T> Matrix2x2<T> {
     }
 }
 
-impl<T: Real> Matrix2x2<T> {
+impl<T: Float> Matrix2x2<T> {
 
     pub fn identity() -> Matrix2x2<T> {
         <Matrix2x2<T> as One>::one()
@@ -103,7 +101,7 @@ impl<T: Real> Matrix2x2<T> {
 }
 
 // NOTE(elsuizo:2019-09-23): en realidad aca tengo que tirar un error me parece en lugar de Option
-impl<T: Real> Matrix2x2<T> {
+impl<T: Float> Matrix2x2<T> {
     pub fn inverse(&self) -> Result<Matrix2x2<T>, LinAlgebraError> {
         let a = self[(0, 0)];
         let b = self[(0, 1)];
@@ -118,7 +116,7 @@ impl<T: Real> Matrix2x2<T> {
     }
 }
 
-impl<T: Real> Mul<Vector2<T>> for Matrix2x2<T> {
+impl<T: Float> Mul<Vector2<T>> for Matrix2x2<T> {
     type Output = Vector2<T>;
 
     fn mul(self, rhs: Vector2<T>) -> Vector2<T> {
@@ -133,7 +131,7 @@ impl<T: Real> Mul<Vector2<T>> for Matrix2x2<T> {
     }
 }
 
-impl<T: Real> Add for Matrix2x2<T> {
+impl<T: Float> Add for Matrix2x2<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -153,7 +151,7 @@ impl<T: Real> Add for Matrix2x2<T> {
     }
 }
 
-impl<T: Real> Mul for Matrix2x2<T> {
+impl<T: Float> Mul for Matrix2x2<T> {
     type Output = Self;
 
 
@@ -180,7 +178,7 @@ impl<T: Real> Mul for Matrix2x2<T> {
     }
 }
 
-impl<T: Real> Zero for Matrix2x2<T> {
+impl<T: Float> Zero for Matrix2x2<T> {
     fn zero() -> Matrix2x2<T> {
         Matrix2x2::new([[T::zero(); 2]; 2])
     }
@@ -190,7 +188,7 @@ impl<T: Real> Zero for Matrix2x2<T> {
     }
 }
 
-impl<T: Real> One for Matrix2x2<T> {
+impl<T: Float> One for Matrix2x2<T> {
     /// Create an identity matrix
     fn one() -> Matrix2x2<T> {
         let one = T::one();
@@ -241,11 +239,5 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
 impl<T: Float + fmt::Display> fmt::Display for Matrix2x2<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
                 write!(dest, "\n   | {:.2} {:.2} |\n   | {:.2} {:.2} |", self[(0, 0)], self[(0, 1)], self[(1, 0)], self[(1, 1)])
-        }
-}
-
-impl<T: PrimInt + fmt::Display> fmt::Display for Matrix2x2<T> {
-    fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
-                write!(dest, "\n   | {:} {:} |\n   | {:} {:} |", self[(0, 0)], self[(0, 1)], self[(1, 0)], self[(1, 1)])
         }
 }
