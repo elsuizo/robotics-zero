@@ -25,6 +25,7 @@
 use crate::matrix2x2::Matrix2x2;
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
+use crate::matrix6x6::Matrix6x6;
 use num_traits::{Float};
 
 // NOTE(elsuizo:2020-03-24): nose si esta bien poner estas funciones aca...
@@ -55,6 +56,14 @@ pub fn check_assert_matrix3x3<T: Float + std::fmt::Debug>(m1: &Matrix3x3<T>, m2:
 }
 
 pub fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2: &Matrix4x4<T>) {
+    for i in 0..m1.rows() {
+        for j in 0..m1.cols() {
+            assert_eq!(compare_floats(m1[(i, j)], m2[(i, j)]), true);
+        }
+    }
+}
+
+pub fn check_assert_matrix6x6<T: Float + std::fmt::Debug>(m1: &Matrix6x6<T>, m2: &Matrix6x6<T>) {
     for i in 0..m1.rows() {
         for j in 0..m1.cols() {
             assert_eq!(compare_floats(m1[(i, j)], m2[(i, j)]), true);

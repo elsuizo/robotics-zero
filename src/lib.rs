@@ -2,6 +2,7 @@
 pub mod matrix2x2;
 pub mod matrix3x3;
 pub mod matrix4x4;
+pub mod matrix6x6;
 pub mod vector2;
 pub mod vector3;
 pub mod vector4;
@@ -352,6 +353,45 @@ mod test_matrix4x4 {
                                       [-1.0/4.0, 1.0/4.0, 1.0/4.0, 1.0/4.0]]);
         let result = m.inverse().unwrap();
         check_assert_matrix4x4(&result, &expected);
+    }
+}
+
+mod test_matrix6x6 {
+    use crate::matrix6x6::Matrix6x6;
+    // use crate::matrix3x3::Matrix3x3;
+    // use crate::utils::check_assert_matrix4x4;
+    use crate::utils::check_assert_matrix6x6;
+    use crate::utils::compare_floats;
+
+    #[test]
+    fn matrix6x6_det_test() {
+        // let m: Matrix6x6<f64> = Matrix6x6::zeros();
+        let m = Matrix6x6::new([[0.0 , 1.0 , 2.0 , 3.0,  4.0,  5.0 ],
+                                [6.0 , 7.0 , 8.0 , 9.0, 10.0, 11.0 ],
+                                [12.0, 13.0, 14.0, 15.0, 16.0, 17.0],
+                                [18.0, 19.0, 20.0, 21.0, 22.0, 23.0],
+                                [24.0, 25.0, 26.0, 27.0, 28.0, 29.0],
+                                [30.0, 31.0, 32.0, 33.0, 34.0, 35.0]]);
+        let result = m.det();
+        assert_eq!(result, 0.0);
+    }
+    #[test]
+    fn matrix6x6_mul_test() {
+        let m = Matrix6x6::new([[0.0 , 1.0 , 2.0 , 3.0,  4.0,  5.0 ],
+                                [6.0 , 7.0 , 8.0 , 9.0, 10.0, 11.0 ],
+                                [12.0, 13.0, 14.0, 15.0, 16.0, 17.0],
+                                [18.0, 19.0, 20.0, 21.0, 22.0, 23.0],
+                                [24.0, 25.0, 26.0, 27.0, 28.0, 29.0],
+                                [30.0, 31.0, 32.0, 33.0, 34.0, 35.0]]);
+        let result = m * m;
+        let expected = Matrix6x6::new([[330.0 , 345.0 , 360.0 ,  375.0,   390.0,  405.0 ],
+                                       [870.0 , 921.0 , 972.0 ,  1023.0,  1074.0, 1125.0],
+                                       [1410.0, 1497.0, 1584.0,  1671.0,  1758.0, 1845.0],
+                                       [1950.0, 2073.0, 2196.0,  2319.0,  2442.0, 2565.0],
+                                       [2490.0, 2649.0, 2808.0,  2967.0,  3126.0, 3285.0],
+                                       [3030.0, 3225.0, 3420.0,  3615.0,  3810.0, 4005.0]]);
+
+        check_assert_matrix6x6(&result, &expected);
     }
 }
 

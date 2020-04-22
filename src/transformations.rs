@@ -246,6 +246,7 @@ pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
     rot2trans(&euler2rot(phi, theta, psi))
 }
 
+
 pub fn skew_from_vec<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
         let zero = T::zero();
         Matrix3x3::new([[ zero, -v[2],  v[1]],
@@ -260,3 +261,5 @@ pub fn skew<T: Float>(number: T) -> Matrix2x2<T> {
     Matrix2x2::new([[  zero, -number],
                     [number,    zero],])
 }
+
+// pub fn skewa<T: Float>(v: )
