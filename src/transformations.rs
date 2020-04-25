@@ -22,8 +22,7 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-
-use num_traits::{One, Zero, Float};
+use num_traits::{Zero, Float};
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
 use crate::matrix2x2::Matrix2x2;
@@ -100,14 +99,14 @@ pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
 /// R: Matrix4x4
 ///
 pub fn rot2trans<T: Float>(r: &Matrix3x3<T>) -> Matrix4x4<T> {
-    let mut R = Matrix4x4::zero();
+    let mut result = Matrix4x4::zero();
     for row in 0..r.rows() {
         for column in 0..r.cols() {
-            R[(row, column)] = r[(row, column)]
+            result[(row, column)] = r[(row, column)]
         }
     }
-    R[(3, 3)] = T::one();
-    return R;
+    result[(3, 3)] = T::one();
+    return result;
 }
 
 /// Brief.
@@ -203,24 +202,24 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> 
 /// Output:
 /// A tuple with the angles: phi, theta, psi
 ///
-pub fn rot2euler<T: Float>(R: Matrix3x3<T>) -> (T, T, T) {
+pub fn rot2euler<T: Float>(r: Matrix3x3<T>) -> (T, T, T) {
 
-    if utils::compare_floats(R[(0, 2)], T::zero()) && utils::compare_floats(R[(1, 2)], T::zero()) {
+    if utils::compare_floats(r[(0, 2)], T::zero()) && utils::compare_floats(r[(1, 2)], T::zero()) {
 
         // singularity
         let phi   = T::zero();
         let sp    = T::zero();
         let cp    = T::one();
-        let theta = (cp * R[(0, 2)] + sp * R[(1, 2)]).atan2(R[(2, 2)]);
-        let psi   = (-sp * R[(0, 0)] + cp * R[(1, 0)]).atan2(-sp * R[(0, 1)] + cp * R[(1, 1)]);
+        let theta = (cp * r[(0, 2)] + sp * r[(1, 2)]).atan2(r[(2, 2)]);
+        let psi   = (-sp * r[(0, 0)] + cp * r[(1, 0)]).atan2(-sp * r[(0, 1)] + cp * r[(1, 1)]);
         return (phi.to_degrees(), theta.to_degrees(), psi.to_degrees());
     } else {
         // non-singular
-        let phi   = R[(1, 2)].atan2(R[(0, 2)]);
+        let phi   = r[(1, 2)].atan2(r[(0, 2)]);
         let sp    = phi.sin();
         let cp    = phi.cos();
-        let theta = (cp * R[(0, 2)] + sp * R[(1, 2)]).atan2(R[(2, 2)]);
-        let psi   = (-sp * R[(0, 0)] + cp * R[(1, 0)]).atan2(-sp * R[(0, 1)] + cp * R[(1, 1)]);
+        let theta = (cp * r[(0, 2)] + sp * r[(1, 2)]).atan2(r[(2, 2)]);
+        let psi   = (-sp * r[(0, 0)] + cp * r[(1, 0)]).atan2(-sp * r[(0, 1)] + cp * r[(1, 1)]);
         return (phi.to_degrees(), theta.to_degrees(), psi.to_degrees());
     }
 }

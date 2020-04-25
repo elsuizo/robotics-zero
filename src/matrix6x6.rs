@@ -24,10 +24,10 @@
 //--------------------------------------------------------------------------
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::ops::{Add, Mul};
-use std::fmt;
+// use std::fmt;
 
 use num_traits::{One, Zero, Float};
-use crate::errors::LinAlgebraError;
+// use crate::errors::LinAlgebraError;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix6x6<T>([[T; 6]; 6]);

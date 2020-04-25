@@ -1,11 +1,12 @@
 /// A Robotics crate
-pub mod matrix2x2;
-pub mod matrix3x3;
-pub mod matrix4x4;
-pub mod matrix6x6;
-pub mod vector2;
-pub mod vector3;
-pub mod vector4;
+pub mod matrix2x2; //<---
+pub mod matrix3x3; //   |
+pub mod matrix4x4; //   |
+pub mod matrix6x6; //   |
+pub mod vector2;   //   | // NOTE(elsuizo:2020-04-22): todo esto tendria que ir en un crate aparte???
+pub mod vector3;   //   |
+pub mod vector4;   //   |
+pub mod vector6;   //<--
 pub mod types;
 pub mod errors;
 pub mod transformations;
@@ -14,6 +15,7 @@ pub mod utils;
 //-------------------------------------------------------------------------
 //                        tests
 //-------------------------------------------------------------------------
+
 mod test_matrix2x2 {
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
@@ -197,7 +199,6 @@ mod test_matrix4x4 {
     use crate::utils::check_assert_matrix3x3;
     use crate::utils::compare_floats;
 
-
     #[test]
     fn create_matrix4x4_test() {
         let m = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
@@ -361,7 +362,6 @@ mod test_matrix6x6 {
     // use crate::matrix3x3::Matrix3x3;
     // use crate::utils::check_assert_matrix4x4;
     use crate::utils::check_assert_matrix6x6;
-    use crate::utils::compare_floats;
 
     #[test]
     fn matrix6x6_det_test() {
@@ -485,7 +485,6 @@ mod vector3_test {
 
 mod vector4_test {
     use crate::vector4::Vector4;
-    use crate::utils::compare_floats;
 
     #[test]
     fn vector4_creation_test() {
@@ -523,6 +522,49 @@ mod vector4_test {
     }
 }
 
+mod vector6_tests {
+    use crate::vector6::Vector6;
+    use crate::matrix6x6::Matrix6x6;
+
+    #[test]
+    fn vector6_creation_test() {
+        let v = Vector6::new([1.0,2.0,3.0,4.0,5.0,6.0]);
+        assert_eq!(v[0], 1.0);
+        assert_eq!(v[1], 2.0);
+        assert_eq!(v[2], 3.0);
+        assert_eq!(v[3], 4.0);
+        assert_eq!(v[4], 5.0);
+        assert_eq!(v[5], 6.0);
+    }
+    #[test]
+    fn vector6_sum_test() {
+        let v        = Vector6::new([1.0,2.0,3.0,4.0,5.0,6.0]);
+        let result   = v + v;
+        let expected = Vector6::new([2.0,4.0,6.0,8.0,10.0,12.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+    #[test]
+    fn product_test() {
+        let v        = Vector6::new([1.0,2.0,3.0,4.0,5.0,6.0]);
+        let result   = v * v;
+        let expected = 91.0;
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn product_Matrix6x6_test() {
+        let v        = Vector6::new([1.0,2.0,3.0,4.0,5.0,6.0]);
+
+        let m = Matrix6x6::new([[0.0 , 1.0 , 2.0 , 3.0,  4.0,  5.0 ],
+                                [6.0 , 7.0 , 8.0 , 9.0, 10.0, 11.0 ],
+                                [12.0, 13.0, 14.0, 15.0, 16.0, 17.0],
+                                [18.0, 19.0, 20.0, 21.0, 22.0, 23.0],
+                                [24.0, 25.0, 26.0, 27.0, 28.0, 29.0],
+                                [30.0, 31.0, 32.0, 33.0, 34.0, 35.0]]);
+        let result = v * m;
+        let expected = Vector6::new([420.0, 441.0, 462.0, 483.0, 504.0, 525.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+}
 mod types_tests {
     use crate::types::{Point2D};
 
@@ -583,12 +625,12 @@ mod transformations_tests {
 
     #[test]
     fn rot2trans_test() {
-        let rot = transformations::rotx(0.0);
-        let Rot = transformations::rot2trans(&rot);
+        let rot       = transformations::rotx(0.0);
+        let rot_trans = transformations::rot2trans(&rot);
 
         let i = Matrix4x4::identity();
 
-        check_assert_matrix4x4(&i, &Rot);
+        check_assert_matrix4x4(&i, &rot_trans);
     }
 
     #[test]
