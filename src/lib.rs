@@ -28,6 +28,9 @@ mod test_matrix2x2 {
         let matrix = Matrix2x2::new([[0.0, 1.0],
                                      [2.0, 3.0]]);
         assert_eq!(matrix[(0, 0)], 0.0);
+        assert_eq!(matrix[(0, 1)], 1.0);
+        assert_eq!(matrix[(1, 0)], 2.0);
+        assert_eq!(matrix[(1, 1)], 3.0);
     }
 
     #[test]
@@ -101,7 +104,15 @@ mod test_matrix3x3 {
         let matrix = Matrix3x3::new([[0.0, 1.0, 2.0],
                                      [3.0, 4.0, 5.0],
                                      [6.0, 7.0, 8.0],]);
+        assert_eq!(matrix[(0, 0)], 0.0);
+        assert_eq!(matrix[(0, 1)], 1.0);
         assert_eq!(matrix[(0, 2)], 2.0);
+        assert_eq!(matrix[(1, 0)], 3.0);
+        assert_eq!(matrix[(1, 1)], 4.0);
+        assert_eq!(matrix[(1, 2)], 5.0);
+        assert_eq!(matrix[(2, 0)], 6.0);
+        assert_eq!(matrix[(2, 1)], 7.0);
+        assert_eq!(matrix[(2, 2)], 8.0);
     }
 
     #[test]
@@ -206,7 +217,7 @@ mod test_matrix4x4 {
                                 [9.0, 10.0, 11.0, 12.0],
                                 [13.0, 14.0, 15.0, 16.0]]);
 
-        assert_eq!(m[(0, 0)], 1.0);
+        assert_eq!(m[(1, 1)], 6.0);
     }
 
     #[test]
@@ -362,18 +373,20 @@ mod test_matrix6x6 {
     // use crate::matrix3x3::Matrix3x3;
     // use crate::utils::check_assert_matrix4x4;
     use crate::utils::check_assert_matrix6x6;
+    use crate::utils::compare_floats;
 
     #[test]
     fn matrix6x6_det_test() {
         // let m: Matrix6x6<f64> = Matrix6x6::zeros();
-        let m = Matrix6x6::new([[0.0 , 1.0 , 2.0 , 3.0,  4.0,  5.0 ],
-                                [6.0 , 7.0 , 8.0 , 9.0, 10.0, 11.0 ],
-                                [12.0, 13.0, 14.0, 15.0, 16.0, 17.0],
-                                [18.0, 19.0, 20.0, 21.0, 22.0, 23.0],
-                                [24.0, 25.0, 26.0, 27.0, 28.0, 29.0],
-                                [30.0, 31.0, 32.0, 33.0, 34.0, 35.0]]);
+        let m = Matrix6x6::new([[1.0 , 1.0 , 3.0 , 4.0,  9.0, 3.0 ],
+                                [10.0 , 10.0 , 1.0 , 2.0, 2.0, 5.0 ],
+                                [2.0, 9.0, 6.0, 10.0, 10.0, 9.0],
+                                [10.0, 9.0, 9.0, 7.0, 3.0, 6.0],
+                                [7.0, 6.0, 6.0, 2.0, 9.0, 5.0],
+                                [3.0, 8.0, 1.0, 4.0, 1.0, 5.0]]);
         let result = m.det();
-        assert_eq!(result, 0.0);
+        let expected = 3271.9999999999723;
+        assert_eq!(compare_floats(result, expected), true);
     }
     #[test]
     fn matrix6x6_mul_test() {
@@ -400,8 +413,9 @@ mod vector2_test {
 
     #[test]
     fn create_vector2_test() {
-        let v = Vector2::new([1.0, 1.0]);
+        let v = Vector2::new([1.0, 2.0]);
         assert_eq!(v[0], 1.0);
+        assert_eq!(v[1], 2.0);
     }
 
     #[test]
@@ -444,9 +458,9 @@ mod vector3_test {
     #[test]
     fn create_vector3_test() {
         let v = Vector3::new([1.0, 1.0, 1.0]);
-        let v_bool = Vector3::new([true, true, true]);
         assert_eq!(v[0], 1.0);
-        assert_eq!(v_bool[0], true);
+        assert_eq!(v[1], 1.0);
+        assert_eq!(v[2], 1.0);
     }
 
     #[test]
@@ -566,13 +580,24 @@ mod vector6_tests {
     }
 }
 mod types_tests {
-    use crate::types::{Point2D};
+    use crate::types::{Point2D, Point};
 
     #[test]
     fn point2d_test() {
         let p = Point2D::new(1, 2, "A");
 
         assert_eq!(1, p.x);
+        assert_eq!(2, p.y);
+        assert_eq!("A", p.frame_name);
+    }
+
+    #[test]
+    fn point_test() {
+        let p = Point::new(1, 1, 3, "B");
+        assert_eq!(1, p.x);
+        assert_eq!(1, p.y);
+        assert_eq!(3, p.z);
+        assert_eq!("B", p.frame_name);
     }
 }
 

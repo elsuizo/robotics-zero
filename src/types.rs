@@ -30,37 +30,30 @@
 // los tests
 //
 // use crate::matrix3x3::Matrix3x3;
+//
+// NOTE(elsuizo:2020-04-25): recordemos que los lifetime van antes que los Types
 
-pub struct Point2D<T> {
+pub struct Point2D<'a, T> {
     pub x: T,
     pub y: T,
-    pub frame_name: String,
+    pub frame_name: &'a str,
 }
 
-impl<T> Point2D<T> {
-    pub fn new(x: T, y: T, name: &str) -> Self {
-        Point2D {
-            x: x,
-            y: y,
-            frame_name: name.to_string(),
-        }
+impl<'a, T> Point2D<'a, T> {
+    pub fn new(x: T, y: T, frame_name: &'a str) -> Self {
+        Self {x, y, frame_name}
     }
 }
 
-pub struct Point<T> {
+pub struct Point<'a, T> {
     pub x: T,
     pub y: T,
     pub z: T,
-    pub frame_name: String,
+    pub frame_name: &'a str,
 }
 
-impl<T> Point<T> {
-    pub fn new(x: T, y: T, z: T, name: &str) -> Self {
-        Point {
-            x: x,
-            y: y,
-            z: z,
-            frame_name: name.to_string(),
-        }
+impl<'a, T> Point<'a, T> {
+    pub fn new(x: T, y: T, z: T, frame_name: &'a str) -> Self {
+        Self {x, y, z, frame_name}
     }
 }
