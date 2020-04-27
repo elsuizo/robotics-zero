@@ -25,9 +25,11 @@
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::ops::{Add, Mul};
 // use std::fmt;
-
 use num_traits::{One, Zero, Float};
-// use crate::errors::LinAlgebraError;
+
+
+use crate::matrix4x4::Matrix4x4;
+use crate::errors::LinAlgebraError;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix5x5<T>([[T; 5]; 5]);
@@ -108,6 +110,46 @@ impl<T: Float> Add for Matrix5x5<T> {
                         [a_40 + b_40, a_41 + b_41, a_42 + b_42, a_43 + b_43, a_44 + b_44]])
     }
 
+}
+
+// NOTE(elsuizo:2020-04-27): primero a pedal
+// despues si anda con for loops o como sea
+impl<T: Float> Mul<T> for Matrix5x5<T> {
+    type Output = Matrix5x5<T>;
+
+    fn mul(self, rhs: T) -> Matrix5x5<T> {
+        let a_00 = self[(0, 0)] * rhs;
+        let a_01 = self[(0, 1)] * rhs;
+        let a_02 = self[(0, 2)] * rhs;
+        let a_03 = self[(0, 3)] * rhs;
+        let a_04 = self[(0, 4)] * rhs;
+        let a_10 = self[(1, 0)] * rhs;
+        let a_11 = self[(1, 1)] * rhs;
+        let a_12 = self[(1, 2)] * rhs;
+        let a_13 = self[(1, 3)] * rhs;
+        let a_14 = self[(1, 4)] * rhs;
+        let a_20 = self[(2, 0)] * rhs;
+        let a_21 = self[(2, 1)] * rhs;
+        let a_22 = self[(2, 2)] * rhs;
+        let a_23 = self[(2, 3)] * rhs;
+        let a_24 = self[(2, 4)] * rhs;
+        let a_30 = self[(3, 0)] * rhs;
+        let a_31 = self[(3, 1)] * rhs;
+        let a_32 = self[(3, 2)] * rhs;
+        let a_33 = self[(3, 3)] * rhs;
+        let a_34 = self[(3, 4)] * rhs;
+        let a_40 = self[(4, 0)] * rhs;
+        let a_41 = self[(4, 1)] * rhs;
+        let a_42 = self[(4, 2)] * rhs;
+        let a_43 = self[(4, 3)] * rhs;
+        let a_44 = self[(4, 4)] * rhs;
+
+        Matrix5x5::new([[a_00, a_01, a_02, a_03, a_04],
+                        [a_10, a_11, a_12, a_13, a_14],
+                        [a_20, a_21, a_22, a_23, a_24],
+                        [a_30, a_31, a_32, a_33, a_34],
+                        [a_40, a_41, a_42, a_43, a_44]])
+    }
 }
 
 impl<T: Float> Mul for Matrix5x5<T> {
@@ -200,7 +242,7 @@ impl<T: Float> One for Matrix5x5<T> {
 }
 
 // NOTE(elsuizo:2020-04-26): poniendo ese Trait anda el norm2 funcional
-impl<T: Float + std::iter::Sum> Matrix5x5<T> {
+impl<T: Float + std::iter::Sum + std::fmt::Debug> Matrix5x5<T> {
 
     pub fn identity() -> Matrix5x5<T> {
         <Matrix5x5<T> as One>::one()
@@ -311,6 +353,46 @@ impl<T: Float + std::iter::Sum> Matrix5x5<T> {
     pub fn norm2(&self) -> T {
         T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
     }
+
+    pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix4x4<T> {
+        let mut values: Vec<T> = Vec::new();
+        let mut result: Matrix4x4<T> = Matrix4x4::zeros();
+        for i in 0..self.rows() {
+            for j in 0..self.cols() {
+                if !(i == selected.0 || j == selected.1) {
+                    // get the values from the Matrix4x4
+                    values.push(self[(i, j)]);
+                }
+            }
+        }
+        let mut i = 0;
+        for r in 0..result.rows() {
+            for c in 0..result.cols() {
+                result[(r, c)] = values[i];
+                i += 1;
+            }
+        }
+        return result;
+    }
+
+    pub fn inverse(&self) -> Result<Matrix5x5<T>, LinAlgebraError> {
+        let det = self.det();
+        if det.abs() > T::epsilon() {
+            let mut cofactors: Matrix5x5<T> = Matrix5x5::zeros();
+            for i in 0..self.rows() {
+                for j in 0..self.cols() {
+                    let value = (-T::one()).powi((i + j) as i32);
+                    cofactors[(i, j)] =  value * self.get_submatrix((i, j)).det();
+                    println!("value: {:?}", value);
+                }
+            }
+            Ok(cofactors.transpose() * (T::one() / det))
+        } else {
+            Err(LinAlgebraError::DeterminantZero)
+        }
+
+    }
+
 }
 
 impl<T> Deref for Matrix5x5<T> {
