@@ -26,6 +26,8 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::ops::{Add, Mul};
 // use std::fmt;
 
+use crate::errors::LinAlgebraError;
+use crate::matrix5x5::Matrix5x5;
 use num_traits::{One, Zero, Float};
 // use crate::errors::LinAlgebraError;
 
@@ -131,6 +133,57 @@ impl<T: Float> Add for Matrix6x6<T> {
                         [a_50 + b_50, a_51 + b_51, a_52 + b_52, a_53 + b_53, a_54 + b_54, a_55 + b_55]])
     }
 
+}
+
+// Matrix6x6 * T
+impl<T: Float> Mul<T> for Matrix6x6<T> {
+    type Output = Matrix6x6<T>;
+
+    fn mul(self, rhs: T) -> Matrix6x6<T> {
+        let a_00 = self[(0, 0)] * rhs;
+        let a_01 = self[(0, 1)] * rhs;
+        let a_02 = self[(0, 2)] * rhs;
+        let a_03 = self[(0, 3)] * rhs;
+        let a_04 = self[(0, 4)] * rhs;
+        let a_05 = self[(0, 5)] * rhs;
+        let a_10 = self[(1, 0)] * rhs;
+        let a_11 = self[(1, 1)] * rhs;
+        let a_12 = self[(1, 2)] * rhs;
+        let a_13 = self[(1, 3)] * rhs;
+        let a_14 = self[(1, 4)] * rhs;
+        let a_15 = self[(1, 5)] * rhs;
+        let a_20 = self[(2, 0)] * rhs;
+        let a_21 = self[(2, 1)] * rhs;
+        let a_22 = self[(2, 2)] * rhs;
+        let a_23 = self[(2, 3)] * rhs;
+        let a_24 = self[(2, 4)] * rhs;
+        let a_25 = self[(2, 5)] * rhs;
+        let a_30 = self[(3, 0)] * rhs;
+        let a_31 = self[(3, 1)] * rhs;
+        let a_32 = self[(3, 2)] * rhs;
+        let a_33 = self[(3, 3)] * rhs;
+        let a_34 = self[(3, 4)] * rhs;
+        let a_35 = self[(3, 5)] * rhs;
+        let a_40 = self[(4, 0)] * rhs;
+        let a_41 = self[(4, 1)] * rhs;
+        let a_42 = self[(4, 2)] * rhs;
+        let a_43 = self[(4, 3)] * rhs;
+        let a_44 = self[(4, 4)] * rhs;
+        let a_45 = self[(4, 5)] * rhs;
+        let a_50 = self[(5, 0)] * rhs;
+        let a_51 = self[(5, 1)] * rhs;
+        let a_52 = self[(5, 2)] * rhs;
+        let a_53 = self[(5, 3)] * rhs;
+        let a_54 = self[(5, 4)] * rhs;
+        let a_55 = self[(5, 5)] * rhs;
+
+        Matrix6x6::new([[a_00, a_01, a_02, a_03, a_04, a_05],
+                        [a_10, a_11, a_12, a_13, a_14, a_15],
+                        [a_20, a_21, a_22, a_23, a_24, a_25],
+                        [a_30, a_31, a_32, a_33, a_34, a_35],
+                        [a_40, a_41, a_42, a_43, a_44, a_45],
+                        [a_50, a_51, a_52, a_53, a_54, a_55]])
+    }
 }
 
 impl<T: Float> Mul for Matrix6x6<T> {
@@ -636,33 +689,94 @@ impl<T: Float + std::iter::Sum> Matrix6x6<T> {
 
     }
 
-    // TODO(elsuizo:2020-04-25): aca primero necesito que las submatrix sean de 5x5
+    pub fn transpose(&self) -> Self {
+        let a_00 = self[(0, 0)];
+        let a_01 = self[(0, 1)];
+        let a_02 = self[(0, 2)];
+        let a_03 = self[(0, 3)];
+        let a_04 = self[(0, 4)];
+        let a_05 = self[(0, 5)];
+        let a_10 = self[(1, 0)];
+        let a_11 = self[(1, 1)];
+        let a_12 = self[(1, 2)];
+        let a_13 = self[(1, 3)];
+        let a_14 = self[(1, 4)];
+        let a_15 = self[(1, 5)];
+        let a_20 = self[(2, 0)];
+        let a_21 = self[(2, 1)];
+        let a_22 = self[(2, 2)];
+        let a_23 = self[(2, 3)];
+        let a_24 = self[(2, 4)];
+        let a_25 = self[(2, 5)];
+        let a_30 = self[(3, 0)];
+        let a_31 = self[(3, 1)];
+        let a_32 = self[(3, 2)];
+        let a_33 = self[(3, 3)];
+        let a_34 = self[(3, 4)];
+        let a_35 = self[(3, 5)];
+        let a_40 = self[(4, 0)];
+        let a_41 = self[(4, 1)];
+        let a_42 = self[(4, 2)];
+        let a_43 = self[(4, 3)];
+        let a_44 = self[(4, 4)];
+        let a_45 = self[(4, 5)];
+        let a_50 = self[(5, 0)];
+        let a_51 = self[(5, 1)];
+        let a_52 = self[(5, 2)];
+        let a_53 = self[(5, 3)];
+        let a_54 = self[(5, 4)];
+        let a_55 = self[(5, 5)];
 
-    // pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix6x6<T> {
-    //     let mut values: Vec<T> = Vec::new();
-    //     let mut result: Matrix3x3<T> = Matrix6x6::zeros();
-    //     for i in 0..self.rows() {
-    //         for j in 0..self.cols() {
-    //             if !(i == selected.0 || j == selected.1) {
-    //                 // get the values from the Matrix3x3
-    //                 values.push(self[(i, j)]);
-    //             }
-    //         }
-    //     }
-    //     let mut i = 0;
-    //     for r in 0..result.rows() {
-    //         for c in 0..result.cols() {
-    //             result[(r, c)] = values[i];
-    //             i += 1;
-    //         }
-    //     }
-    //
-    //     return result;
-    // }
+        Matrix6x6::new([[a_00, a_10, a_20, a_30, a_40, a_50],
+                        [a_01, a_11, a_21, a_31, a_41, a_51],
+                        [a_02, a_12, a_22, a_32, a_42, a_52],
+                        [a_03, a_13, a_23, a_33, a_43, a_53],
+                        [a_04, a_14, a_24, a_34, a_44, a_54],
+                        [a_05, a_15, a_25, a_35, a_45, a_55]])
+    }
 
     pub fn norm2(&self) -> T {
         T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
     }
+
+    pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix5x5<T> {
+        let mut values: Vec<T> = Vec::new();
+        let mut result: Matrix5x5<T> = Matrix5x5::zeros();
+        for i in 0..self.rows() {
+            for j in 0..self.cols() {
+                if !(i == selected.0 || j == selected.1) {
+                    // get the values from the Matrix4x4
+                    values.push(self[(i, j)]);
+                }
+            }
+        }
+        let mut i = 0;
+        for r in 0..result.rows() {
+            for c in 0..result.cols() {
+                result[(r, c)] = values[i];
+                i += 1;
+            }
+        }
+        return result;
+    }
+
+    pub fn inverse(&self) -> Result<Matrix6x6<T>, LinAlgebraError> {
+        let det = self.det();
+        if det.abs() > T::epsilon() {
+            let mut cofactors: Matrix6x6<T> = Matrix6x6::zeros();
+            for i in 0..self.rows() {
+                for j in 0..self.cols() {
+                    let value = (-T::one()).powi((i + j) as i32);
+                    cofactors[(i, j)] =  value * self.get_submatrix((i, j)).det();
+                }
+            }
+            Ok(cofactors.transpose() * (T::one() / det))
+        } else {
+            Err(LinAlgebraError::DeterminantZero)
+        }
+
+    }
+
 }
 
 impl<T: Float> Zero for Matrix6x6<T> {

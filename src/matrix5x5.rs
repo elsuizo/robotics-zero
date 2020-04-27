@@ -242,7 +242,7 @@ impl<T: Float> One for Matrix5x5<T> {
 }
 
 // NOTE(elsuizo:2020-04-26): poniendo ese Trait anda el norm2 funcional
-impl<T: Float + std::iter::Sum + std::fmt::Debug> Matrix5x5<T> {
+impl<T: Float + std::iter::Sum> Matrix5x5<T> {
 
     pub fn identity() -> Matrix5x5<T> {
         <Matrix5x5<T> as One>::one()
@@ -383,7 +383,6 @@ impl<T: Float + std::iter::Sum + std::fmt::Debug> Matrix5x5<T> {
                 for j in 0..self.cols() {
                     let value = (-T::one()).powi((i + j) as i32);
                     cofactors[(i, j)] =  value * self.get_submatrix((i, j)).det();
-                    println!("value: {:?}", value);
                 }
             }
             Ok(cofactors.transpose() * (T::one() / det))

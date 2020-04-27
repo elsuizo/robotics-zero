@@ -37,7 +37,7 @@ use num_traits::{Float};
 // NOTE(elsuizo:2020-03-31): tuve que sacar el T::epsilon() porque era muy chico y algunos tests
 // no pasan, habria que ver otra solucion...
 pub fn compare_floats<T: Float>(num1: T, num2: T) -> bool {
-    Float::abs(num1 - num2) < T::from(1e-10).unwrap()
+    Float::abs(num1 - num2) < T::from(1e-5).unwrap()
 }
 
 // TODO(elsuizo:2020-04-26): todas estas funciones deberian ser una sola como mucho
