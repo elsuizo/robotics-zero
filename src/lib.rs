@@ -2,6 +2,7 @@
 pub mod matrix2x2; //<---
 pub mod matrix3x3; //   |
 pub mod matrix4x4; //   |
+pub mod matrix5x5;
 pub mod matrix6x6; //   |
 pub mod vector2;   //   | // NOTE(elsuizo:2020-04-22): todo esto tendria que ir en un crate aparte???
 pub mod vector3;   //   |
@@ -368,6 +369,71 @@ mod test_matrix4x4 {
     }
 }
 
+mod test_matrix5x5 {
+    use crate::matrix5x5::Matrix5x5;
+
+    use crate::utils::compare_floats;
+    use crate::utils::check_assert_matrix5x5;
+    #[test]
+    fn matrix5x5_det_test() {
+        let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
+                                [ 2.0, 4.0, 8.0,  3.0,  2.0],
+                                [ 5.0, 1.0, 2.0,  9.0, 10.0],
+                                [ 6.0, 9.0, 9.0,  7.0,  3.0],
+                                [ 1.0, 8.0, 8.0, 10.0,  5.0]]);
+        let result = m.det();
+        let expected = 49.99999999999798;
+        assert_eq!(compare_floats(result, expected), true);
+    }
+    #[test]
+    fn matrix5x5_sum_test() {
+        let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
+                                [ 2.0, 4.0, 8.0,  3.0,  2.0],
+                                [ 5.0, 1.0, 2.0,  9.0, 10.0],
+                                [ 6.0, 9.0, 9.0,  7.0,  3.0],
+                                [ 1.0, 8.0, 8.0, 10.0,  5.0]]);
+
+        let expected = Matrix5x5::new([[20.0,  2.0, 14.0,  2.0, 10.0],
+                                       [ 4.0,  8.0, 16.0,  6.0,  4.0],
+                                       [10.0,  2.0,  4.0, 18.0, 20.0],
+                                       [12.0, 18.0, 18.0, 14.0,  6.0],
+                                       [ 2.0, 16.0, 16.0, 20.0, 10.0]]);
+        let result = m + m;
+
+        check_assert_matrix5x5(&result, &expected);
+
+    }
+    #[test]
+    fn matrix5x5_product_test() {
+        let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
+                                [ 2.0, 4.0, 8.0,  3.0,  2.0],
+                                [ 5.0, 1.0, 2.0,  9.0, 10.0],
+                                [ 6.0, 9.0, 9.0,  7.0,  3.0],
+                                [ 1.0, 8.0, 8.0, 10.0,  5.0]]);
+        let result = m * m;
+        let expected = Matrix5x5::new([[148.0,  70.0, 141.0, 133.0, 150.0],
+                                       [ 88.0,  69.0, 105.0, 127.0, 117.0],
+                                       [126.0, 172.0, 208.0, 189.0, 124.0],
+                                       [168.0, 138.0, 219.0, 193.0, 174.0],
+                                       [131.0, 171.0, 217.0, 217.0, 156.0]]);
+
+        check_assert_matrix5x5(&result, &expected);
+    }
+    #[test]
+    fn matrix5x5_norm2_test() {
+        let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
+                                [ 2.0, 4.0, 8.0,  3.0,  2.0],
+                                [ 5.0, 1.0, 2.0,  9.0, 10.0],
+                                [ 6.0, 9.0, 9.0,  7.0,  3.0],
+                                [ 1.0, 8.0, 8.0, 10.0,  5.0]]);
+
+        let result = m.norm2();
+        let expected = 31.52776554086889;
+        assert_eq!(compare_floats(result, expected), true);
+    }
+
+}
+
 mod test_matrix6x6 {
     use crate::matrix6x6::Matrix6x6;
     // use crate::matrix3x3::Matrix3x3;
@@ -378,12 +444,12 @@ mod test_matrix6x6 {
     #[test]
     fn matrix6x6_det_test() {
         // let m: Matrix6x6<f64> = Matrix6x6::zeros();
-        let m = Matrix6x6::new([[1.0 , 1.0 , 3.0 , 4.0,  9.0, 3.0 ],
-                                [10.0 , 10.0 , 1.0 , 2.0, 2.0, 5.0 ],
-                                [2.0, 9.0, 6.0, 10.0, 10.0, 9.0],
-                                [10.0, 9.0, 9.0, 7.0, 3.0, 6.0],
-                                [7.0, 6.0, 6.0, 2.0, 9.0, 5.0],
-                                [3.0, 8.0, 1.0, 4.0, 1.0, 5.0]]);
+        let m = Matrix6x6::new([[ 1.0,  1.0, 3.0,  4.0,  9.0, 3.0],
+                                [10.0, 10.0, 1.0,  2.0,  2.0, 5.0],
+                                [ 2.0,  9.0, 6.0, 10.0, 10.0, 9.0],
+                                [10.0,  9.0, 9.0,  7.0,  3.0, 6.0],
+                                [ 7.0,  6.0, 6.0,  2.0,  9.0, 5.0],
+                                [ 3.0,  8.0, 1.0,  4.0,  1.0, 5.0]]);
         let result = m.det();
         let expected = 3271.9999999999723;
         assert_eq!(compare_floats(result, expected), true);
@@ -406,7 +472,20 @@ mod test_matrix6x6 {
 
         check_assert_matrix6x6(&result, &expected);
     }
+    #[test]
+    fn matrix6x6_norm2_test() {
+        let m = Matrix6x6::new([[0.0 , 1.0 , 2.0 , 3.0,  4.0,  5.0 ],
+                                [6.0 , 7.0 , 8.0 , 9.0, 10.0, 11.0 ],
+                                [12.0, 13.0, 14.0, 15.0, 16.0, 17.0],
+                                [18.0, 19.0, 20.0, 21.0, 22.0, 23.0],
+                                [24.0, 25.0, 26.0, 27.0, 28.0, 29.0],
+                                [30.0, 31.0, 32.0, 33.0, 34.0, 35.0]]);
+        let result = m.norm2();
+        let expected = 122.10651088291729;
+        assert_eq!(compare_floats(result, expected), true);
+    }
 }
+
 
 mod vector2_test {
     use crate::vector2::Vector2;

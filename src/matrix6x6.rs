@@ -34,8 +34,8 @@ pub struct Matrix6x6<T>([[T; 6]; 6]);
 
 
 impl<T> Matrix6x6<T> {
-    pub fn new(data_input: [[T; 6]; 6]) -> Matrix6x6<T> {
-        Matrix6x6(data_input)
+    pub fn new(data_input: [[T; 6]; 6]) -> Self {
+        Self(data_input)
     }
     pub fn rows(&self) -> usize {
         self.0.len()
@@ -221,7 +221,7 @@ impl<T: Float> Mul for Matrix6x6<T> {
     }
 }
 
-impl<T: Float> Matrix6x6<T> {
+impl<T: Float + std::iter::Sum> Matrix6x6<T> {
 
     pub fn identity() -> Matrix6x6<T> {
         <Matrix6x6<T> as One>::one()
@@ -634,6 +634,34 @@ impl<T: Float> Matrix6x6<T> {
         a_05*a_14*a_23*a_31*a_40*a_52 + a_05*a_14*a_23*a_31*a_42*a_50 +
         a_05*a_14*a_23*a_32*a_40*a_51 - a_05*a_14*a_23*a_32*a_41*a_50
 
+    }
+
+    // TODO(elsuizo:2020-04-25): aca primero necesito que las submatrix sean de 5x5
+
+    // pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix6x6<T> {
+    //     let mut values: Vec<T> = Vec::new();
+    //     let mut result: Matrix3x3<T> = Matrix6x6::zeros();
+    //     for i in 0..self.rows() {
+    //         for j in 0..self.cols() {
+    //             if !(i == selected.0 || j == selected.1) {
+    //                 // get the values from the Matrix3x3
+    //                 values.push(self[(i, j)]);
+    //             }
+    //         }
+    //     }
+    //     let mut i = 0;
+    //     for r in 0..result.rows() {
+    //         for c in 0..result.cols() {
+    //             result[(r, c)] = values[i];
+    //             i += 1;
+    //         }
+    //     }
+    //
+    //     return result;
+    // }
+
+    pub fn norm2(&self) -> T {
+        T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
     }
 }
 

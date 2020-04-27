@@ -26,6 +26,7 @@ use crate::matrix2x2::Matrix2x2;
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
 use crate::matrix6x6::Matrix6x6;
+use crate::matrix5x5::Matrix5x5;
 use num_traits::{Float};
 
 // NOTE(elsuizo:2020-03-24): nose si esta bien poner estas funciones aca...
@@ -39,6 +40,9 @@ pub fn compare_floats<T: Float>(num1: T, num2: T) -> bool {
     Float::abs(num1 - num2) < T::from(1e-10).unwrap()
 }
 
+// TODO(elsuizo:2020-04-26): todas estas funciones deberian ser una sola como mucho
+// - Una de las cosas que podria aprovechar es que se pueden comparar dos iterators element-wise!!!
+// - Otra es hacer un trait que y hacer una funcion que acepte un trait object
 pub fn check_assert_matrix2x2<T: Float + std::fmt::Debug>(m1: &Matrix2x2<T>, m2: &Matrix2x2<T>) {
     for i in 0..m1.rows() {
         for j in 0..m1.cols() {
@@ -56,6 +60,14 @@ pub fn check_assert_matrix3x3<T: Float + std::fmt::Debug>(m1: &Matrix3x3<T>, m2:
 }
 
 pub fn check_assert_matrix4x4<T: Float + std::fmt::Debug>(m1: &Matrix4x4<T>, m2: &Matrix4x4<T>) {
+    for i in 0..m1.rows() {
+        for j in 0..m1.cols() {
+            assert_eq!(compare_floats(m1[(i, j)], m2[(i, j)]), true);
+        }
+    }
+}
+
+pub fn check_assert_matrix5x5<T: Float + std::fmt::Debug>(m1: &Matrix5x5<T>, m2: &Matrix5x5<T>) {
     for i in 0..m1.rows() {
         for j in 0..m1.cols() {
             assert_eq!(compare_floats(m1[(i, j)], m2[(i, j)]), true);
