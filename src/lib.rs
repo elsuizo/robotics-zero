@@ -7,6 +7,7 @@ pub mod matrix6x6; //   |
 pub mod vector2;   //   | // NOTE(elsuizo:2020-04-22): todo esto tendria que ir en un crate aparte???
 pub mod vector3;   //   |
 pub mod vector4;   //   |
+pub mod vector5;
 pub mod vector6;   //<--
 pub mod types;
 pub mod errors;
@@ -578,11 +579,15 @@ mod vector3_test {
 
 mod vector4_test {
     use crate::vector4::Vector4;
+    use crate::matrix4x4::Matrix4x4;
 
     #[test]
     fn vector4_creation_test() {
         let v = Vector4::new([1, 1, 1, 1]);
         assert_eq!(v[0], 1);
+        assert_eq!(v[1], 1);
+        assert_eq!(v[2], 1);
+        assert_eq!(v[3], 1);
     }
     #[test]
     fn vector4_zeros_test() {
@@ -612,6 +617,74 @@ mod vector4_test {
         let result = v1.norm2();
         let expected = 5.477225575051661;
         assert_eq!(result, expected);
+    }
+    #[test]
+    fn vector4_mul_Matrix4x4_test() {
+        let m = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
+                                [5.0, 6.0, 7.0, 8.0],
+                                [9.0, 10.0, 11.0, 12.0],
+                                [13.0, 14.0, 15.0, 16.0]]);
+
+        let v1 = Vector4::new([1.0, 2.0, 3.0, 4.0]);
+        let result = v1 * m;
+        let expected = Vector4::new([90.0, 100.0, 110.0, 120.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+}
+
+mod vector5_test {
+    use crate::vector5::Vector5;
+    use crate::matrix5x5::Matrix5x5;
+
+    #[test]
+    fn vector5_creation_test() {
+        let v = Vector5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
+        assert_eq!(v[0], 1.0);
+        assert_eq!(v[1], 2.0);
+        assert_eq!(v[2], 3.0);
+        assert_eq!(v[3], 4.0);
+        assert_eq!(v[4], 5.0);
+    }
+    #[test]
+    fn vector5_zeros_test() {
+        let result: Vector5<f32> = Vector5::zeros();
+        let expected = Vector5::new([0.0, 0.0, 0.0, 0.0, 0.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+    #[test]
+    fn vector5_sum_test() {
+        let v1 = Vector5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
+        let v2 = Vector5::new([6.0, 7.0, 8.0, 9.0, 10.0]);
+        let result = v1 + v2;
+        let expected = Vector5::new([7.0, 9.0, 11.0, 13.0, 15.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
+    }
+    #[test]
+    fn vector5_mul_test() {
+        let v1 = Vector5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
+        let v2 = Vector5::new([6.0, 7.0, 8.0, 9.0, 10.0]);
+        let result = v1 * v2;
+        let expected = 130.0;
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn vector5_norm_test() {
+        let v1 = Vector5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
+        let result = v1.norm2();
+        let expected = 7.416198487095663;
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn vector5_mul_Matrix5x5_test() {
+        let v1 = Vector5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
+        let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
+                                [ 2.0, 4.0, 8.0,  3.0,  2.0],
+                                [ 5.0, 1.0, 2.0,  9.0, 10.0],
+                                [ 6.0, 9.0, 9.0,  7.0,  3.0],
+                                [ 1.0, 8.0, 8.0, 10.0,  5.0]]);
+        let result = v1 * m;
+        let expected = Vector5::new([58.0, 88.0, 105.0, 112.0, 76.0]);
+        assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }
 
