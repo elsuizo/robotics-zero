@@ -40,6 +40,9 @@ use crate::errors::LinAlgebraError;
 //-------------------------------------------------------------------------
 use crate::vector2::*;
 
+//-------------------------------------------------------------------------
+//                        code
+//-------------------------------------------------------------------------
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix2x2<T>([[T; 2]; 2]);
 
@@ -245,13 +248,13 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
     }
 }
 
-// TODO(elsuizo:2020-03-26): hay que hacerlo mas "inteligente" para que cuando
-// ponemos un numero de mas de 1 cifra no se rompa
 //-------------------------------------------------------------------------
-//                        Display
+//                        Display for Matrix2x2
 //-------------------------------------------------------------------------
 impl<T: Float + fmt::Display> fmt::Display for Matrix2x2<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
-                write!(dest, "\n   | {:.2} {:.2} |\n   | {:.2} {:.2} |", self[(0, 0)], self[(0, 1)], self[(1, 0)], self[(1, 1)])
+                println!("");
+                write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(0, 0)], self[(0, 1)])?;
+                write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(1, 0)], self[(1, 1)])
         }
 }

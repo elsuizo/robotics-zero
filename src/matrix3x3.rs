@@ -30,6 +30,10 @@ use std::fmt;
 use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
 
+//-------------------------------------------------------------------------
+//                        code
+//-------------------------------------------------------------------------
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix3x3<T>([[T; 3]; 3]);
 
@@ -217,16 +221,14 @@ impl<T> IndexMut<(usize, usize)> for Matrix3x3<T> {
     }
 }
 
-// TODO(elsuizo:2020-03-26): hay que hacerlo mas "inteligente" para que cuando
-// ponemos un numero de mas de 1 cifra no se rompa
 //-------------------------------------------------------------------------
-//                        Display
+//                        Display for Matrix3x3
 //-------------------------------------------------------------------------
 impl<T: Float + fmt::Display> fmt::Display for Matrix3x3<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
-                write!(dest, "\n   | {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} |",
-                      self[(0, 0)], self[(0, 1)], self[(0, 2)],
-                      self[(1, 0)], self[(1, 1)], self[(1, 2)],
-                      self[(2, 0)], self[(2, 1)], self[(2, 2)])
-        }
+        println!("");
+        write!(dest, "|{0:<7.2} {1:^7.2} {2:>7.2}|\n", self[(0, 0)], self[(0, 1)], self[(0, 2)])?;
+        write!(dest, "|{0:<7.2} {1:^7.2} {2:>7.2}|\n", self[(1, 0)], self[(1, 1)], self[(1, 2)])?;
+        write!(dest, "|{0:<7.2} {1:^7.2} {2:>7.2}|\n", self[(2, 0)], self[(2, 1)], self[(2, 2)])
+    }
 }

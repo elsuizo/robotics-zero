@@ -24,12 +24,16 @@
 //--------------------------------------------------------------------------
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::ops::{Add, Mul};
-// use std::fmt;
+use std::fmt;
 use num_traits::{One, Zero, Float};
 
 
 use crate::matrix4x4::Matrix4x4;
 use crate::errors::LinAlgebraError;
+
+//-------------------------------------------------------------------------
+//                        code
+//-------------------------------------------------------------------------
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix5x5<T>([[T; 5]; 5]);
@@ -354,6 +358,9 @@ impl<T: Float + std::iter::Sum> Matrix5x5<T> {
         T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
     }
 
+    // TODO(elsuizo:2020-04-28): esta funcion no deberia ser pub
+    /// get the a submatrix from discard row `i` and column `j`
+    ///
     pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix4x4<T> {
         let mut values: Vec<T> = Vec::new();
         let mut result: Matrix4x4<T> = Matrix4x4::zeros();
@@ -375,14 +382,19 @@ impl<T: Float + std::iter::Sum> Matrix5x5<T> {
         return result;
     }
 
+    /// Calculate the inverse of the Matrix6x6 via tha Adjoint Matrix:
+    /// A^(-1) = 1/det Adj
+    /// where Adj = Cofactor.Transpose()
+    /// Cofactor = (-1)^(i+j) M(i, j).det()
+    ///
     pub fn inverse(&self) -> Result<Matrix5x5<T>, LinAlgebraError> {
         let det = self.det();
         if det.abs() > T::epsilon() {
             let mut cofactors: Matrix5x5<T> = Matrix5x5::zeros();
             for i in 0..self.rows() {
                 for j in 0..self.cols() {
-                    let value = (-T::one()).powi((i + j) as i32);
-                    cofactors[(i, j)] =  value * self.get_submatrix((i, j)).det();
+                    let sign = (-T::one()).powi((i + j) as i32);
+                    cofactors[(i, j)] =  sign * self.get_submatrix((i, j)).det();
                 }
             }
             Ok(cofactors.transpose() * (T::one() / det))
@@ -428,17 +440,18 @@ impl<T> IndexMut<(usize, usize)> for Matrix5x5<T> {
     }
 }
 
-// TODO(elsuizo:2020-03-26): hay que hacerlo mas "inteligente" para que cuando
-// ponemos un numero de mas de 1 cifra no se rompa
+
+
 //-------------------------------------------------------------------------
-//                        Display
+//                        Display for Matrix5x5
 //-------------------------------------------------------------------------
-// impl<T: Float + fmt::Display> fmt::Display for Matrix6x6<T> {
-//     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
-//                 write!(dest, "\n   | {:.2} {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} {:.2} |\n   | {:.2} {:.2} {:.2} {:.2} |",
-//                       self[(0, 0)], self[(0, 1)], self[(0, 2)], self[(0, 3)],
-//                       self[(1, 0)], self[(1, 1)], self[(1, 2)], self[(1, 3)],
-//                       self[(2, 0)], self[(2, 1)], self[(2, 2)], self[(2, 3)],
-//                       self[(3, 0)], self[(3, 1)], self[(3, 2)], self[(3, 3)])
-//         }
-// }
+impl<T: Float + fmt::Display> fmt::Display for Matrix5x5<T> {
+    fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
+                println!("");
+                write!(dest, "|{0:<7.2} {1:^7.2} {2:^7.2} {3:^7.2} {4:>7.2}|\n", self[(0, 0)], self[(0, 1)], self[(0, 2)], self[(0, 3)], self[(0, 4)])?;
+                write!(dest, "|{0:<7.2} {1:^7.2} {2:^7.2} {3:^7.2} {4:>7.2}|\n", self[(1, 0)], self[(1, 1)], self[(1, 2)], self[(1, 3)], self[(1, 4)])?;
+                write!(dest, "|{0:<7.2} {1:^7.2} {2:^7.2} {3:^7.2} {4:>7.2}|\n", self[(2, 0)], self[(2, 1)], self[(2, 2)], self[(2, 3)], self[(2, 4)])?;
+                write!(dest, "|{0:<7.2} {1:^7.2} {2:^7.2} {3:^7.2} {4:>7.2}|\n", self[(3, 0)], self[(3, 1)], self[(3, 2)], self[(3, 3)], self[(3, 4)])?;
+                write!(dest, "|{0:<7.2} {1:^7.2} {2:^7.2} {3:^7.2} {4:>7.2}|\n", self[(4, 0)], self[(4, 1)], self[(4, 2)], self[(4, 3)], self[(4, 4)])
+        }
+}
