@@ -18,6 +18,7 @@ pub mod utils;
 //                        tests
 //-------------------------------------------------------------------------
 
+#[cfg(test)]
 mod test_matrix2x2 {
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
@@ -96,6 +97,7 @@ mod test_matrix2x2 {
     }
 }
 
+#[cfg(test)]
 mod test_matrix3x3 {
     use crate::matrix3x3::Matrix3x3;
     use crate::utils::check_assert_matrix3x3;
@@ -205,6 +207,7 @@ mod test_matrix3x3 {
     }
 }
 
+#[cfg(test)]
 mod test_matrix4x4 {
     use crate::matrix4x4::Matrix4x4;
     use crate::matrix3x3::Matrix3x3;
@@ -370,6 +373,7 @@ mod test_matrix4x4 {
     }
 }
 
+#[cfg(test)]
 mod test_matrix5x5 {
     use crate::matrix5x5::Matrix5x5;
 
@@ -466,6 +470,7 @@ mod test_matrix5x5 {
 
 }
 
+#[cfg(test)]
 mod test_matrix6x6 {
     use crate::matrix6x6::Matrix6x6;
     // use crate::matrix3x3::Matrix3x3;
@@ -537,6 +542,7 @@ mod test_matrix6x6 {
 }
 
 
+#[cfg(test)]
 mod vector2_test {
     use crate::vector2::Vector2;
 
@@ -581,6 +587,7 @@ mod vector2_test {
     }
 }
 
+#[cfg(test)]
 mod vector3_test {
     use crate::vector3::Vector3;
 
@@ -626,6 +633,7 @@ mod vector3_test {
     }
 }
 
+#[cfg(test)]
 mod vector4_test {
     use crate::vector4::Vector4;
     use crate::matrix4x4::Matrix4x4;
@@ -668,7 +676,7 @@ mod vector4_test {
         assert_eq!(result, expected);
     }
     #[test]
-    fn vector4_mul_Matrix4x4_test() {
+    fn vector4_mul_matrix4x4_test() {
         let m = Matrix4x4::new([[1.0, 2.0, 3.0, 4.0],
                                 [5.0, 6.0, 7.0, 8.0],
                                 [9.0, 10.0, 11.0, 12.0],
@@ -681,6 +689,7 @@ mod vector4_test {
     }
 }
 
+#[cfg(test)]
 mod vector5_test {
     use crate::vector5::Vector5;
     use crate::matrix5x5::Matrix5x5;
@@ -724,7 +733,7 @@ mod vector5_test {
         assert_eq!(result, expected);
     }
     #[test]
-    fn vector5_mul_Matrix5x5_test() {
+    fn vector5_mul_matrix5x5_test() {
         let v1 = Vector5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
         let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
                                 [ 2.0, 4.0, 8.0,  3.0,  2.0],
@@ -737,6 +746,7 @@ mod vector5_test {
     }
 }
 
+#[cfg(test)]
 mod vector6_tests {
     use crate::vector6::Vector6;
     use crate::matrix6x6::Matrix6x6;
@@ -766,7 +776,7 @@ mod vector6_tests {
         assert_eq!(result, expected);
     }
     #[test]
-    fn product_Matrix6x6_test() {
+    fn product_matrix6x6_test() {
         let v        = Vector6::new([1.0,2.0,3.0,4.0,5.0,6.0]);
 
         let m = Matrix6x6::new([[0.0 , 1.0 , 2.0 , 3.0,  4.0,  5.0 ],
@@ -780,6 +790,8 @@ mod vector6_tests {
         assert_eq!(&result[..], &expected[..], "\nExpected\n{:?}\nfound\n{:?}", &result[..], &expected[..]);
     }
 }
+
+#[cfg(test)]
 mod types_tests {
     use crate::types::{Point2D, Point};
 
@@ -802,6 +814,7 @@ mod types_tests {
     }
 }
 
+#[cfg(test)]
 mod transformations_tests {
     use crate::transformations;
     use crate::utils::{check_assert_matrix3x3, check_assert_matrix4x4, compare_floats, is_rotation};
