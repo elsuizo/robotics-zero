@@ -32,6 +32,8 @@ use std::fmt;
 
 use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
+use crate::linear_algebra::LinearAlgebra;
+
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
 
@@ -46,6 +48,47 @@ use crate::vector2::*;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix2x2<T>([[T; 2]; 2]);
 
+impl<T: Float> LinearAlgebra<T> for Matrix2x2<T> {
+    fn rows(&self) -> usize {
+        self.0.len()
+    }
+    fn cols(&self) -> usize {
+        self.rows()
+    }
+
+    fn det(&self) -> T {
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
+        (a * d) - (c * b)
+    }
+
+    fn transpose(&self) -> Matrix2x2<T> {
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
+        Matrix2x2::new([
+            [a, c],
+            [b, d]
+        ])
+    }
+
+    fn trace(&self) -> T {
+        self[(0, 0)] + self[(1, 1)]
+    }
+
+    fn norm2(&self) -> T {
+        let a = self[(0, 0)];
+        let b = self[(0, 1)];
+        let c = self[(1, 0)];
+        let d = self[(1, 1)];
+        T::sqrt(
+            a * a + b * b + c * c + d * d
+        )
+    }
+}
 
 impl<T> Matrix2x2<T> {
     pub fn new(data_input: [[T; 2]; 2]) -> Matrix2x2<T> {
@@ -103,7 +146,6 @@ impl<T: Float> Matrix2x2<T> {
     }
 }
 
-// NOTE(elsuizo:2019-09-23): en realidad aca tengo que tirar un error me parece en lugar de Option
 impl<T: Float> Matrix2x2<T> {
     pub fn inverse(&self) -> Result<Matrix2x2<T>, LinAlgebraError> {
         let a = self[(0, 0)];

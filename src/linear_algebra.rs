@@ -22,11 +22,26 @@
 //
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
+/// Generic Trait for Matrix operations and Linear Algebra methods
+///
+pub trait LinearAlgebra<T> {
+    // fn inverse(&self) -> Self;
 
-trait LinearAlgebra {
-    fn inverse(&self) -> self;
+    fn rows(&self) -> usize;
 
-    fn rows(&self) -> self
+    fn cols(&self) -> usize;
+
+    fn shape(&self) -> (usize, usize) {
+        (self.rows(), self.cols())
+    }
+
+    fn det(&self) -> T;
+
+    fn transpose(&self) -> Self;
+
+    fn trace(&self) -> T;
+
+    fn norm2(&self) -> T;
 }
 
 
