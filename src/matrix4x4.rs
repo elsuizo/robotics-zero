@@ -52,27 +52,6 @@ impl<T> Matrix4x4<T> {
 
 impl<T: Float> Matrix4x4<T> {
 
-    pub fn convert2vector(&self) -> [T; 16] {
-        let a1  = self[(0, 0)];
-        let a2  = self[(0, 1)];
-        let a3  = self[(0, 2)];
-        let a4  = self[(0, 3)];
-        let a5  = self[(1, 0)];
-        let a6  = self[(1, 1)];
-        let a7  = self[(1, 2)];
-        let a8  = self[(1, 3)];
-        let a9  = self[(2, 0)];
-        let a10 = self[(2, 1)];
-        let a11 = self[(2, 2)];
-        let a12 = self[(2, 3)];
-        let a13 = self[(3, 0)];
-        let a14 = self[(3, 1)];
-        let a15 = self[(3, 2)];
-        let a16 = self[(3, 3)];
-        [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16]
-
-    }
-
     pub fn identity() -> Matrix4x4<T> {
         <Matrix4x4<T> as One>::one()
     }
@@ -107,11 +86,6 @@ impl<T: Float> Matrix4x4<T> {
         *a8 - a11*a13*a4*a6 + a11*a14*a4*a5 - a11*a16*a2*a5 - a12*a13*a2*a7 + a12*a13*a3*a6 - a12*a14*a3*a5 + a12*a15*a2*a5 + a14*a3*a8*a9 - a14*a4*a7*a9 - a15*a2*a8*a9 + a15*a4*
         a6*a9 + a16*a2*a7*a9 - a16*a3*a6*a9
 
-        // if det.abs() > T::epsilon() {
-        //     Some(det)
-        // } else {
-        //     None
-        // }
     }
 
     pub fn inverse(&self) -> Result<Matrix4x4<T>, LinAlgebraError> {
@@ -257,6 +231,34 @@ impl<T: Float> Add for Matrix4x4<T> {
                          [a13 + b13, a14 + b14, a15 + b15, a16 + b16]])
     }
 
+}
+
+impl<T: Float> Mul<T> for Matrix4x4<T> {
+    type Output = Matrix4x4<T>;
+
+    fn mul(self, rhs: T) -> Matrix4x4<T> {
+        let a1  = self[(0, 0)] * rhs;
+        let a2  = self[(0, 1)] * rhs;
+        let a3  = self[(0, 2)] * rhs;
+        let a4  = self[(0, 3)] * rhs;
+        let a5  = self[(1, 0)] * rhs;
+        let a6  = self[(1, 1)] * rhs;
+        let a7  = self[(1, 2)] * rhs;
+        let a8  = self[(1, 3)] * rhs;
+        let a9  = self[(2, 0)] * rhs;
+        let a10 = self[(2, 1)] * rhs;
+        let a11 = self[(2, 2)] * rhs;
+        let a12 = self[(2, 3)] * rhs;
+        let a13 = self[(3, 0)] * rhs;
+        let a14 = self[(3, 1)] * rhs;
+        let a15 = self[(3, 2)] * rhs;
+        let a16 = self[(3, 3)] * rhs;
+
+        Matrix4x4::new([[a1, a2, a3, a4],
+                        [a5, a6, a7, a8],
+                        [a9, a10,a11,a12],
+                        [a13,a14,a15,a16]])
+    }
 }
 
 impl<T: Float> Mul for Matrix4x4<T> {

@@ -120,6 +120,26 @@ impl<T: Float> Add for Matrix3x3<T> {
     }
 }
 
+impl<T: Float> Mul<T> for Matrix3x3<T> {
+    type Output = Matrix3x3<T>;
+
+    fn mul(self, rhs: T) -> Matrix3x3<T> {
+        let a_00 = self[(0, 0)] * rhs;
+        let a_01 = self[(0, 1)] * rhs;
+        let a_02 = self[(0, 2)] * rhs;
+        let a_10 = self[(1, 0)] * rhs;
+        let a_11 = self[(1, 1)] * rhs;
+        let a_12 = self[(1, 2)] * rhs;
+        let a_20 = self[(2, 0)] * rhs;
+        let a_21 = self[(2, 1)] * rhs;
+        let a_22 = self[(2, 2)] * rhs;
+
+        Matrix3x3::new([[a_00, a_01, a_02],
+                        [a_10, a_11, a_12],
+                        [a_20, a_21, a_22]])
+    }
+}
+
 impl<T: Float> Mul for Matrix3x3<T> {
     type Output = Self;
 

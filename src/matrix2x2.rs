@@ -151,6 +151,20 @@ impl<T: Float> Add for Matrix2x2<T> {
     }
 }
 
+impl<T: Float> Mul<T> for Matrix2x2<T> {
+    type Output = Matrix2x2<T>;
+
+    fn mul(self, rhs: T) -> Matrix2x2<T> {
+        let a_00 = self[(0, 0)] * rhs;
+        let a_01 = self[(0, 1)] * rhs;
+        let a_10 = self[(1, 0)] * rhs;
+        let a_11 = self[(1, 1)] * rhs;
+
+        Matrix2x2::new([[a_00, a_01],
+                        [a_10, a_11]])
+    }
+}
+
 impl<T: Float> Mul for Matrix2x2<T> {
     type Output = Self;
 
