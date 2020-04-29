@@ -29,6 +29,7 @@ use std::fmt;
 
 use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
+use crate::linear_algebra::LinearAlgebra;
 
 //-------------------------------------------------------------------------
 //                        code
@@ -37,11 +38,68 @@ use crate::errors::LinAlgebraError;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix3x3<T>([[T; 3]; 3]);
 
+impl<T: Float> LinearAlgebra<T> for Matrix3x3<T> {
+
+    fn rows(&self) -> usize {
+        self.0.len()
+    }
+
+    fn cols(&self) -> usize {
+        self.rows()
+    }
+
+    fn transpose(&self) -> Matrix3x3<T> {
+        Matrix3x3::new([
+            [self[(0, 0)], self[(1, 0)], self[(2, 0)]],
+            [self[(0, 1)], self[(1, 1)], self[(2, 1)]],
+            [self[(0, 2)], self[(1, 2)], self[(2, 2)]],
+        ])
+    }
+
+    fn trace(&self) -> T {
+        return self[(0, 0)] + self[(1, 1)] + self[(2, 2)];
+    }
+
+    fn norm2(&self) -> T {
+        T::sqrt(
+            self[(0, 0)] * self[(0, 0)] + self[(1, 0)] * self[(1, 0)] + self[(2, 0)] * self[(2, 0)] +
+            self[(0, 1)] * self[(0, 1)] + self[(1, 1)] * self[(1, 1)] + self[(2, 1)] * self[(2, 1)] +
+            self[(0, 2)] * self[(0, 2)] + self[(1, 2)] * self[(1, 2)] + self[(2, 2)] * self[(2, 2)]
+        )
+    }
+
+    fn det(&self) -> T {
+        self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)])
+        - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
+        + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)])
+    }
+
+    fn inverse(&self) -> Result<Matrix3x3<T>, LinAlgebraError> {
+        let det = self.det();
+        if det.abs() > T::epsilon() {
+            let invdet = T::one() / det;
+            let mut res = Matrix3x3::zero();
+            res[(0, 0)] = (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)]) * invdet;
+            res[(0, 1)] = (self[(0, 2)] * self[(2, 1)] - self[(0, 1)] * self[(2, 2)]) * invdet;
+            res[(0, 2)] = (self[(0, 1)] * self[(1, 2)] - self[(0, 2)] * self[(1, 1)]) * invdet;
+            res[(1, 0)] = (self[(1, 2)] * self[(2, 0)] - self[(1, 0)] * self[(2, 2)]) * invdet;
+            res[(1, 1)] = (self[(0, 0)] * self[(2, 2)] - self[(0, 2)] * self[(2, 0)]) * invdet;
+            res[(1, 2)] = (self[(1, 0)] * self[(0, 2)] - self[(0, 0)] * self[(1, 2)]) * invdet;
+            res[(2, 0)] = (self[(1, 0)] * self[(2, 1)] - self[(2, 0)] * self[(1, 1)]) * invdet;
+            res[(2, 1)] = (self[(2, 0)] * self[(0, 1)] - self[(0, 0)] * self[(2, 1)]) * invdet;
+            res[(2, 2)] = (self[(0, 0)] * self[(1, 1)] - self[(1, 0)] * self[(0, 1)]) * invdet;
+            Ok(res)
+        } else {
+            Err(LinAlgebraError::DeterminantZero)
+        }
+    }
+
+}
+
 impl<T> Matrix3x3<T> {
     pub fn new(data_input: [[T; 3]; 3]) -> Matrix3x3<T> {
         Matrix3x3(data_input)
     }
-
     pub fn rows(&self) -> usize {
         self.0.len()
     }
@@ -60,60 +118,9 @@ impl<T: Float> Matrix3x3<T> {
         <Matrix3x3<T> as Zero>::zero()
     }
 
-    pub fn trace(&self) -> T {
-        return self[(0, 0)] + self[(1, 1)] + self[(2, 2)];
-    }
-
-    // TODO(elsuizo:2019-09-25): aca tendria que devolver un error
-    pub fn det(&self) -> T {
-        let det = self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)])
-                  - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
-                  + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)]);
-        return det
-    }
-
-    pub fn transpose(&self) -> Matrix3x3<T> {
-        Matrix3x3::new([
-            [self[(0, 0)], self[(1, 0)], self[(2, 0)]],
-            [self[(0, 1)], self[(1, 1)], self[(2, 1)]],
-            [self[(0, 2)], self[(1, 2)], self[(2, 2)]],
-        ])
-    }
-
-    pub fn norm2(&self) -> T {
-        T::sqrt(
-            self[(0, 0)] * self[(0, 0)] + self[(1, 0)] * self[(1, 0)] + self[(2, 0)] * self[(2, 0)] +
-            self[(0, 1)] * self[(0, 1)] + self[(1, 1)] * self[(1, 1)] + self[(2, 1)] * self[(2, 1)] +
-            self[(0, 2)] * self[(0, 2)] + self[(1, 2)] * self[(1, 2)] + self[(2, 2)] * self[(2, 2)]
-        )
-    }
-
     pub fn as_vec(&self) -> Vec<T> {
         let result: Vec<T> = self.iter().flatten().cloned().collect();
         return result
-    }
-}
-
-impl<T: Float> Matrix3x3<T> {
-
-    pub fn inverse(&self) -> Result<Matrix3x3<T>, LinAlgebraError> {
-        let det = self.det();
-        if det.abs() > T::epsilon() {
-            let invdet = T::one() / det;
-            let mut res = Matrix3x3::zero();
-            res[(0, 0)] = (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)]) * invdet;
-            res[(0, 1)] = (self[(0, 2)] * self[(2, 1)] - self[(0, 1)] * self[(2, 2)]) * invdet;
-            res[(0, 2)] = (self[(0, 1)] * self[(1, 2)] - self[(0, 2)] * self[(1, 1)]) * invdet;
-            res[(1, 0)] = (self[(1, 2)] * self[(2, 0)] - self[(1, 0)] * self[(2, 2)]) * invdet;
-            res[(1, 1)] = (self[(0, 0)] * self[(2, 2)] - self[(0, 2)] * self[(2, 0)]) * invdet;
-            res[(1, 2)] = (self[(1, 0)] * self[(0, 2)] - self[(0, 0)] * self[(1, 2)]) * invdet;
-            res[(2, 0)] = (self[(1, 0)] * self[(2, 1)] - self[(2, 0)] * self[(1, 1)]) * invdet;
-            res[(2, 1)] = (self[(2, 0)] * self[(0, 1)] - self[(0, 0)] * self[(2, 1)]) * invdet;
-            res[(2, 2)] = (self[(0, 0)] * self[(1, 1)] - self[(1, 0)] * self[(0, 1)]) * invdet;
-            Ok(res)
-        } else {
-            Err(LinAlgebraError::DeterminantZero)
-        }
     }
 }
 

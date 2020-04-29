@@ -30,29 +30,24 @@ use crate::errors::LinAlgebraError;
 use crate::matrix5x5::Matrix5x5;
 use num_traits::{One, Zero, Float};
 
+use crate::linear_algebra::LinearAlgebra;
 //-------------------------------------------------------------------------
 //                        code
 //-------------------------------------------------------------------------
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix6x6<T>([[T; 6]; 6]);
 
+impl<T: Float + std::iter::Sum> LinearAlgebra<T> for Matrix6x6<T> {
 
-impl<T> Matrix6x6<T> {
-    pub fn new(data_input: [[T; 6]; 6]) -> Self {
-        Self(data_input)
-    }
-    pub fn rows(&self) -> usize {
+    fn rows(&self) -> usize {
         self.0.len()
     }
-    pub fn cols(&self) -> usize {
+
+    fn cols(&self) -> usize {
         self.rows()
     }
-}
 
-impl<T: Float> Add for Matrix6x6<T> {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self {
+    fn transpose(&self) -> Self {
         let a_00 = self[(0, 0)];
         let a_01 = self[(0, 1)];
         let a_02 = self[(0, 2)];
@@ -90,207 +85,23 @@ impl<T: Float> Add for Matrix6x6<T> {
         let a_54 = self[(5, 4)];
         let a_55 = self[(5, 5)];
 
-        let b_00 = rhs[(0, 0)];
-        let b_01 = rhs[(0, 1)];
-        let b_02 = rhs[(0, 2)];
-        let b_03 = rhs[(0, 3)];
-        let b_04 = rhs[(0, 4)];
-        let b_05 = rhs[(0, 5)];
-        let b_10 = rhs[(1, 0)];
-        let b_11 = rhs[(1, 1)];
-        let b_12 = rhs[(1, 2)];
-        let b_13 = rhs[(1, 3)];
-        let b_14 = rhs[(1, 4)];
-        let b_15 = rhs[(1, 5)];
-        let b_20 = rhs[(2, 0)];
-        let b_21 = rhs[(2, 1)];
-        let b_22 = rhs[(2, 2)];
-        let b_23 = rhs[(2, 3)];
-        let b_24 = rhs[(2, 4)];
-        let b_25 = rhs[(2, 5)];
-        let b_30 = rhs[(3, 0)];
-        let b_31 = rhs[(3, 1)];
-        let b_32 = rhs[(3, 2)];
-        let b_33 = rhs[(3, 3)];
-        let b_34 = rhs[(3, 4)];
-        let b_35 = rhs[(3, 5)];
-        let b_40 = rhs[(4, 0)];
-        let b_41 = rhs[(4, 1)];
-        let b_42 = rhs[(4, 2)];
-        let b_43 = rhs[(4, 3)];
-        let b_44 = rhs[(4, 4)];
-        let b_45 = rhs[(4, 5)];
-        let b_50 = rhs[(5, 0)];
-        let b_51 = rhs[(5, 1)];
-        let b_52 = rhs[(5, 2)];
-        let b_53 = rhs[(5, 3)];
-        let b_54 = rhs[(5, 4)];
-        let b_55 = rhs[(5, 5)];
-
-        Matrix6x6::new([[a_00 + b_00, a_01 + b_01, a_02 + b_02, a_03 + b_03, a_04 + b_04, a_05 + b_05],
-                        [a_10 + b_10, a_11 + b_11, a_12 + b_12, a_13 + b_13, a_14 + b_14, a_15 + b_15],
-                        [a_20 + b_20, a_21 + b_21, a_22 + b_22, a_23 + b_23, a_24 + b_24, a_25 + b_25],
-                        [a_30 + b_30, a_31 + b_31, a_32 + b_32, a_33 + b_33, a_34 + b_34, a_35 + b_35],
-                        [a_40 + b_40, a_41 + b_41, a_42 + b_42, a_43 + b_43, a_44 + b_44, a_45 + b_45],
-                        [a_50 + b_50, a_51 + b_51, a_52 + b_52, a_53 + b_53, a_54 + b_54, a_55 + b_55]])
+        Matrix6x6::new([[a_00, a_10, a_20, a_30, a_40, a_50],
+                        [a_01, a_11, a_21, a_31, a_41, a_51],
+                        [a_02, a_12, a_22, a_32, a_42, a_52],
+                        [a_03, a_13, a_23, a_33, a_43, a_53],
+                        [a_04, a_14, a_24, a_34, a_44, a_54],
+                        [a_05, a_15, a_25, a_35, a_45, a_55]])
     }
 
-}
-
-// Matrix6x6 * T
-impl<T: Float> Mul<T> for Matrix6x6<T> {
-    type Output = Matrix6x6<T>;
-
-    fn mul(self, rhs: T) -> Matrix6x6<T> {
-        let a_00 = self[(0, 0)] * rhs;
-        let a_01 = self[(0, 1)] * rhs;
-        let a_02 = self[(0, 2)] * rhs;
-        let a_03 = self[(0, 3)] * rhs;
-        let a_04 = self[(0, 4)] * rhs;
-        let a_05 = self[(0, 5)] * rhs;
-        let a_10 = self[(1, 0)] * rhs;
-        let a_11 = self[(1, 1)] * rhs;
-        let a_12 = self[(1, 2)] * rhs;
-        let a_13 = self[(1, 3)] * rhs;
-        let a_14 = self[(1, 4)] * rhs;
-        let a_15 = self[(1, 5)] * rhs;
-        let a_20 = self[(2, 0)] * rhs;
-        let a_21 = self[(2, 1)] * rhs;
-        let a_22 = self[(2, 2)] * rhs;
-        let a_23 = self[(2, 3)] * rhs;
-        let a_24 = self[(2, 4)] * rhs;
-        let a_25 = self[(2, 5)] * rhs;
-        let a_30 = self[(3, 0)] * rhs;
-        let a_31 = self[(3, 1)] * rhs;
-        let a_32 = self[(3, 2)] * rhs;
-        let a_33 = self[(3, 3)] * rhs;
-        let a_34 = self[(3, 4)] * rhs;
-        let a_35 = self[(3, 5)] * rhs;
-        let a_40 = self[(4, 0)] * rhs;
-        let a_41 = self[(4, 1)] * rhs;
-        let a_42 = self[(4, 2)] * rhs;
-        let a_43 = self[(4, 3)] * rhs;
-        let a_44 = self[(4, 4)] * rhs;
-        let a_45 = self[(4, 5)] * rhs;
-        let a_50 = self[(5, 0)] * rhs;
-        let a_51 = self[(5, 1)] * rhs;
-        let a_52 = self[(5, 2)] * rhs;
-        let a_53 = self[(5, 3)] * rhs;
-        let a_54 = self[(5, 4)] * rhs;
-        let a_55 = self[(5, 5)] * rhs;
-
-        Matrix6x6::new([[a_00, a_01, a_02, a_03, a_04, a_05],
-                        [a_10, a_11, a_12, a_13, a_14, a_15],
-                        [a_20, a_21, a_22, a_23, a_24, a_25],
-                        [a_30, a_31, a_32, a_33, a_34, a_35],
-                        [a_40, a_41, a_42, a_43, a_44, a_45],
-                        [a_50, a_51, a_52, a_53, a_54, a_55]])
-    }
-}
-
-impl<T: Float> Mul for Matrix6x6<T> {
-    type Output = Self;
-
-    fn mul(self, rhs: Self) -> Self {
-        let a_00 = self[(0, 0)];
-        let a_01 = self[(0, 1)];
-        let a_02 = self[(0, 2)];
-        let a_03 = self[(0, 3)];
-        let a_04 = self[(0, 4)];
-        let a_05 = self[(0, 5)];
-        let a_10 = self[(1, 0)];
-        let a_11 = self[(1, 1)];
-        let a_12 = self[(1, 2)];
-        let a_13 = self[(1, 3)];
-        let a_14 = self[(1, 4)];
-        let a_15 = self[(1, 5)];
-        let a_20 = self[(2, 0)];
-        let a_21 = self[(2, 1)];
-        let a_22 = self[(2, 2)];
-        let a_23 = self[(2, 3)];
-        let a_24 = self[(2, 4)];
-        let a_25 = self[(2, 5)];
-        let a_30 = self[(3, 0)];
-        let a_31 = self[(3, 1)];
-        let a_32 = self[(3, 2)];
-        let a_33 = self[(3, 3)];
-        let a_34 = self[(3, 4)];
-        let a_35 = self[(3, 5)];
-        let a_40 = self[(4, 0)];
-        let a_41 = self[(4, 1)];
-        let a_42 = self[(4, 2)];
-        let a_43 = self[(4, 3)];
-        let a_44 = self[(4, 4)];
-        let a_45 = self[(4, 5)];
-        let a_50 = self[(5, 0)];
-        let a_51 = self[(5, 1)];
-        let a_52 = self[(5, 2)];
-        let a_53 = self[(5, 3)];
-        let a_54 = self[(5, 4)];
-        let a_55 = self[(5, 5)];
-
-        let b_00 = rhs[(0, 0)];
-        let b_01 = rhs[(0, 1)];
-        let b_02 = rhs[(0, 2)];
-        let b_03 = rhs[(0, 3)];
-        let b_04 = rhs[(0, 4)];
-        let b_05 = rhs[(0, 5)];
-        let b_10 = rhs[(1, 0)];
-        let b_11 = rhs[(1, 1)];
-        let b_12 = rhs[(1, 2)];
-        let b_13 = rhs[(1, 3)];
-        let b_14 = rhs[(1, 4)];
-        let b_15 = rhs[(1, 5)];
-        let b_20 = rhs[(2, 0)];
-        let b_21 = rhs[(2, 1)];
-        let b_22 = rhs[(2, 2)];
-        let b_23 = rhs[(2, 3)];
-        let b_24 = rhs[(2, 4)];
-        let b_25 = rhs[(2, 5)];
-        let b_30 = rhs[(3, 0)];
-        let b_31 = rhs[(3, 1)];
-        let b_32 = rhs[(3, 2)];
-        let b_33 = rhs[(3, 3)];
-        let b_34 = rhs[(3, 4)];
-        let b_35 = rhs[(3, 5)];
-        let b_40 = rhs[(4, 0)];
-        let b_41 = rhs[(4, 1)];
-        let b_42 = rhs[(4, 2)];
-        let b_43 = rhs[(4, 3)];
-        let b_44 = rhs[(4, 4)];
-        let b_45 = rhs[(4, 5)];
-        let b_50 = rhs[(5, 0)];
-        let b_51 = rhs[(5, 1)];
-        let b_52 = rhs[(5, 2)];
-        let b_53 = rhs[(5, 3)];
-        let b_54 = rhs[(5, 4)];
-        let b_55 = rhs[(5, 5)];
-
-        Matrix6x6::new([[a_00*b_00 + a_01*b_10 + a_02*b_20 + a_03*b_30 + a_04*b_40 + a_05*b_50, a_00*b_01 + a_01*b_11 + a_02*b_21 + a_03*b_31 + a_04*b_41 + a_05*b_51, a_00*b_02 + a_01*b_12 + a_02*b_22 + a_03*b_32 + a_04*b_42 + a_05*b_52, a_00*b_03 + a_01*b_13 + a_02*b_23 + a_03*b_33 + a_04*b_43 + a_05*b_53, a_00*b_04 + a_01*b_14 + a_02*b_24 + a_03*b_34 + a_04*b_44 + a_05*b_54, a_00*b_05 + a_01*b_15 + a_02*b_25 + a_03*b_35 + a_04*b_45 + a_05*b_55],
-                        [a_10*b_00 + a_11*b_10 + a_12*b_20 + a_13*b_30 + a_14*b_40 + a_15*b_50, a_10*b_01 + a_11*b_11 + a_12*b_21 + a_13*b_31 + a_14*b_41 + a_15*b_51, a_10*b_02 + a_11*b_12 + a_12*b_22 + a_13*b_32 + a_14*b_42 + a_15*b_52, a_10*b_03 + a_11*b_13 + a_12*b_23 + a_13*b_33 + a_14*b_43 + a_15*b_53, a_10*b_04 + a_11*b_14 + a_12*b_24 + a_13*b_34 + a_14*b_44 + a_15*b_54, a_10*b_05 + a_11*b_15 + a_12*b_25 + a_13*b_35 + a_14*b_45 + a_15*b_55],
-                        [a_20*b_00 + a_21*b_10 + a_22*b_20 + a_23*b_30 + a_24*b_40 + a_25*b_50, a_20*b_01 + a_21*b_11 + a_22*b_21 + a_23*b_31 + a_24*b_41 + a_25*b_51, a_20*b_02 + a_21*b_12 + a_22*b_22 + a_23*b_32 + a_24*b_42 + a_25*b_52, a_20*b_03 + a_21*b_13 + a_22*b_23 + a_23*b_33 + a_24*b_43 + a_25*b_53, a_20*b_04 + a_21*b_14 + a_22*b_24 + a_23*b_34 + a_24*b_44 + a_25*b_54, a_20*b_05 + a_21*b_15 + a_22*b_25 + a_23*b_35 + a_24*b_45 + a_25*b_55],
-                        [a_30*b_00 + a_31*b_10 + a_32*b_20 + a_33*b_30 + a_34*b_40 + a_35*b_50, a_30*b_01 + a_31*b_11 + a_32*b_21 + a_33*b_31 + a_34*b_41 + a_35*b_51, a_30*b_02 + a_31*b_12 + a_32*b_22 + a_33*b_32 + a_34*b_42 + a_35*b_52, a_30*b_03 + a_31*b_13 + a_32*b_23 + a_33*b_33 + a_34*b_43 + a_35*b_53, a_30*b_04 + a_31*b_14 + a_32*b_24 + a_33*b_34 + a_34*b_44 + a_35*b_54, a_30*b_05 + a_31*b_15 + a_32*b_25 + a_33*b_35 + a_34*b_45 + a_35*b_55],
-                        [a_40*b_00 + a_41*b_10 + a_42*b_20 + a_43*b_30 + a_44*b_40 + a_45*b_50, a_40*b_01 + a_41*b_11 + a_42*b_21 + a_43*b_31 + a_44*b_41 + a_45*b_51, a_40*b_02 + a_41*b_12 + a_42*b_22 + a_43*b_32 + a_44*b_42 + a_45*b_52, a_40*b_03 + a_41*b_13 + a_42*b_23 + a_43*b_33 + a_44*b_43 + a_45*b_53, a_40*b_04 + a_41*b_14 + a_42*b_24 + a_43*b_34 + a_44*b_44 + a_45*b_54, a_40*b_05 + a_41*b_15 + a_42*b_25 + a_43*b_35 + a_44*b_45 + a_45*b_55],
-                        [a_50*b_00 + a_51*b_10 + a_52*b_20 + a_53*b_30 + a_54*b_40 + a_55*b_50, a_50*b_01 + a_51*b_11 + a_52*b_21 + a_53*b_31 + a_54*b_41 + a_55*b_51, a_50*b_02 + a_51*b_12 + a_52*b_22 + a_53*b_32 + a_54*b_42 + a_55*b_52, a_50*b_03 + a_51*b_13 + a_52*b_23 + a_53*b_33 + a_54*b_43 + a_55*b_53, a_50*b_04 + a_51*b_14 + a_52*b_24 + a_53*b_34 + a_54*b_44 + a_55*b_54, a_50*b_05 + a_51*b_15 + a_52*b_25 + a_53*b_35 + a_54*b_45 + a_55*b_55]])
-
-    }
-}
-
-impl<T: Float + std::iter::Sum> Matrix6x6<T> {
-
-    pub fn identity() -> Matrix6x6<T> {
-        <Matrix6x6<T> as One>::one()
-    }
-
-    pub fn zeros() -> Matrix6x6<T> {
-        <Matrix6x6<T> as Zero>::zero()
-    }
-
-    pub fn trace(&self) -> T {
+    fn trace(&self) -> T {
         return self[(0, 0)] + self[(1, 1)] + self[(2, 2)] + self[(3, 3)] + self[(4, 4)] + self[(5, 5)];
     }
 
-    pub fn det(&self) -> T {
+    fn norm2(&self) -> T {
+        T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
+    }
+
+    fn det(&self) -> T {
         let a_00 = self[(0, 0)];
         let a_01 = self[(0, 1)];
         let a_02 = self[(0, 2)];
@@ -690,8 +501,45 @@ impl<T: Float + std::iter::Sum> Matrix6x6<T> {
         a_05*a_14*a_23*a_32*a_40*a_51 - a_05*a_14*a_23*a_32*a_41*a_50
 
     }
+    ///
+    /// Calculate the inverse of the Matrix6x6 via tha Adjoint Matrix:
+    /// A^(-1) = 1/det Adj
+    /// where Adj = Cofactor.Transpose()
+    /// Cofactor = (-1)^(i+j) M(i, j).det()
+    fn inverse(&self) -> Result<Matrix6x6<T>, LinAlgebraError> {
+        let det = self.det();
+        if det.abs() > T::epsilon() {
+            let mut cofactors: Matrix6x6<T> = Matrix6x6::zeros();
+            for i in 0..self.rows() {
+                for j in 0..self.cols() {
+                    let sign = (-T::one()).powi((i + j) as i32);
+                    cofactors[(i, j)] =  sign * self.get_submatrix((i, j)).det();
+                }
+            }
+            Ok(cofactors.transpose() * (T::one() / det))
+        } else {
+            Err(LinAlgebraError::DeterminantZero)
+        }
 
-    pub fn transpose(&self) -> Self {
+    }
+
+}
+impl<T> Matrix6x6<T> {
+    pub fn new(data_input: [[T; 6]; 6]) -> Self {
+        Self(data_input)
+    }
+    pub fn rows(&self) -> usize {
+        self.0.len()
+    }
+    pub fn cols(&self) -> usize {
+        self.rows()
+    }
+}
+
+impl<T: Float> Add for Matrix6x6<T> {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self {
         let a_00 = self[(0, 0)];
         let a_01 = self[(0, 1)];
         let a_02 = self[(0, 2)];
@@ -729,16 +577,200 @@ impl<T: Float + std::iter::Sum> Matrix6x6<T> {
         let a_54 = self[(5, 4)];
         let a_55 = self[(5, 5)];
 
-        Matrix6x6::new([[a_00, a_10, a_20, a_30, a_40, a_50],
-                        [a_01, a_11, a_21, a_31, a_41, a_51],
-                        [a_02, a_12, a_22, a_32, a_42, a_52],
-                        [a_03, a_13, a_23, a_33, a_43, a_53],
-                        [a_04, a_14, a_24, a_34, a_44, a_54],
-                        [a_05, a_15, a_25, a_35, a_45, a_55]])
+        let b_00 = rhs[(0, 0)];
+        let b_01 = rhs[(0, 1)];
+        let b_02 = rhs[(0, 2)];
+        let b_03 = rhs[(0, 3)];
+        let b_04 = rhs[(0, 4)];
+        let b_05 = rhs[(0, 5)];
+        let b_10 = rhs[(1, 0)];
+        let b_11 = rhs[(1, 1)];
+        let b_12 = rhs[(1, 2)];
+        let b_13 = rhs[(1, 3)];
+        let b_14 = rhs[(1, 4)];
+        let b_15 = rhs[(1, 5)];
+        let b_20 = rhs[(2, 0)];
+        let b_21 = rhs[(2, 1)];
+        let b_22 = rhs[(2, 2)];
+        let b_23 = rhs[(2, 3)];
+        let b_24 = rhs[(2, 4)];
+        let b_25 = rhs[(2, 5)];
+        let b_30 = rhs[(3, 0)];
+        let b_31 = rhs[(3, 1)];
+        let b_32 = rhs[(3, 2)];
+        let b_33 = rhs[(3, 3)];
+        let b_34 = rhs[(3, 4)];
+        let b_35 = rhs[(3, 5)];
+        let b_40 = rhs[(4, 0)];
+        let b_41 = rhs[(4, 1)];
+        let b_42 = rhs[(4, 2)];
+        let b_43 = rhs[(4, 3)];
+        let b_44 = rhs[(4, 4)];
+        let b_45 = rhs[(4, 5)];
+        let b_50 = rhs[(5, 0)];
+        let b_51 = rhs[(5, 1)];
+        let b_52 = rhs[(5, 2)];
+        let b_53 = rhs[(5, 3)];
+        let b_54 = rhs[(5, 4)];
+        let b_55 = rhs[(5, 5)];
+
+        Matrix6x6::new([[a_00 + b_00, a_01 + b_01, a_02 + b_02, a_03 + b_03, a_04 + b_04, a_05 + b_05],
+                        [a_10 + b_10, a_11 + b_11, a_12 + b_12, a_13 + b_13, a_14 + b_14, a_15 + b_15],
+                        [a_20 + b_20, a_21 + b_21, a_22 + b_22, a_23 + b_23, a_24 + b_24, a_25 + b_25],
+                        [a_30 + b_30, a_31 + b_31, a_32 + b_32, a_33 + b_33, a_34 + b_34, a_35 + b_35],
+                        [a_40 + b_40, a_41 + b_41, a_42 + b_42, a_43 + b_43, a_44 + b_44, a_45 + b_45],
+                        [a_50 + b_50, a_51 + b_51, a_52 + b_52, a_53 + b_53, a_54 + b_54, a_55 + b_55]])
     }
 
-    pub fn norm2(&self) -> T {
-        T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
+}
+
+// Matrix6x6 * T
+impl<T: Float> Mul<T> for Matrix6x6<T> {
+    type Output = Matrix6x6<T>;
+
+    fn mul(self, rhs: T) -> Matrix6x6<T> {
+        let a_00 = self[(0, 0)] * rhs;
+        let a_01 = self[(0, 1)] * rhs;
+        let a_02 = self[(0, 2)] * rhs;
+        let a_03 = self[(0, 3)] * rhs;
+        let a_04 = self[(0, 4)] * rhs;
+        let a_05 = self[(0, 5)] * rhs;
+        let a_10 = self[(1, 0)] * rhs;
+        let a_11 = self[(1, 1)] * rhs;
+        let a_12 = self[(1, 2)] * rhs;
+        let a_13 = self[(1, 3)] * rhs;
+        let a_14 = self[(1, 4)] * rhs;
+        let a_15 = self[(1, 5)] * rhs;
+        let a_20 = self[(2, 0)] * rhs;
+        let a_21 = self[(2, 1)] * rhs;
+        let a_22 = self[(2, 2)] * rhs;
+        let a_23 = self[(2, 3)] * rhs;
+        let a_24 = self[(2, 4)] * rhs;
+        let a_25 = self[(2, 5)] * rhs;
+        let a_30 = self[(3, 0)] * rhs;
+        let a_31 = self[(3, 1)] * rhs;
+        let a_32 = self[(3, 2)] * rhs;
+        let a_33 = self[(3, 3)] * rhs;
+        let a_34 = self[(3, 4)] * rhs;
+        let a_35 = self[(3, 5)] * rhs;
+        let a_40 = self[(4, 0)] * rhs;
+        let a_41 = self[(4, 1)] * rhs;
+        let a_42 = self[(4, 2)] * rhs;
+        let a_43 = self[(4, 3)] * rhs;
+        let a_44 = self[(4, 4)] * rhs;
+        let a_45 = self[(4, 5)] * rhs;
+        let a_50 = self[(5, 0)] * rhs;
+        let a_51 = self[(5, 1)] * rhs;
+        let a_52 = self[(5, 2)] * rhs;
+        let a_53 = self[(5, 3)] * rhs;
+        let a_54 = self[(5, 4)] * rhs;
+        let a_55 = self[(5, 5)] * rhs;
+
+        Matrix6x6::new([[a_00, a_01, a_02, a_03, a_04, a_05],
+                        [a_10, a_11, a_12, a_13, a_14, a_15],
+                        [a_20, a_21, a_22, a_23, a_24, a_25],
+                        [a_30, a_31, a_32, a_33, a_34, a_35],
+                        [a_40, a_41, a_42, a_43, a_44, a_45],
+                        [a_50, a_51, a_52, a_53, a_54, a_55]])
+    }
+}
+
+impl<T: Float> Mul for Matrix6x6<T> {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self {
+        let a_00 = self[(0, 0)];
+        let a_01 = self[(0, 1)];
+        let a_02 = self[(0, 2)];
+        let a_03 = self[(0, 3)];
+        let a_04 = self[(0, 4)];
+        let a_05 = self[(0, 5)];
+        let a_10 = self[(1, 0)];
+        let a_11 = self[(1, 1)];
+        let a_12 = self[(1, 2)];
+        let a_13 = self[(1, 3)];
+        let a_14 = self[(1, 4)];
+        let a_15 = self[(1, 5)];
+        let a_20 = self[(2, 0)];
+        let a_21 = self[(2, 1)];
+        let a_22 = self[(2, 2)];
+        let a_23 = self[(2, 3)];
+        let a_24 = self[(2, 4)];
+        let a_25 = self[(2, 5)];
+        let a_30 = self[(3, 0)];
+        let a_31 = self[(3, 1)];
+        let a_32 = self[(3, 2)];
+        let a_33 = self[(3, 3)];
+        let a_34 = self[(3, 4)];
+        let a_35 = self[(3, 5)];
+        let a_40 = self[(4, 0)];
+        let a_41 = self[(4, 1)];
+        let a_42 = self[(4, 2)];
+        let a_43 = self[(4, 3)];
+        let a_44 = self[(4, 4)];
+        let a_45 = self[(4, 5)];
+        let a_50 = self[(5, 0)];
+        let a_51 = self[(5, 1)];
+        let a_52 = self[(5, 2)];
+        let a_53 = self[(5, 3)];
+        let a_54 = self[(5, 4)];
+        let a_55 = self[(5, 5)];
+
+        let b_00 = rhs[(0, 0)];
+        let b_01 = rhs[(0, 1)];
+        let b_02 = rhs[(0, 2)];
+        let b_03 = rhs[(0, 3)];
+        let b_04 = rhs[(0, 4)];
+        let b_05 = rhs[(0, 5)];
+        let b_10 = rhs[(1, 0)];
+        let b_11 = rhs[(1, 1)];
+        let b_12 = rhs[(1, 2)];
+        let b_13 = rhs[(1, 3)];
+        let b_14 = rhs[(1, 4)];
+        let b_15 = rhs[(1, 5)];
+        let b_20 = rhs[(2, 0)];
+        let b_21 = rhs[(2, 1)];
+        let b_22 = rhs[(2, 2)];
+        let b_23 = rhs[(2, 3)];
+        let b_24 = rhs[(2, 4)];
+        let b_25 = rhs[(2, 5)];
+        let b_30 = rhs[(3, 0)];
+        let b_31 = rhs[(3, 1)];
+        let b_32 = rhs[(3, 2)];
+        let b_33 = rhs[(3, 3)];
+        let b_34 = rhs[(3, 4)];
+        let b_35 = rhs[(3, 5)];
+        let b_40 = rhs[(4, 0)];
+        let b_41 = rhs[(4, 1)];
+        let b_42 = rhs[(4, 2)];
+        let b_43 = rhs[(4, 3)];
+        let b_44 = rhs[(4, 4)];
+        let b_45 = rhs[(4, 5)];
+        let b_50 = rhs[(5, 0)];
+        let b_51 = rhs[(5, 1)];
+        let b_52 = rhs[(5, 2)];
+        let b_53 = rhs[(5, 3)];
+        let b_54 = rhs[(5, 4)];
+        let b_55 = rhs[(5, 5)];
+
+        Matrix6x6::new([[a_00*b_00 + a_01*b_10 + a_02*b_20 + a_03*b_30 + a_04*b_40 + a_05*b_50, a_00*b_01 + a_01*b_11 + a_02*b_21 + a_03*b_31 + a_04*b_41 + a_05*b_51, a_00*b_02 + a_01*b_12 + a_02*b_22 + a_03*b_32 + a_04*b_42 + a_05*b_52, a_00*b_03 + a_01*b_13 + a_02*b_23 + a_03*b_33 + a_04*b_43 + a_05*b_53, a_00*b_04 + a_01*b_14 + a_02*b_24 + a_03*b_34 + a_04*b_44 + a_05*b_54, a_00*b_05 + a_01*b_15 + a_02*b_25 + a_03*b_35 + a_04*b_45 + a_05*b_55],
+                        [a_10*b_00 + a_11*b_10 + a_12*b_20 + a_13*b_30 + a_14*b_40 + a_15*b_50, a_10*b_01 + a_11*b_11 + a_12*b_21 + a_13*b_31 + a_14*b_41 + a_15*b_51, a_10*b_02 + a_11*b_12 + a_12*b_22 + a_13*b_32 + a_14*b_42 + a_15*b_52, a_10*b_03 + a_11*b_13 + a_12*b_23 + a_13*b_33 + a_14*b_43 + a_15*b_53, a_10*b_04 + a_11*b_14 + a_12*b_24 + a_13*b_34 + a_14*b_44 + a_15*b_54, a_10*b_05 + a_11*b_15 + a_12*b_25 + a_13*b_35 + a_14*b_45 + a_15*b_55],
+                        [a_20*b_00 + a_21*b_10 + a_22*b_20 + a_23*b_30 + a_24*b_40 + a_25*b_50, a_20*b_01 + a_21*b_11 + a_22*b_21 + a_23*b_31 + a_24*b_41 + a_25*b_51, a_20*b_02 + a_21*b_12 + a_22*b_22 + a_23*b_32 + a_24*b_42 + a_25*b_52, a_20*b_03 + a_21*b_13 + a_22*b_23 + a_23*b_33 + a_24*b_43 + a_25*b_53, a_20*b_04 + a_21*b_14 + a_22*b_24 + a_23*b_34 + a_24*b_44 + a_25*b_54, a_20*b_05 + a_21*b_15 + a_22*b_25 + a_23*b_35 + a_24*b_45 + a_25*b_55],
+                        [a_30*b_00 + a_31*b_10 + a_32*b_20 + a_33*b_30 + a_34*b_40 + a_35*b_50, a_30*b_01 + a_31*b_11 + a_32*b_21 + a_33*b_31 + a_34*b_41 + a_35*b_51, a_30*b_02 + a_31*b_12 + a_32*b_22 + a_33*b_32 + a_34*b_42 + a_35*b_52, a_30*b_03 + a_31*b_13 + a_32*b_23 + a_33*b_33 + a_34*b_43 + a_35*b_53, a_30*b_04 + a_31*b_14 + a_32*b_24 + a_33*b_34 + a_34*b_44 + a_35*b_54, a_30*b_05 + a_31*b_15 + a_32*b_25 + a_33*b_35 + a_34*b_45 + a_35*b_55],
+                        [a_40*b_00 + a_41*b_10 + a_42*b_20 + a_43*b_30 + a_44*b_40 + a_45*b_50, a_40*b_01 + a_41*b_11 + a_42*b_21 + a_43*b_31 + a_44*b_41 + a_45*b_51, a_40*b_02 + a_41*b_12 + a_42*b_22 + a_43*b_32 + a_44*b_42 + a_45*b_52, a_40*b_03 + a_41*b_13 + a_42*b_23 + a_43*b_33 + a_44*b_43 + a_45*b_53, a_40*b_04 + a_41*b_14 + a_42*b_24 + a_43*b_34 + a_44*b_44 + a_45*b_54, a_40*b_05 + a_41*b_15 + a_42*b_25 + a_43*b_35 + a_44*b_45 + a_45*b_55],
+                        [a_50*b_00 + a_51*b_10 + a_52*b_20 + a_53*b_30 + a_54*b_40 + a_55*b_50, a_50*b_01 + a_51*b_11 + a_52*b_21 + a_53*b_31 + a_54*b_41 + a_55*b_51, a_50*b_02 + a_51*b_12 + a_52*b_22 + a_53*b_32 + a_54*b_42 + a_55*b_52, a_50*b_03 + a_51*b_13 + a_52*b_23 + a_53*b_33 + a_54*b_43 + a_55*b_53, a_50*b_04 + a_51*b_14 + a_52*b_24 + a_53*b_34 + a_54*b_44 + a_55*b_54, a_50*b_05 + a_51*b_15 + a_52*b_25 + a_53*b_35 + a_54*b_45 + a_55*b_55]])
+
+    }
+}
+
+impl<T: Float + std::iter::Sum> Matrix6x6<T> {
+
+    pub fn identity() -> Matrix6x6<T> {
+        <Matrix6x6<T> as One>::one()
+    }
+
+    pub fn zeros() -> Matrix6x6<T> {
+        <Matrix6x6<T> as Zero>::zero()
     }
 
     pub fn as_vec(&self) -> Vec<T> {
@@ -749,7 +781,7 @@ impl<T: Float + std::iter::Sum> Matrix6x6<T> {
     // TODO(elsuizo:2020-04-28): esta funcion no deberia ser pub
     /// get the a submatrix from discard row `i` and column `j`
     ///
-    pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix5x5<T> {
+    fn get_submatrix(&self, selected: (usize, usize)) -> Matrix5x5<T> {
         let mut values: Vec<T> = Vec::new();
         let mut result: Matrix5x5<T> = Matrix5x5::zeros();
         for i in 0..self.rows() {
@@ -770,26 +802,6 @@ impl<T: Float + std::iter::Sum> Matrix6x6<T> {
         return result;
     }
 
-    /// Calculate the inverse of the Matrix6x6 via tha Adjoint Matrix:
-    /// A^(-1) = 1/det Adj
-    /// where Adj = Cofactor.Transpose()
-    /// Cofactor = (-1)^(i+j) M(i, j).det()
-    pub fn inverse(&self) -> Result<Matrix6x6<T>, LinAlgebraError> {
-        let det = self.det();
-        if det.abs() > T::epsilon() {
-            let mut cofactors: Matrix6x6<T> = Matrix6x6::zeros();
-            for i in 0..self.rows() {
-                for j in 0..self.cols() {
-                    let sign = (-T::one()).powi((i + j) as i32);
-                    cofactors[(i, j)] =  sign * self.get_submatrix((i, j)).det();
-                }
-            }
-            Ok(cofactors.transpose() * (T::one() / det))
-        } else {
-            Err(LinAlgebraError::DeterminantZero)
-        }
-
-    }
 
 }
 

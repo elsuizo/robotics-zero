@@ -24,8 +24,9 @@
 //--------------------------------------------------------------------------
 /// Generic Trait for Matrix operations and Linear Algebra methods
 ///
+use crate::errors::LinAlgebraError;
+
 pub trait LinearAlgebra<T> {
-    // fn inverse(&self) -> Self;
 
     fn rows(&self) -> usize;
 
@@ -35,13 +36,15 @@ pub trait LinearAlgebra<T> {
         (self.rows(), self.cols())
     }
 
-    fn det(&self) -> T;
-
     fn transpose(&self) -> Self;
 
     fn trace(&self) -> T;
 
     fn norm2(&self) -> T;
+
+    fn det(&self) -> T;
+
+    fn inverse(&self) -> Result<Self, LinAlgebraError> where Self: Sized;
 }
 
 

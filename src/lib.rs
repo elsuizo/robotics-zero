@@ -26,6 +26,7 @@ mod test_matrix2x2 {
     use crate::vector2::Vector2;
     use crate::utils::check_assert_matrix2x2;
     use crate::utils::compare_floats;
+    use crate::linear_algebra::LinearAlgebra;
 
     #[test]
     fn create_matrix() {
@@ -102,6 +103,7 @@ mod test_matrix3x3 {
     use crate::matrix3x3::Matrix3x3;
     use crate::utils::check_assert_matrix3x3;
     use crate::utils::compare_floats;
+    use crate::linear_algebra::LinearAlgebra;
 
     #[test]
     fn create_matrix() {
@@ -214,6 +216,7 @@ mod test_matrix4x4 {
     use crate::utils::check_assert_matrix4x4;
     use crate::utils::check_assert_matrix3x3;
     use crate::utils::compare_floats;
+    use crate::linear_algebra::LinearAlgebra;
 
     #[test]
     fn matrix4x4_create_matrix4x4_test() {
@@ -381,6 +384,7 @@ mod test_matrix5x5 {
 
     use crate::utils::compare_floats;
     use crate::utils::check_assert_matrix5x5;
+    use crate::linear_algebra::LinearAlgebra;
     #[test]
     fn matrix5x5_det_test() {
         let m = Matrix5x5::new([[10.0, 1.0, 7.0,  1.0,  5.0],
@@ -481,6 +485,7 @@ mod test_matrix6x6 {
     // use crate::utils::check_assert_matrix4x4;
     use crate::utils::check_assert_matrix6x6;
     use crate::utils::compare_floats;
+    use crate::linear_algebra::LinearAlgebra;
 
     #[test]
     fn matrix6x6_det_test() {

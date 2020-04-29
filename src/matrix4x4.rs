@@ -29,6 +29,7 @@ use std::fmt;
 use num_traits::{One, Zero, Float};
 use crate::matrix3x3::*;
 use crate::errors::LinAlgebraError;
+use crate::linear_algebra::LinearAlgebra;
 
 
 //-------------------------------------------------------------------------
@@ -37,37 +38,64 @@ use crate::errors::LinAlgebraError;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Matrix4x4<T>([[T; 4]; 4]);
 
-impl<T> Matrix4x4<T> {
+impl<T: Float> LinearAlgebra<T> for Matrix4x4<T> {
 
-    pub fn new(data_input: [[T; 4]; 4]) -> Matrix4x4<T> {
-        Matrix4x4(data_input)
-    }
-
-    pub fn rows(&self) -> usize {
+    fn rows(&self) -> usize {
         self.0.len()
     }
-    // NOTE(elsuizo:2019-09-13): si ya se es medio...
-    pub fn cols(&self) -> usize {
+
+    fn cols(&self) -> usize {
         self.rows()
     }
 
-}
+    fn transpose(&self) -> Matrix4x4<T> {
+        let a1  = self[(0, 0)];
+        let a2  = self[(0, 1)];
+        let a3  = self[(0, 2)];
+        let a4  = self[(0, 3)];
+        let a5  = self[(1, 0)];
+        let a6  = self[(1, 1)];
+        let a7  = self[(1, 2)];
+        let a8  = self[(1, 3)];
+        let a9  = self[(2, 0)];
+        let a10 = self[(2, 1)];
+        let a11 = self[(2, 2)];
+        let a12 = self[(2, 3)];
+        let a13 = self[(3, 0)];
+        let a14 = self[(3, 1)];
+        let a15 = self[(3, 2)];
+        let a16 = self[(3, 3)];
 
-impl<T: Float> Matrix4x4<T> {
-
-    pub fn identity() -> Matrix4x4<T> {
-        <Matrix4x4<T> as One>::one()
+        Matrix4x4::new([[a1, a5, a9, a13], [a2, a6, a10, a14], [a3, a7, a11, a15], [a4, a8, a12, a16]])
     }
 
-    pub fn zeros() -> Matrix4x4<T> {
-        <Matrix4x4<T> as Zero>::zero()
-    }
-
-    pub fn trace(&self) -> T {
+    fn trace(&self) -> T {
         return self[(0, 0)] + self[(1, 1)] + self[(2, 2)] + self[(3, 3)];
     }
 
-    pub fn det(&self) -> T {
+    fn norm2(&self) -> T {
+        let a1  = self[(0, 0)];
+        let a2  = self[(0, 1)];
+        let a3  = self[(0, 2)];
+        let a4  = self[(0, 3)];
+        let a5  = self[(1, 0)];
+        let a6  = self[(1, 1)];
+        let a7  = self[(1, 2)];
+        let a8  = self[(1, 3)];
+        let a9  = self[(2, 0)];
+        let a10 = self[(2, 1)];
+        let a11 = self[(2, 2)];
+        let a12 = self[(2, 3)];
+        let a13 = self[(3, 0)];
+        let a14 = self[(3, 1)];
+        let a15 = self[(3, 2)];
+        let a16 = self[(3, 3)];
+
+        T::sqrt(a1 * a1 + a2 * a2 + a3 * a3 + a4 * a4 + a5 * a5 + a6 * a6 + a7 * a7
+                + a8 * a8 + a9 * a9 + a10 * a10 + a11 * a11 + a12 * a12 + a13 * a13
+                + a14 * a14 + a15 * a15 + a16 * a16)
+    }
+    fn det(&self) -> T {
         let a1  = self[(0, 0)];
         let a2  = self[(0, 1)];
         let a3  = self[(0, 2)];
@@ -91,7 +119,7 @@ impl<T: Float> Matrix4x4<T> {
 
     }
 
-    pub fn inverse(&self) -> Result<Matrix4x4<T>, LinAlgebraError> {
+    fn inverse(&self) -> Result<Matrix4x4<T>, LinAlgebraError> {
         let det = self.det();
         if det.abs() > T::epsilon() {
             let a1 = self.get_submatrix((0, 0)).det();
@@ -122,48 +150,31 @@ impl<T: Float> Matrix4x4<T> {
                 Err(LinAlgebraError::DeterminantZero)
         }
     }
-    pub fn transpose(&self) -> Matrix4x4<T> {
-        let a1  = self[(0, 0)];
-        let a2  = self[(0, 1)];
-        let a3  = self[(0, 2)];
-        let a4  = self[(0, 3)];
-        let a5  = self[(1, 0)];
-        let a6  = self[(1, 1)];
-        let a7  = self[(1, 2)];
-        let a8  = self[(1, 3)];
-        let a9  = self[(2, 0)];
-        let a10 = self[(2, 1)];
-        let a11 = self[(2, 2)];
-        let a12 = self[(2, 3)];
-        let a13 = self[(3, 0)];
-        let a14 = self[(3, 1)];
-        let a15 = self[(3, 2)];
-        let a16 = self[(3, 3)];
+}
+impl<T> Matrix4x4<T> {
 
-        Matrix4x4::new([[a1, a5, a9, a13], [a2, a6, a10, a14], [a3, a7, a11, a15], [a4, a8, a12, a16]])
+    pub fn new(data_input: [[T; 4]; 4]) -> Matrix4x4<T> {
+        Matrix4x4(data_input)
     }
 
-    pub fn norm2(&self) -> T {
-        let a1  = self[(0, 0)];
-        let a2  = self[(0, 1)];
-        let a3  = self[(0, 2)];
-        let a4  = self[(0, 3)];
-        let a5  = self[(1, 0)];
-        let a6  = self[(1, 1)];
-        let a7  = self[(1, 2)];
-        let a8  = self[(1, 3)];
-        let a9  = self[(2, 0)];
-        let a10 = self[(2, 1)];
-        let a11 = self[(2, 2)];
-        let a12 = self[(2, 3)];
-        let a13 = self[(3, 0)];
-        let a14 = self[(3, 1)];
-        let a15 = self[(3, 2)];
-        let a16 = self[(3, 3)];
+    pub fn rows(&self) -> usize {
+        self.0.len()
+    }
+    // NOTE(elsuizo:2019-09-13): si ya se es medio...
+    pub fn cols(&self) -> usize {
+        self.rows()
+    }
 
-        T::sqrt(a1 * a1 + a2 * a2 + a3 * a3 + a4 * a4 + a5 * a5 + a6 * a6 + a7 * a7
-                + a8 * a8 + a9 * a9 + a10 * a10 + a11 * a11 + a12 * a12 + a13 * a13
-                + a14 * a14 + a15 * a15 + a16 * a16)
+}
+
+impl<T: Float> Matrix4x4<T> {
+
+    pub fn identity() -> Matrix4x4<T> {
+        <Matrix4x4<T> as One>::one()
+    }
+
+    pub fn zeros() -> Matrix4x4<T> {
+        <Matrix4x4<T> as Zero>::zero()
     }
 
     pub fn as_vec(&self) -> Vec<T> {
