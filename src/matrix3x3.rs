@@ -87,6 +87,11 @@ impl<T: Float> Matrix3x3<T> {
             self[(0, 2)] * self[(0, 2)] + self[(1, 2)] * self[(1, 2)] + self[(2, 2)] * self[(2, 2)]
         )
     }
+
+    pub fn as_vec(&self) -> Vec<T> {
+        let result: Vec<T> = self.iter().flatten().cloned().collect();
+        return result
+    }
 }
 
 impl<T: Float> Matrix3x3<T> {

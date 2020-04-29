@@ -101,9 +101,13 @@ impl<T: Float> Matrix2x2<T> {
             a * a + b * b + c * c + d * d
         )
     }
+
+    pub fn as_vec(&self) -> Vec<T> {
+        let result: Vec<T> = self.iter().flatten().cloned().collect();
+        return result
+    }
 }
 
-// NOTE(elsuizo:2019-09-23): en realidad aca tengo que tirar un error me parece en lugar de Option
 impl<T: Float> Matrix2x2<T> {
     pub fn inverse(&self) -> Result<Matrix2x2<T>, LinAlgebraError> {
         let a = self[(0, 0)];

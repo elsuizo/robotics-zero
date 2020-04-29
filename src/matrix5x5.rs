@@ -358,6 +358,11 @@ impl<T: Float + std::iter::Sum> Matrix5x5<T> {
         T::sqrt(self.iter().flatten().cloned().map(|element| element * element).sum())
     }
 
+    pub fn as_vec(&self) -> Vec<T> {
+        let result: Vec<T> = self.iter().flatten().cloned().collect();
+        return result
+    }
+
     // TODO(elsuizo:2020-04-28): esta funcion no deberia ser pub
     /// get the a submatrix from discard row `i` and column `j`
     ///
