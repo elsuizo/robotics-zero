@@ -144,6 +144,11 @@ impl<T: Float> Matrix2x2<T> {
             a * a + b * b + c * c + d * d
         )
     }
+
+    pub fn as_vec(&self) -> Vec<T> {
+        let result: Vec<T> = self.iter().flatten().cloned().collect();
+        return result
+    }
 }
 
 impl<T: Float> Matrix2x2<T> {

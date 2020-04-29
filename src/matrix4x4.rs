@@ -166,6 +166,11 @@ impl<T: Float> Matrix4x4<T> {
                 + a14 * a14 + a15 * a15 + a16 * a16)
     }
 
+    pub fn as_vec(&self) -> Vec<T> {
+        let result: Vec<T> = self.iter().flatten().cloned().collect();
+        return result
+    }
+
     // TODO(elsuizo:2020-03-24): tendria que verificar que la tupla que ingresan es valida
     pub fn get_submatrix(&self, selected: (usize, usize)) -> Matrix3x3<T> {
         let mut values: Vec<T> = Vec::new();

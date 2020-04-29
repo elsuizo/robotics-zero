@@ -27,7 +27,6 @@ mod test_matrix2x2 {
     use crate::utils::check_assert_matrix2x2;
     use crate::utils::compare_floats;
 
-
     #[test]
     fn create_matrix() {
         let matrix = Matrix2x2::new([[0.0, 1.0],
@@ -42,8 +41,8 @@ mod test_matrix2x2 {
     fn test_identity_creation() {
         let expected = Matrix2x2::new([[1.0, 0.0],
                                      [0.0, 1.0]]);
-        let identity: Matrix2x2<f64> = Matrix2x2::identity();
-        check_assert_matrix2x2(&expected, &identity);
+        let result: Matrix2x2<f64> = Matrix2x2::identity();
+        assert_eq!(result.as_vec(), expected.as_vec());
     }
 
     #[test]
@@ -54,9 +53,8 @@ mod test_matrix2x2 {
                                  [7.0, 8.0]]);
         let expected = Matrix2x2::new([[6.0, 8.0],
                                        [10.0, 12.0]]);
-        let m = m1 + m2;
-
-        check_assert_matrix2x2(&expected, &m);
+        let result  = m1 + m2;
+        assert_eq!(result.as_vec(), expected.as_vec());
     }
 
     #[test]
