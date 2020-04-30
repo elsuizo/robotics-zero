@@ -24,7 +24,7 @@ pub mod linear_algebra;
 mod test_matrix2x2 {
     use crate::matrix2x2::Matrix2x2;
     use crate::vector2::Vector2;
-    use crate::utils::check_assert_matrix2x2;
+    use crate::utils::compare_vecs;
     use crate::utils::compare_floats;
     use crate::linear_algebra::LinearAlgebra;
 
@@ -93,7 +93,7 @@ mod test_matrix2x2 {
         let expected = Matrix2x2::new([[-2.0, 1.0],
                                        [1.5, -0.5]]);
         if let Ok(result) = m1.inverse() {
-            check_assert_matrix2x2(&expected, &result);
+            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
         }
     }
 }
@@ -101,7 +101,7 @@ mod test_matrix2x2 {
 #[cfg(test)]
 mod test_matrix3x3 {
     use crate::matrix3x3::Matrix3x3;
-    use crate::utils::check_assert_matrix3x3;
+    use crate::utils::compare_vecs;
     use crate::utils::compare_floats;
     use crate::linear_algebra::LinearAlgebra;
 
@@ -143,7 +143,7 @@ mod test_matrix3x3 {
                                        [6.0, 8.0, 10.0],
                                        [12.0, 14.0, 16.0],]);
         let result = m1 + m2;
-        check_assert_matrix3x3(&expected, &result);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
 
     }
 
@@ -155,7 +155,7 @@ mod test_matrix3x3 {
         let expected = Matrix3x3::new([[1.0, 0.0, 0.0],
                                       [0.0, 1.0, 0.0],
                                       [0.0, 0.0, 1.0],]);
-        check_assert_matrix3x3(&identity, &expected);
+        assert_eq!(compare_vecs(&identity.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -165,7 +165,7 @@ mod test_matrix3x3 {
         let expected = Matrix3x3::new([[0.0, 0.0, 0.0],
                                        [0.0, 0.0, 0.0],
                                        [0.0, 0.0, 0.0],]);
-        check_assert_matrix3x3(&zero, &expected);
+        assert_eq!(compare_vecs(&zero.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -204,7 +204,7 @@ mod test_matrix3x3 {
                                       [-0.16666666666666666, 0.0, 0.16666666666666666],]);
 
         if let Ok(result) = m.inverse() {
-            check_assert_matrix3x3(&expected, &result);
+            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
         }
     }
 }
@@ -213,8 +213,7 @@ mod test_matrix3x3 {
 mod test_matrix4x4 {
     use crate::matrix4x4::Matrix4x4;
     use crate::matrix3x3::Matrix3x3;
-    use crate::utils::check_assert_matrix4x4;
-    use crate::utils::check_assert_matrix3x3;
+    use crate::utils::compare_vecs;
     use crate::utils::compare_floats;
     use crate::linear_algebra::LinearAlgebra;
 
@@ -234,8 +233,8 @@ mod test_matrix4x4 {
                                        [0.0, 1.0, 0.0, 0.0],
                                        [0.0, 0.0, 1.0, 0.0],
                                        [0.0, 0.0, 0.0, 1.0]]);
-        let identity: Matrix4x4<f64> = Matrix4x4::identity();
-        check_assert_matrix4x4(&identity, &expected);
+        let result: Matrix4x4<f64> = Matrix4x4::identity();
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -255,7 +254,7 @@ mod test_matrix4x4 {
                                 [18.0, 20.0, 22.0, 24.0],
                                 [26.0, 28.0, 30.0, 32.0]]);
         let result = m1 + m2;
-        check_assert_matrix4x4(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -275,7 +274,7 @@ mod test_matrix4x4 {
                                        [314.0, 356.0, 398.0, 440.0],
                                        [426.0, 484.0, 542.0, 600.0]]);
         let result = m1 * m2;
-        check_assert_matrix4x4(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -314,7 +313,7 @@ mod test_matrix4x4 {
                                        [3.0, 7.0, 11.0, 15.0],
                                        [4.0, 8.0, 12.0, 16.0]]);
         let result = m1.transpose();
-        check_assert_matrix4x4(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -324,7 +323,7 @@ mod test_matrix4x4 {
                                        [0.0, 0.0, 0.0, 0.0],
                                        [0.0, 0.0, 0.0, 0.0]]);
         let result: Matrix4x4<f64> = Matrix4x4::zeros();
-        check_assert_matrix4x4(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
 
     #[test]
@@ -341,7 +340,7 @@ mod test_matrix4x4 {
                                        [10.0, 11.0, 12.0],
                                        [14.0, 15.0, 16.0],]);
 
-        check_assert_matrix3x3(&result1, &expected1);
+        assert_eq!(compare_vecs(&result1.as_vec(), &expected1.as_vec()), true);
 
         let result2 = m.get_submatrix((0, 1));
 
@@ -349,7 +348,7 @@ mod test_matrix4x4 {
                                        [9.0, 11.0, 12.0],
                                        [13.0, 15.0, 16.0],]);
 
-        check_assert_matrix3x3(&result2, &expected2);
+        assert_eq!(compare_vecs(&result2.as_vec(), &expected2.as_vec()), true);
 
         let result3 = m.get_submatrix((0, 2));
 
@@ -357,7 +356,7 @@ mod test_matrix4x4 {
                                        [9.0, 10.0, 12.0],
                                        [13.0, 14.0, 16.0],]);
 
-        check_assert_matrix3x3(&result3, &expected3);
+        assert_eq!(compare_vecs(&result3.as_vec(), &expected3.as_vec()), true);
     }
 
     #[test]
@@ -373,7 +372,7 @@ mod test_matrix4x4 {
                                       [-1.0/4.0, 1.0/4.0, 1.0/4.0, 1.0/4.0]]);
 
         if let Ok(result) = m.inverse() {
-            check_assert_matrix4x4(&result, &expected);
+            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
         }
     }
 }
@@ -383,7 +382,7 @@ mod test_matrix5x5 {
     use crate::matrix5x5::Matrix5x5;
 
     use crate::utils::compare_floats;
-    use crate::utils::check_assert_matrix5x5;
+    use crate::utils::compare_vecs;
     use crate::linear_algebra::LinearAlgebra;
     #[test]
     fn matrix5x5_det_test() {
@@ -411,7 +410,7 @@ mod test_matrix5x5 {
                                        [ 2.0, 16.0, 16.0, 20.0, 10.0]]);
         let result = m + m;
 
-        check_assert_matrix5x5(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
 
     }
     #[test]
@@ -428,7 +427,7 @@ mod test_matrix5x5 {
                                        [168.0, 138.0, 219.0, 193.0, 174.0],
                                        [131.0, 171.0, 217.0, 217.0, 156.0]]);
 
-        check_assert_matrix5x5(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
     #[test]
     fn matrix5x5_norm2_test() {
@@ -456,7 +455,7 @@ mod test_matrix5x5 {
                                 [ 2.5, 0.5, 1.0,  4.5, 5.0],
                                 [ 3.0, 4.5, 4.5,  3.5,  1.5],
                                 [ 0.5, 4.0, 4.0, 5.0,  2.5]]);
-        check_assert_matrix5x5(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
     #[test]
     fn matrix5x5_inv_test() {
@@ -472,7 +471,7 @@ mod test_matrix5x5 {
                                        [37.98 , -49.64 , -29.32 , -32.34 ,  60.12 ]]);
 
         if let Ok(result) = m.inverse() {
-            check_assert_matrix5x5(&result, &expected);
+            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
         }
     }
 
@@ -481,10 +480,8 @@ mod test_matrix5x5 {
 #[cfg(test)]
 mod test_matrix6x6 {
     use crate::matrix6x6::Matrix6x6;
-    // use crate::matrix3x3::Matrix3x3;
-    // use crate::utils::check_assert_matrix4x4;
-    use crate::utils::check_assert_matrix6x6;
     use crate::utils::compare_floats;
+    use crate::utils::compare_vecs;
     use crate::linear_algebra::LinearAlgebra;
 
     #[test]
@@ -516,7 +513,7 @@ mod test_matrix6x6 {
                                        [2490.0, 2649.0, 2808.0,  2967.0,  3126.0, 3285.0],
                                        [3030.0, 3225.0, 3420.0,  3615.0,  3810.0, 4005.0]]);
 
-        check_assert_matrix6x6(&result, &expected);
+        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
     }
     #[test]
     fn matrix6x6_norm2_test() {
@@ -546,7 +543,7 @@ mod test_matrix6x6 {
                                        [-3.90709 ,  2.46699 ,  4.17115 , -0.870416 , -0.310513, -6.07579]]);
 
         if let Ok(result) = m.inverse() {
-            check_assert_matrix6x6(&result, &expected);
+            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
         }
     }
 }
@@ -827,7 +824,7 @@ mod types_tests {
 #[cfg(test)]
 mod transformations_tests {
     use crate::transformations;
-    use crate::utils::{check_assert_matrix3x3, check_assert_matrix4x4, compare_floats, is_rotation};
+    use crate::utils::{compare_vecs, compare_floats, is_rotation};
     use crate::matrix3x3::Matrix3x3;
     use crate::matrix4x4::Matrix4x4;
 
@@ -839,9 +836,9 @@ mod transformations_tests {
         let i = Matrix3x3::identity();
         assert_eq!(is_rotation(rot1), true);
         assert_eq!(is_rotation(rot2), true);
-        check_assert_matrix3x3(&rot1, &rot2);
-        check_assert_matrix3x3(&i, &rot2);
-        check_assert_matrix3x3(&i, &rot1);
+        assert_eq!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()), true);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot2.as_vec()), true);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot1.as_vec()), true);
     }
 
     #[test]
@@ -853,9 +850,9 @@ mod transformations_tests {
 
         assert_eq!(is_rotation(rot1), true);
         assert_eq!(is_rotation(rot2), true);
-        check_assert_matrix3x3(&rot1, &rot2);
-        check_assert_matrix3x3(&i, &rot2);
-        check_assert_matrix3x3(&i, &rot1);
+        assert_eq!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()), true);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot2.as_vec()), true);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot1.as_vec()), true);
     }
 
     #[test]
@@ -867,9 +864,9 @@ mod transformations_tests {
 
         assert_eq!(is_rotation(rot1), true);
         assert_eq!(is_rotation(rot2), true);
-        check_assert_matrix3x3(&rot1, &rot2);
-        check_assert_matrix3x3(&i, &rot2);
-        check_assert_matrix3x3(&i, &rot1);
+        assert_eq!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()), true);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot2.as_vec()), true);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot1.as_vec()), true);
     }
 
     #[test]
@@ -879,7 +876,7 @@ mod transformations_tests {
 
         let i = Matrix4x4::identity();
 
-        check_assert_matrix4x4(&i, &rot_trans);
+        assert_eq!(compare_vecs(&i.as_vec(), &rot_trans.as_vec()), true);
     }
 
     #[test]
