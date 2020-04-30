@@ -22,8 +22,8 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
+use num_traits::{Float, Zero};
 use std::ops::{Deref, DerefMut};
-use num_traits::{Zero, Float};
 
 use std::ops::{Add, Mul};
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -44,7 +44,6 @@ impl<T> Vector2<T> {
 }
 
 impl<T: Float> Vector2<T> {
-
     pub fn zeros() -> Vector2<T> {
         <Vector2<T> as Zero>::zero()
     }
@@ -108,7 +107,6 @@ impl<T: Float> Zero for Vector2<T> {
     fn is_zero(&self) -> bool {
         *self == Vector2::zero()
     }
-
 }
 
 impl<T> Deref for Vector2<T> {

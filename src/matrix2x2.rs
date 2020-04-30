@@ -26,13 +26,13 @@
 // - [ ] Implementar RangeFull para poder hacer matrix[..]
 // - [ ] Implementar Iterator
 // - [ ] Implementar std::fmt::Display para visualizar cuando imprimimos resultados
-use std::ops::{Deref, DerefMut, Index, IndexMut};
-use std::ops::{Add, Mul};
 use std::fmt;
+use std::ops::{Add, Mul};
+use std::ops::{Deref, DerefMut, Index, IndexMut};
 
-use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
 use crate::linear_algebra::LinearAlgebra;
+use num_traits::{Float, One, Zero};
 
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -49,7 +49,6 @@ use crate::vector2::*;
 pub struct Matrix2x2<T>([[T; 2]; 2]);
 
 impl<T: Float> LinearAlgebra<T> for Matrix2x2<T> {
-
     fn rows(&self) -> usize {
         self.0.len()
     }
@@ -71,10 +70,7 @@ impl<T: Float> LinearAlgebra<T> for Matrix2x2<T> {
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
-        Matrix2x2::new([
-            [a, c],
-            [b, d]
-        ])
+        Matrix2x2::new([[a, c], [b, d]])
     }
 
     fn trace(&self) -> T {
@@ -86,9 +82,7 @@ impl<T: Float> LinearAlgebra<T> for Matrix2x2<T> {
         let b = self[(0, 1)];
         let c = self[(1, 0)];
         let d = self[(1, 1)];
-        T::sqrt(
-            a * a + b * b + c * c + d * d
-        )
+        T::sqrt(a * a + b * b + c * c + d * d)
     }
 
     fn inverse(&self) -> Result<Matrix2x2<T>, LinAlgebraError> {
@@ -98,7 +92,7 @@ impl<T: Float> LinearAlgebra<T> for Matrix2x2<T> {
         let d = self[(1, 1)];
         let det = self.det();
         if det.abs() > T::epsilon() {
-            Ok(Matrix2x2::new([[d/det, -b/det], [-c/det, a/det]]))
+            Ok(Matrix2x2::new([[d / det, -b / det], [-c / det, a / det]]))
         } else {
             Err(LinAlgebraError::DeterminantZero)
         }
@@ -118,7 +112,6 @@ impl<T> Matrix2x2<T> {
 }
 
 impl<T: Float> Matrix2x2<T> {
-
     pub fn identity() -> Matrix2x2<T> {
         <Matrix2x2<T> as One>::one()
     }
@@ -129,7 +122,7 @@ impl<T: Float> Matrix2x2<T> {
 
     pub fn as_vec(&self) -> Vec<T> {
         let result: Vec<T> = self.iter().flatten().cloned().collect();
-        return result
+        return result;
     }
 }
 
@@ -161,10 +154,7 @@ impl<T: Float> Add for Matrix2x2<T> {
         let b2 = rhs[(0, 1)];
         let c2 = rhs[(1, 0)];
         let d2 = rhs[(1, 1)];
-        Matrix2x2::new([
-            [a1 + a2, b1 + b2],
-            [c1 + c2, d1 + d2],
-        ])
+        Matrix2x2::new([[a1 + a2, b1 + b2], [c1 + c2, d1 + d2]])
     }
 }
 
@@ -177,14 +167,12 @@ impl<T: Float> Mul<T> for Matrix2x2<T> {
         let a_10 = self[(1, 0)] * rhs;
         let a_11 = self[(1, 1)] * rhs;
 
-        Matrix2x2::new([[a_00, a_01],
-                        [a_10, a_11]])
+        Matrix2x2::new([[a_00, a_01], [a_10, a_11]])
     }
 }
 
 impl<T: Float> Mul for Matrix2x2<T> {
     type Output = Self;
-
 
     fn mul(self, rhs: Self) -> Self {
         let a1 = self[(0, 0)];
@@ -202,10 +190,7 @@ impl<T: Float> Mul for Matrix2x2<T> {
 
         let m10 = c1 * a2 + d1 * c2;
         let m11 = c1 * b2 + d1 * d2;
-        Matrix2x2::new([
-            [m00, m01],
-            [m10, m11],
-        ])
+        Matrix2x2::new([[m00, m01], [m10, m11]])
     }
 }
 
@@ -258,7 +243,7 @@ impl<T> Index<(usize, usize)> for Matrix2x2<T> {
 
 impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
-            &mut self.0[index.0][index.1]
+        &mut self.0[index.0][index.1]
     }
 }
 
@@ -267,8 +252,8 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
 //-------------------------------------------------------------------------
 impl<T: Float + fmt::Display> fmt::Display for Matrix2x2<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
-                println!("");
-                write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(0, 0)], self[(0, 1)])?;
-                write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(1, 0)], self[(1, 1)])
-        }
+        println!("");
+        write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(0, 0)], self[(0, 1)])?;
+        write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(1, 0)], self[(1, 1)])
+    }
 }

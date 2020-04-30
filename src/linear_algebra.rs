@@ -27,7 +27,6 @@
 use crate::errors::LinAlgebraError;
 
 pub trait LinearAlgebra<T> {
-
     fn rows(&self) -> usize;
 
     fn cols(&self) -> usize;
@@ -44,7 +43,7 @@ pub trait LinearAlgebra<T> {
 
     fn det(&self) -> T;
 
-    fn inverse(&self) -> Result<Self, LinAlgebraError> where Self: Sized;
+    fn inverse(&self) -> Result<Self, LinAlgebraError>
+    where
+        Self: Sized;
 }
-
-

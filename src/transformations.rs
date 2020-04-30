@@ -27,7 +27,10 @@ use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
 use crate::matrix2x2::Matrix2x2;
 use crate::vector3::Vector3;
+use crate::vector6::Vector6;
 use crate::utils;
+use crate::types::*;
+use crate::errors::LinAlgebraError;
 // use crate::linear_algebra::LinearAlgebra;
 
 //-------------------------------------------------------------------------
@@ -248,6 +251,25 @@ pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
 }
 
 
+// NOTE(elsuizo:2020-04-30): no se si me gusta como queda esta funcion asi que acepta dos tipos de
+// types
+pub fn skewb<T: Float>(value: VectorTypes<T>) -> Result<MatrixTypes<T>, LinAlgebraError> {
+    match value {
+        VectorTypes::Scalar(number) => {
+            let zero = T::zero();
+            Ok(MatrixTypes::M22(Matrix2x2::new([[  zero, -number],
+                                   [number,    zero]])))
+        },
+        VectorTypes::V3(v3)        => {
+            let zero = T::zero();
+            Ok(MatrixTypes::M33(Matrix3x3::new([[  zero, -v3[2],  v3[1]],
+                                   [ v3[2],  zero, -v3[0]],
+                                   [-v3[1],  v3[0],  zero]])))
+        }
+        _                          => Err(LinAlgebraError::Vector3OrScalar)
+    }
+}
+
 pub fn skew_from_vec<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
         let zero = T::zero();
         Matrix3x3::new([[ zero, -v[2],  v[1]],
@@ -262,5 +284,12 @@ pub fn skew<T: Float>(number: T) -> Matrix2x2<T> {
     Matrix2x2::new([[  zero, -number],
                     [number,    zero],])
 }
-
-// pub fn skewa<T: Float>(v: )
+// ///
+// /// Create augmented skew-symmetric matrix
+// pub fn skewa<T: Float>(v: VectorTypes<T>) -> MatrixTypes<T> {
+//     match v {
+//         VectorTypes::V3(v3) => {
+//
+//         }
+//     }
+// }

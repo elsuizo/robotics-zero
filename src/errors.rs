@@ -28,7 +28,6 @@ use std::fmt;
 
 pub type Result<T1> = ::std::result::Result<T1, LinAlgebraError>;
 
-
 #[derive(Debug)]
 pub enum LinAlgebraError {
     /// the arrays must be equal and dimension 3
@@ -38,22 +37,36 @@ pub enum LinAlgebraError {
     },
 
     InvalidVectorDimention {
-        len_v: usize
+        len_v: usize,
     },
     InvalidMatrixShape {
         rows: usize,
         columns: usize,
     },
     DeterminantZero,
+    Vector3OrScalar,
 }
 
 impl fmt::Display for LinAlgebraError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            LinAlgebraError::InvalidDimentionOrNotEq { len_u, len_v } => write!(f, "The arrays must be of dimention 3: len of u:({}) != len of v:({})", len_u, len_v),
-            LinAlgebraError::InvalidVectorDimention {len_v} => write!(f, "The vector must be of dimention 1 or 3: len of vector input is: {}", len_v),
-            LinAlgebraError::InvalidMatrixShape {rows, columns} => write!(f, "The matrix must be of rows: 2 or 3 and columns: 2 or 3, got: rows{}, columns{}", rows, columns),
-            LinAlgebraError::DeterminantZero  => write!(f, "The Matrix is not invertible")
+            LinAlgebraError::InvalidDimentionOrNotEq { len_u, len_v } => write!(
+                f,
+                "The arrays must be of dimention 3: len of u:({}) != len of v:({})",
+                len_u, len_v
+            ),
+            LinAlgebraError::InvalidVectorDimention { len_v } => write!(
+                f,
+                "The vector must be of dimention 1 or 3: len of vector input is: {}",
+                len_v
+            ),
+            LinAlgebraError::InvalidMatrixShape { rows, columns } => write!(
+                f,
+                "The matrix must be of rows: 2 or 3 and columns: 2 or 3, got: rows{}, columns{}",
+                rows, columns
+            ),
+            LinAlgebraError::DeterminantZero => write!(f, "The Matrix is not invertible"),
+            LinAlgebraError::Vector3OrScalar => write!(f, "The input must be a Vector3 or scalar"),
         }
     }
 }

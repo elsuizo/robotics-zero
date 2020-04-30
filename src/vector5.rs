@@ -22,8 +22,8 @@
 //
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
+use num_traits::{Float, Zero};
 use std::ops::{Deref, DerefMut};
-use num_traits::{Zero, Float};
 
 use std::ops::{Add, Mul};
 
@@ -112,11 +112,13 @@ impl<T: Float> Mul<Matrix5x5<T>> for Vector5<T> {
         let a_43 = rhs[(4, 3)];
         let a_44 = rhs[(4, 4)];
 
-    Vector5::new([a_00*v0 + a_10*v1 + a_20*v2 + a_30*v3 + a_40*v4,
-                  a_01*v0 + a_11*v1 + a_21*v2 + a_31*v3 + a_41*v4,
-                  a_02*v0 + a_12*v1 + a_22*v2 + a_32*v3 + a_42*v4,
-                  a_03*v0 + a_13*v1 + a_23*v2 + a_33*v3 + a_43*v4,
-                  a_04*v0 + a_14*v1 + a_24*v2 + a_34*v3 + a_44*v4])
+        Vector5::new([
+            a_00 * v0 + a_10 * v1 + a_20 * v2 + a_30 * v3 + a_40 * v4,
+            a_01 * v0 + a_11 * v1 + a_21 * v2 + a_31 * v3 + a_41 * v4,
+            a_02 * v0 + a_12 * v1 + a_22 * v2 + a_32 * v3 + a_42 * v4,
+            a_03 * v0 + a_13 * v1 + a_23 * v2 + a_33 * v3 + a_43 * v4,
+            a_04 * v0 + a_14 * v1 + a_24 * v2 + a_34 * v3 + a_44 * v4,
+        ])
     }
 }
 
@@ -140,7 +142,6 @@ impl<T: Float> Add for Vector5<T> {
 }
 
 impl<T: Float> Zero for Vector5<T> {
-
     fn zero() -> Vector5<T> {
         Vector5::new([T::zero(); 5])
     }
@@ -148,7 +149,6 @@ impl<T: Float> Zero for Vector5<T> {
     fn is_zero(&self) -> bool {
         *self == Vector5::zero()
     }
-
 }
 
 impl<T> Deref for Vector5<T> {

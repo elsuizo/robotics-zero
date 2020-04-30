@@ -22,9 +22,9 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-use crate::matrix3x3::Matrix3x3;
 use crate::linear_algebra::LinearAlgebra;
-use num_traits::{Float};
+use crate::matrix3x3::Matrix3x3;
+use num_traits::Float;
 
 // NOTE(elsuizo:2020-03-24): nose si esta bien poner estas funciones aca...
 //-------------------------------------------------------------------------
@@ -38,10 +38,13 @@ pub fn compare_floats<T: Float>(num1: T, num2: T) -> bool {
 }
 
 pub fn compare_vecs<T: Float>(v1: &Vec<T>, v2: &Vec<T>) -> bool {
-    let v_result: Vec<bool> = v1.iter().zip(v2).map(|(a, b)| compare_floats(*a , *b)).collect();
+    let v_result: Vec<bool> = v1
+        .iter()
+        .zip(v2)
+        .map(|(a, b)| compare_floats(*a, *b))
+        .collect();
     v_result.iter().all(|&x| x == true)
 }
-
 
 pub fn is_rotation<T: Float>(r: Matrix3x3<T>) -> bool {
     let r2 = r * r;

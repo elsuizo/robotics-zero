@@ -23,8 +23,8 @@
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
 // imports
+use num_traits::{Float, Zero};
 use std::ops::{Deref, DerefMut};
-use num_traits::{Zero, Float};
 
 use std::ops::{Add, Mul};
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -89,7 +89,11 @@ impl<T: Float> Mul<Matrix3x3<T>> for Vector3<T> {
         let v2 = self[1];
         let v3 = self[2];
 
-        Vector3::new([a11 * v1 + a12 * v2 + a13 * v3, a21 * v1 + a22 * v2 + a23 * v3, a31 * v1 + a32 * v2 + a33 * v3])
+        Vector3::new([
+            a11 * v1 + a12 * v2 + a13 * v3,
+            a21 * v1 + a22 * v2 + a23 * v3,
+            a31 * v1 + a32 * v2 + a33 * v3,
+        ])
     }
 }
 
@@ -110,7 +114,6 @@ impl<T: Float> Add for Vector3<T> {
 }
 
 impl<T: Float> Zero for Vector3<T> {
-
     fn zero() -> Vector3<T> {
         Vector3::new([T::zero(); 3])
     }
@@ -118,7 +121,6 @@ impl<T: Float> Zero for Vector3<T> {
     fn is_zero(&self) -> bool {
         *self == Vector3::zero()
     }
-
 }
 
 impl<T> Deref for Vector3<T> {

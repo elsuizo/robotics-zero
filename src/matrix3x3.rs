@@ -23,13 +23,13 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 
-use std::ops::{Deref, DerefMut, Index, IndexMut};
-use std::ops::{Add, Mul};
 use std::fmt;
+use std::ops::{Add, Mul};
+use std::ops::{Deref, DerefMut, Index, IndexMut};
 
-use num_traits::{One, Zero, Float};
 use crate::errors::LinAlgebraError;
 use crate::linear_algebra::LinearAlgebra;
+use num_traits::{Float, One, Zero};
 
 //-------------------------------------------------------------------------
 //                        code
@@ -39,7 +39,6 @@ use crate::linear_algebra::LinearAlgebra;
 pub struct Matrix3x3<T>([[T; 3]; 3]);
 
 impl<T: Float> LinearAlgebra<T> for Matrix3x3<T> {
-
     fn rows(&self) -> usize {
         self.0.len()
     }
@@ -62,16 +61,22 @@ impl<T: Float> LinearAlgebra<T> for Matrix3x3<T> {
 
     fn norm2(&self) -> T {
         T::sqrt(
-            self[(0, 0)] * self[(0, 0)] + self[(1, 0)] * self[(1, 0)] + self[(2, 0)] * self[(2, 0)] +
-            self[(0, 1)] * self[(0, 1)] + self[(1, 1)] * self[(1, 1)] + self[(2, 1)] * self[(2, 1)] +
-            self[(0, 2)] * self[(0, 2)] + self[(1, 2)] * self[(1, 2)] + self[(2, 2)] * self[(2, 2)]
+            self[(0, 0)] * self[(0, 0)]
+                + self[(1, 0)] * self[(1, 0)]
+                + self[(2, 0)] * self[(2, 0)]
+                + self[(0, 1)] * self[(0, 1)]
+                + self[(1, 1)] * self[(1, 1)]
+                + self[(2, 1)] * self[(2, 1)]
+                + self[(0, 2)] * self[(0, 2)]
+                + self[(1, 2)] * self[(1, 2)]
+                + self[(2, 2)] * self[(2, 2)],
         )
     }
 
     fn det(&self) -> T {
         self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(2, 1)] * self[(1, 2)])
-        - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
-        + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)])
+            - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
+            + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)])
     }
 
     fn inverse(&self) -> Result<Matrix3x3<T>, LinAlgebraError> {
@@ -93,7 +98,6 @@ impl<T: Float> LinearAlgebra<T> for Matrix3x3<T> {
             Err(LinAlgebraError::DeterminantZero)
         }
     }
-
 }
 
 impl<T> Matrix3x3<T> {
@@ -109,7 +113,6 @@ impl<T> Matrix3x3<T> {
 }
 
 impl<T: Float> Matrix3x3<T> {
-
     pub fn identity() -> Matrix3x3<T> {
         <Matrix3x3<T> as One>::one()
     }
@@ -120,7 +123,7 @@ impl<T: Float> Matrix3x3<T> {
 
     pub fn as_vec(&self) -> Vec<T> {
         let result: Vec<T> = self.iter().flatten().cloned().collect();
-        return result
+        return result;
     }
 }
 
@@ -129,9 +132,21 @@ impl<T: Float> Add for Matrix3x3<T> {
 
     fn add(self, rhs: Self) -> Self {
         Matrix3x3::new([
-            [self[(0, 0)] + rhs[(0, 0)], self[(0, 1)] + rhs[(0, 1)], self[(0, 2)] + rhs[(0, 2)]],
-            [self[(1, 0)] + rhs[(1, 0)], self[(1, 1)] + rhs[(1, 1)], self[(1, 2)] + rhs[(1, 2)]],
-            [self[(2, 0)] + rhs[(2, 0)], self[(2, 1)] + rhs[(2, 1)], self[(2, 2)] + rhs[(2, 2)]],
+            [
+                self[(0, 0)] + rhs[(0, 0)],
+                self[(0, 1)] + rhs[(0, 1)],
+                self[(0, 2)] + rhs[(0, 2)],
+            ],
+            [
+                self[(1, 0)] + rhs[(1, 0)],
+                self[(1, 1)] + rhs[(1, 1)],
+                self[(1, 2)] + rhs[(1, 2)],
+            ],
+            [
+                self[(2, 0)] + rhs[(2, 0)],
+                self[(2, 1)] + rhs[(2, 1)],
+                self[(2, 2)] + rhs[(2, 2)],
+            ],
         ])
     }
 }
@@ -150,9 +165,7 @@ impl<T: Float> Mul<T> for Matrix3x3<T> {
         let a_21 = self[(2, 1)] * rhs;
         let a_22 = self[(2, 2)] * rhs;
 
-        Matrix3x3::new([[a_00, a_01, a_02],
-                        [a_10, a_11, a_12],
-                        [a_20, a_21, a_22]])
+        Matrix3x3::new([[a_00, a_01, a_02], [a_10, a_11, a_12], [a_20, a_21, a_22]])
     }
 }
 
@@ -160,23 +173,28 @@ impl<T: Float> Mul for Matrix3x3<T> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
-        let m00 = self[(0, 0)] * rhs[(0, 0)] + self[(0, 1)] * rhs[(1, 0)] + self[(0, 2)] * rhs[(2, 0)];
-        let m01 = self[(0, 0)] * rhs[(0, 1)] + self[(0, 1)] * rhs[(1, 1)] + self[(0, 2)] * rhs[(2, 1)];
-        let m02 = self[(0, 0)] * rhs[(0, 2)] + self[(0, 1)] * rhs[(1, 2)] + self[(0, 2)] * rhs[(2, 2)];
+        let m00 =
+            self[(0, 0)] * rhs[(0, 0)] + self[(0, 1)] * rhs[(1, 0)] + self[(0, 2)] * rhs[(2, 0)];
+        let m01 =
+            self[(0, 0)] * rhs[(0, 1)] + self[(0, 1)] * rhs[(1, 1)] + self[(0, 2)] * rhs[(2, 1)];
+        let m02 =
+            self[(0, 0)] * rhs[(0, 2)] + self[(0, 1)] * rhs[(1, 2)] + self[(0, 2)] * rhs[(2, 2)];
 
-        let m10 = self[(1, 0)] * rhs[(0, 0)] + self[(1, 1)] * rhs[(1, 0)] + self[(1, 2)] * rhs[(2, 0)];
-        let m11 = self[(1, 0)] * rhs[(0, 1)] + self[(1, 1)] * rhs[(1, 1)] + self[(1, 2)] * rhs[(2, 1)];
-        let m12 = self[(1, 0)] * rhs[(0, 2)] + self[(1, 1)] * rhs[(1, 2)] + self[(1, 2)] * rhs[(2, 2)];
+        let m10 =
+            self[(1, 0)] * rhs[(0, 0)] + self[(1, 1)] * rhs[(1, 0)] + self[(1, 2)] * rhs[(2, 0)];
+        let m11 =
+            self[(1, 0)] * rhs[(0, 1)] + self[(1, 1)] * rhs[(1, 1)] + self[(1, 2)] * rhs[(2, 1)];
+        let m12 =
+            self[(1, 0)] * rhs[(0, 2)] + self[(1, 1)] * rhs[(1, 2)] + self[(1, 2)] * rhs[(2, 2)];
 
-        let m20 = self[(2, 0)] * rhs[(0, 0)] + self[(2, 1)] * rhs[(1, 0)] + self[(2, 2)] * rhs[(2, 0)];
-        let m21 = self[(2, 0)] * rhs[(0, 1)] + self[(2, 1)] * rhs[(1, 1)] + self[(2, 2)] * rhs[(2, 1)];
-        let m22 = self[(2, 0)] * rhs[(0, 2)] + self[(2, 1)] * rhs[(1, 2)] + self[(2, 2)] * rhs[(2, 2)];
+        let m20 =
+            self[(2, 0)] * rhs[(0, 0)] + self[(2, 1)] * rhs[(1, 0)] + self[(2, 2)] * rhs[(2, 0)];
+        let m21 =
+            self[(2, 0)] * rhs[(0, 1)] + self[(2, 1)] * rhs[(1, 1)] + self[(2, 2)] * rhs[(2, 1)];
+        let m22 =
+            self[(2, 0)] * rhs[(0, 2)] + self[(2, 1)] * rhs[(1, 2)] + self[(2, 2)] * rhs[(2, 2)];
 
-        Matrix3x3::new([
-            [m00, m01, m02],
-            [m10, m11, m12],
-            [m20, m21, m22],
-        ])
+        Matrix3x3::new([[m00, m01, m02], [m10, m11, m12], [m20, m21, m22]])
     }
 }
 
@@ -229,7 +247,7 @@ impl<T> Index<(usize, usize)> for Matrix3x3<T> {
 
 impl<T> IndexMut<(usize, usize)> for Matrix3x3<T> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
-            &mut self.0[index.0][index.1]
+        &mut self.0[index.0][index.1]
     }
 }
 
@@ -239,8 +257,26 @@ impl<T> IndexMut<(usize, usize)> for Matrix3x3<T> {
 impl<T: Float + fmt::Display> fmt::Display for Matrix3x3<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
         println!("");
-        write!(dest, "|{0:<7.2} {1:^7.2} {2:>7.2}|\n", self[(0, 0)], self[(0, 1)], self[(0, 2)])?;
-        write!(dest, "|{0:<7.2} {1:^7.2} {2:>7.2}|\n", self[(1, 0)], self[(1, 1)], self[(1, 2)])?;
-        write!(dest, "|{0:<7.2} {1:^7.2} {2:>7.2}|\n", self[(2, 0)], self[(2, 1)], self[(2, 2)])
+        write!(
+            dest,
+            "|{0:<7.2} {1:^7.2} {2:>7.2}|\n",
+            self[(0, 0)],
+            self[(0, 1)],
+            self[(0, 2)]
+        )?;
+        write!(
+            dest,
+            "|{0:<7.2} {1:^7.2} {2:>7.2}|\n",
+            self[(1, 0)],
+            self[(1, 1)],
+            self[(1, 2)]
+        )?;
+        write!(
+            dest,
+            "|{0:<7.2} {1:^7.2} {2:>7.2}|\n",
+            self[(2, 0)],
+            self[(2, 1)],
+            self[(2, 2)]
+        )
     }
 }

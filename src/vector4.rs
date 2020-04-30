@@ -23,8 +23,8 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 // imports
+use num_traits::{Float, Zero};
 use std::ops::{Deref, DerefMut};
-use num_traits::{Zero, Float};
 
 use std::ops::{Add, Mul};
 
@@ -78,32 +78,34 @@ impl<T: Float> Mul<Matrix4x4<T>> for Vector4<T> {
     type Output = Vector4<T>;
 
     fn mul(self, rhs: Matrix4x4<T>) -> Vector4<T> {
-        let a11  = rhs[(0, 0)];
-        let a12  = rhs[(0, 1)];
-        let a13  = rhs[(0, 2)];
-        let a14  = rhs[(0, 3)];
-        let a21  = rhs[(1, 0)];
-        let a22  = rhs[(1, 1)];
-        let a23  = rhs[(1, 2)];
-        let a24  = rhs[(1, 3)];
-        let a31  = rhs[(2, 0)];
-        let a32  = rhs[(2, 1)];
-        let a33  = rhs[(2, 2)];
-        let a34  = rhs[(2, 3)];
-        let a41  = rhs[(3, 0)];
-        let a42  = rhs[(3, 1)];
-        let a43  = rhs[(3, 2)];
-        let a44  = rhs[(3, 3)];
+        let a11 = rhs[(0, 0)];
+        let a12 = rhs[(0, 1)];
+        let a13 = rhs[(0, 2)];
+        let a14 = rhs[(0, 3)];
+        let a21 = rhs[(1, 0)];
+        let a22 = rhs[(1, 1)];
+        let a23 = rhs[(1, 2)];
+        let a24 = rhs[(1, 3)];
+        let a31 = rhs[(2, 0)];
+        let a32 = rhs[(2, 1)];
+        let a33 = rhs[(2, 2)];
+        let a34 = rhs[(2, 3)];
+        let a41 = rhs[(3, 0)];
+        let a42 = rhs[(3, 1)];
+        let a43 = rhs[(3, 2)];
+        let a44 = rhs[(3, 3)];
 
         let v1 = self[0];
         let v2 = self[1];
         let v3 = self[2];
         let v4 = self[3];
 
-        Vector4::new([v1 * a11 + v2 * a21 + v3 * a31 + v4 * a41,
-                      v1 * a12 + v2 * a22 + v3 * a32 + v4 * a42,
-                      v1 * a13 + v2 * a23 + v3 * a33 + v4 * a43,
-                      v1 * a14 + v2 * a24 + v3 * a34 + v4 * a44,])
+        Vector4::new([
+            v1 * a11 + v2 * a21 + v3 * a31 + v4 * a41,
+            v1 * a12 + v2 * a22 + v3 * a32 + v4 * a42,
+            v1 * a13 + v2 * a23 + v3 * a33 + v4 * a43,
+            v1 * a14 + v2 * a24 + v3 * a34 + v4 * a44,
+        ])
     }
 }
 
@@ -126,7 +128,6 @@ impl<T: Float> Add for Vector4<T> {
 }
 
 impl<T: Float> Zero for Vector4<T> {
-
     fn zero() -> Vector4<T> {
         Vector4::new([T::zero(); 4])
     }
@@ -134,7 +135,6 @@ impl<T: Float> Zero for Vector4<T> {
     fn is_zero(&self) -> bool {
         *self == Vector4::zero()
     }
-
 }
 
 impl<T> Deref for Vector4<T> {

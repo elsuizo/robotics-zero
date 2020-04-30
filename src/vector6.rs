@@ -22,8 +22,8 @@
 //
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
+use num_traits::{Float, Zero};
 use std::ops::{Deref, DerefMut};
-use num_traits::{Zero, Float};
 
 use std::ops::{Add, Mul};
 
@@ -79,7 +79,6 @@ impl<T: Float> Mul for Vector6<T> {
     }
 }
 
-
 // TODO(elsuizo:2020-04-22): faltaria Matrix6x6 * Vector6
 impl<T: Float> Mul<Matrix6x6<T>> for Vector6<T> {
     type Output = Vector6<T>;
@@ -129,13 +128,14 @@ impl<T: Float> Mul<Matrix6x6<T>> for Vector6<T> {
         let v4 = self[4];
         let v5 = self[5];
 
-        Vector6::new([a_00*v0 + a_10*v1 + a_20*v2 + a_30*v3 + a_40*v4 + a_50*v5,
-                      a_01*v0 + a_11*v1 + a_21*v2 + a_31*v3 + a_41*v4 + a_51*v5,
-                      a_02*v0 + a_12*v1 + a_22*v2 + a_32*v3 + a_42*v4 + a_52*v5,
-                      a_03*v0 + a_13*v1 + a_23*v2 + a_33*v3 + a_43*v4 + a_53*v5,
-                      a_04*v0 + a_14*v1 + a_24*v2 + a_34*v3 + a_44*v4 + a_54*v5,
-                      a_05*v0 + a_15*v1 + a_25*v2 + a_35*v3 + a_45*v4 + a_55*v5])
-
+        Vector6::new([
+            a_00 * v0 + a_10 * v1 + a_20 * v2 + a_30 * v3 + a_40 * v4 + a_50 * v5,
+            a_01 * v0 + a_11 * v1 + a_21 * v2 + a_31 * v3 + a_41 * v4 + a_51 * v5,
+            a_02 * v0 + a_12 * v1 + a_22 * v2 + a_32 * v3 + a_42 * v4 + a_52 * v5,
+            a_03 * v0 + a_13 * v1 + a_23 * v2 + a_33 * v3 + a_43 * v4 + a_53 * v5,
+            a_04 * v0 + a_14 * v1 + a_24 * v2 + a_34 * v3 + a_44 * v4 + a_54 * v5,
+            a_05 * v0 + a_15 * v1 + a_25 * v2 + a_35 * v3 + a_45 * v4 + a_55 * v5,
+        ])
     }
 }
 
@@ -162,7 +162,6 @@ impl<T: Float> Add for Vector6<T> {
 }
 
 impl<T: Float> Zero for Vector6<T> {
-
     fn zero() -> Vector6<T> {
         Vector6::new([T::zero(); 6])
     }
@@ -170,7 +169,6 @@ impl<T: Float> Zero for Vector6<T> {
     fn is_zero(&self) -> bool {
         *self == Vector6::zero()
     }
-
 }
 
 impl<T> Deref for Vector6<T> {
