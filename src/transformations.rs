@@ -192,6 +192,7 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> 
                     [v_x * v_z * comp - v_y * s, v_y * v_z * comp + v_x * s, v_z * v_z * comp + c],])
 }
 
+// TODO(elsuizo:2020-04-30): ver y explicar bien cuando ocurria una singularidad
 /// Brief.
 ///
 /// Compute the euler angles from a Rotation matrix(ZYZ convention)
@@ -207,6 +208,7 @@ pub fn rot2euler<T: Float>(r: Matrix3x3<T>) -> (T, T, T) {
     if utils::compare_floats(r[(0, 2)], T::zero()) && utils::compare_floats(r[(1, 2)], T::zero()) {
 
         // singularity
+        println!("warning singularity occurs");
         let phi   = T::zero();
         let sp    = T::zero();
         let cp    = T::one();

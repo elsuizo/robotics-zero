@@ -889,4 +889,17 @@ mod transformations_tests {
         assert_eq!(compare_floats(angles_in.1, angles_out.1), true);
         assert_eq!(compare_floats(angles_in.2, angles_out.2), true);
     }
+
+    // TODO(elsuizo:2020-04-30): hay que ver bien porque no anda este test
+    #[test]
+    #[ignore]
+    fn euler_singularity_test() {
+        let angles_in = (90.0, 0.0, 0.0);
+        let rot = transformations::euler2rot(angles_in.0, angles_in.1, angles_in.2);
+        let angles_out = transformations::rot2euler(rot);
+        println!("angles_out: {:?}", angles_out);
+        assert_eq!(compare_floats(angles_in.0, angles_out.0), true);
+        assert_eq!(compare_floats(angles_in.1, angles_out.1), true);
+        assert_eq!(compare_floats(angles_in.2, angles_out.2), true);
+    }
 }
