@@ -55,6 +55,17 @@ impl<T: Float> Vector3<T> {
     }
 }
 
+impl<T: Float> Mul<T> for Vector3<T> {
+    type Output = Vector3<T>;
+
+    fn mul(self, rhs: T) -> Vector3<T> {
+        let a0 = self[0] * rhs;
+        let a1 = self[1] * rhs;
+        let a2 = self[2] * rhs;
+        Vector3::new([a0, a1, a2])
+    }
+}
+
 impl<T: Float> Mul for Vector3<T> {
     type Output = T;
 

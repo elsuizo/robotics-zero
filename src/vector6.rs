@@ -57,6 +57,22 @@ impl<T: Float> Vector6<T> {
     }
 }
 
+// TODO(elsuizo:2021-05-03): faltaria constant * Vector6
+/// Vector6 * constant
+impl<T: Float> Mul<T> for Vector6<T> {
+    type Output = Vector6<T>;
+
+    fn mul(self, rhs: T) -> Vector6<T> {
+        let a0 = self[0] * rhs;
+        let a1 = self[1] * rhs;
+        let a2 = self[2] * rhs;
+        let a3 = self[3] * rhs;
+        let a4 = self[4] * rhs;
+        let a5 = self[5] * rhs;
+        Vector6::new([a0, a1, a2, a3, a4, a5])
+    }
+}
+
 impl<T: Float> Mul for Vector6<T> {
     type Output = T;
 

@@ -75,6 +75,20 @@ impl<T: Float> Mul for Vector5<T> {
     }
 }
 
+// TODO(elsuizo:2020-05-03): faltaria constant * Vector5
+/// Vector5 * constant
+impl<T: Float> Mul<T> for Vector5<T> {
+    type Output = Vector5<T>;
+
+    fn mul(self, rhs: T) -> Vector5<T> {
+        let a0 = self[0] * rhs;
+        let a1 = self[1] * rhs;
+        let a2 = self[2] * rhs;
+        let a3 = self[3] * rhs;
+        let a4 = self[4] * rhs;
+        Vector5::new([a0, a1, a2, a3, a4])
+    }
+}
 // TODO(elsuizo:2020-04-22): faltaria Matrix5x5 * Vector5
 impl<T: Float> Mul<Matrix5x5<T>> for Vector5<T> {
     type Output = Vector5<T>;

@@ -74,6 +74,20 @@ impl<T: Float> Mul for Vector4<T> {
     }
 }
 
+// TODO(elsuizo:2020-05-01): faltaria constant * Vector4
+/// Vector4 * constant
+impl<T: Float> Mul<T> for Vector4<T> {
+    type Output = Vector4<T>;
+
+    fn mul(self, rhs: T) -> Vector4<T> {
+        let a0 = self[0] * rhs;
+        let a1 = self[1] * rhs;
+        let a2 = self[2] * rhs;
+        let a3 = self[3] * rhs;
+        Vector4::new([a0, a1, a2, a3])
+    }
+}
+
 impl<T: Float> Mul<Matrix4x4<T>> for Vector4<T> {
     type Output = Vector4<T>;
 

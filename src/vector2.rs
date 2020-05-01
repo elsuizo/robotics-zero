@@ -70,6 +70,18 @@ impl<T: Float> Mul for Vector2<T> {
     }
 }
 
+// TODO(elsuizo:2020-05-01): faltaria constant * Vector2
+/// Vector2 * constant
+impl<T: Float> Mul<T> for Vector2<T> {
+    type Output = Vector2<T>;
+
+    fn mul(self, rhs: T) -> Vector2<T> {
+        let a0 = self[0] * rhs;
+        let a1 = self[1] * rhs;
+        Vector2::new([a0, a1])
+    }
+}
+
 impl<T: Float> Mul<Matrix2x2<T>> for Vector2<T> {
     type Output = Vector2<T>;
 
