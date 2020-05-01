@@ -261,14 +261,14 @@ pub fn skew_from_vec<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
     ])
 }
 
-pub fn skew_from_scalar<T: Float>(number: T) -> Matrix2x2<T> {
+pub fn skew_scalar<T: Float>(number: T) -> Matrix2x2<T> {
     let zero = T::zero();
     Matrix2x2::new([[zero, -number], [number, zero]])
 }
 
 ///
 /// Create augmented skew-symmetric matrix
-pub fn skewa_v3<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
+pub fn skew_v3<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
     let zero = T::zero();
     Matrix3x3::new([[zero, -v[2], v[0]], [v[2], zero, v[1]], [zero, zero, zero]])
 }
@@ -282,4 +282,14 @@ pub fn skew_v6<T: Float>(v: Vector6<T>) -> Matrix4x4<T> {
         [-v[4], v[3], zero, v[2]],
         [zero, zero, zero, zero],
     ])
+}
+
+// NOTE(elsuizo:2020-05-01): no me gusta como queda ese unwrap ahi feo...
+pub fn vex_m22<T:Float>(m: Matrix2x2<T>) -> T {
+    T::from(0.5).unwrap() * (m[(1, 0)] - m[(0, 1)])
+}
+
+pub fn vex_m33<T: Float>(m: Matrix3x3<T>) -> Vector3<T> {
+    let constant = T::from(0.5).unwrap();
+    constant * Vector3::new([m[(2,1)] - m[(1,2)], m[(0,2)] - m[(2,0)], m[(1,0)] - m[(0,1)]])
 }
