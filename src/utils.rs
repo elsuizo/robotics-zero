@@ -26,7 +26,6 @@ use crate::linear_algebra::LinearAlgebra;
 use crate::matrix3x3::Matrix3x3;
 use num_traits::Float;
 
-// NOTE(elsuizo:2020-03-24): nose si esta bien poner estas funciones aca...
 //-------------------------------------------------------------------------
 //                        auxiliar functions
 //-------------------------------------------------------------------------

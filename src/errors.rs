@@ -28,6 +28,7 @@ use std::fmt;
 
 pub type Result<T1> = ::std::result::Result<T1, LinAlgebraError>;
 
+/// Errors for Linear Algebra operations
 #[derive(Debug)]
 pub enum LinAlgebraError {
     /// the arrays must be equal and dimension 3

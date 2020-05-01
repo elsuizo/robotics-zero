@@ -22,15 +22,14 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-use num_traits::{Zero, Float};
+use crate::errors::LinAlgebraError;
+use crate::matrix2x2::Matrix2x2;
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
-use crate::matrix2x2::Matrix2x2;
+use crate::utils;
 use crate::vector3::Vector3;
 use crate::vector6::Vector6;
-use crate::utils;
-use crate::types::*;
-use crate::errors::LinAlgebraError;
+use num_traits::{Float, Zero};
 // use crate::linear_algebra::LinearAlgebra;
 
 //-------------------------------------------------------------------------
@@ -49,10 +48,7 @@ pub fn rotx<T: Float>(angle: T) -> Matrix3x3<T> {
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix3x3::new([[one, zero, zero],
-                    [zero, c, -s],
-                    [zero, s,  c]])
-
+    Matrix3x3::new([[one, zero, zero], [zero, c, -s], [zero, s, c]])
 }
 
 /// Brief.
@@ -68,9 +64,7 @@ pub fn roty<T: Float>(angle: T) -> Matrix3x3<T> {
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix3x3::new([[c,   zero,   s],
-                    [zero, one, zero],
-                    [-s,  zero,   c]])
+    Matrix3x3::new([[c, zero, s], [zero, one, zero], [-s, zero, c]])
 }
 
 /// Brief.
@@ -86,9 +80,7 @@ pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix3x3::new([[c,   -s,   zero],
-                    [s,    c,   zero],
-                    [zero,  zero, one]])
+    Matrix3x3::new([[c, -s, zero], [s, c, zero], [zero, zero, one]])
 }
 
 /// Brief.
@@ -189,10 +181,23 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> 
     let v_y = vector[1];
     let v_z = vector[2];
 
-
-    Matrix3x3::new([[v_x * v_x * comp + c, v_y * v_x * comp - v_z * s, v_z * v_x * comp + v_y * s],
-                    [v_x * v_y * comp + v_z * s, v_y * v_y * comp + c, v_z * v_y * comp - v_x * s],
-                    [v_x * v_z * comp - v_y * s, v_y * v_z * comp + v_x * s, v_z * v_z * comp + c],])
+    Matrix3x3::new([
+        [
+            v_x * v_x * comp + c,
+            v_y * v_x * comp - v_z * s,
+            v_z * v_x * comp + v_y * s,
+        ],
+        [
+            v_x * v_y * comp + v_z * s,
+            v_y * v_y * comp + c,
+            v_z * v_y * comp - v_x * s,
+        ],
+        [
+            v_x * v_z * comp - v_y * s,
+            v_y * v_z * comp + v_x * s,
+            v_z * v_z * comp + c,
+        ],
+    ])
 }
 
 // TODO(elsuizo:2020-04-30): ver y explicar bien cuando ocurria una singularidad
@@ -207,28 +212,25 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> 
 /// A tuple with the angles: phi, theta, psi
 ///
 pub fn rot2euler<T: Float>(r: Matrix3x3<T>) -> (T, T, T) {
-
     if utils::compare_floats(r[(0, 2)], T::zero()) && utils::compare_floats(r[(1, 2)], T::zero()) {
-
         // singularity
         println!("warning singularity occurs");
-        let phi   = T::zero();
-        let sp    = T::zero();
-        let cp    = T::one();
+        let phi = T::zero();
+        let sp = T::zero();
+        let cp = T::one();
         let theta = (cp * r[(0, 2)] + sp * r[(1, 2)]).atan2(r[(2, 2)]);
-        let psi   = (-sp * r[(0, 0)] + cp * r[(1, 0)]).atan2(-sp * r[(0, 1)] + cp * r[(1, 1)]);
+        let psi = (-sp * r[(0, 0)] + cp * r[(1, 0)]).atan2(-sp * r[(0, 1)] + cp * r[(1, 1)]);
         return (phi.to_degrees(), theta.to_degrees(), psi.to_degrees());
     } else {
         // non-singular
-        let phi   = r[(1, 2)].atan2(r[(0, 2)]);
-        let sp    = phi.sin();
-        let cp    = phi.cos();
+        let phi = r[(1, 2)].atan2(r[(0, 2)]);
+        let sp = phi.sin();
+        let cp = phi.cos();
         let theta = (cp * r[(0, 2)] + sp * r[(1, 2)]).atan2(r[(2, 2)]);
-        let psi   = (-sp * r[(0, 0)] + cp * r[(1, 0)]).atan2(-sp * r[(0, 1)] + cp * r[(1, 1)]);
+        let psi = (-sp * r[(0, 0)] + cp * r[(1, 0)]).atan2(-sp * r[(0, 1)] + cp * r[(1, 1)]);
         return (phi.to_degrees(), theta.to_degrees(), psi.to_degrees());
     }
 }
-
 
 pub fn rot_euler_zyx<T: Float>(phi: T, theta: T, psi: T) -> Matrix3x3<T> {
     rotz(phi) * roty(theta) * rotx(psi)
@@ -250,46 +252,34 @@ pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
     rot2trans(&euler2rot(phi, theta, psi))
 }
 
-
-// NOTE(elsuizo:2020-04-30): no se si me gusta como queda esta funcion asi que acepta dos tipos de
-// types
-pub fn skewb<T: Float>(value: VectorTypes<T>) -> Result<MatrixTypes<T>, LinAlgebraError> {
-    match value {
-        VectorTypes::Scalar(number) => {
-            let zero = T::zero();
-            Ok(MatrixTypes::M22(Matrix2x2::new([[  zero, -number],
-                                   [number,    zero]])))
-        },
-        VectorTypes::V3(v3)        => {
-            let zero = T::zero();
-            Ok(MatrixTypes::M33(Matrix3x3::new([[  zero, -v3[2],  v3[1]],
-                                   [ v3[2],  zero, -v3[0]],
-                                   [-v3[1],  v3[0],  zero]])))
-        }
-        _                          => Err(LinAlgebraError::Vector3OrScalar)
-    }
-}
-
 pub fn skew_from_vec<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
-        let zero = T::zero();
-        Matrix3x3::new([[ zero, -v[2],  v[1]],
-                        [ v[2],  zero, -v[0]],
-                        [-v[1],  v[0],  zero],
-                      ])
-}
-
-pub fn skew<T: Float>(number: T) -> Matrix2x2<T> {
-
     let zero = T::zero();
-    Matrix2x2::new([[  zero, -number],
-                    [number,    zero],])
+    Matrix3x3::new([
+        [zero, -v[2], v[1]],
+        [v[2], zero, -v[0]],
+        [-v[1], v[0], zero],
+    ])
 }
-// ///
-// /// Create augmented skew-symmetric matrix
-// pub fn skewa<T: Float>(v: VectorTypes<T>) -> MatrixTypes<T> {
-//     match v {
-//         VectorTypes::V3(v3) => {
-//
-//         }
-//     }
-// }
+
+pub fn skew_from_scalar<T: Float>(number: T) -> Matrix2x2<T> {
+    let zero = T::zero();
+    Matrix2x2::new([[zero, -number], [number, zero]])
+}
+
+///
+/// Create augmented skew-symmetric matrix
+pub fn skewa_v3<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
+    let zero = T::zero();
+    Matrix3x3::new([[zero, -v[2], v[0]], [v[2], zero, v[1]], [zero, zero, zero]])
+}
+
+///Create augmented skew-symmetric matrix
+pub fn skew_v6<T: Float>(v: Vector6<T>) -> Matrix4x4<T> {
+    let zero = T::zero();
+    Matrix4x4::new([
+        [zero, -v[5], v[4], v[0]],
+        [v[5], zero, -v[3], v[1]],
+        [-v[4], v[3], zero, v[2]],
+        [zero, zero, zero, zero],
+    ])
+}
