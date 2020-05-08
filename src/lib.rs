@@ -94,7 +94,7 @@ mod test_matrix2x2 {
         let m1 = Matrix2x2::new([[1.0, 2.0], [3.0, 4.0]]);
         let expected = Matrix2x2::new([[-2.0, 1.0], [1.5, -0.5]]);
         if let Ok(result) = m1.inverse() {
-            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+            assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
         }
     }
 }
@@ -134,7 +134,7 @@ mod test_matrix3x3 {
 
         let expected = Matrix3x3::new([[0.0, 2.0, 4.0], [6.0, 8.0, 10.0], [12.0, 14.0, 16.0]]);
         let result = m1 + m2;
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -142,7 +142,7 @@ mod test_matrix3x3 {
         let identity: Matrix3x3<f64> = Matrix3x3::identity();
 
         let expected = Matrix3x3::new([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
-        assert_eq!(compare_vecs(&identity.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&identity.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -150,7 +150,7 @@ mod test_matrix3x3 {
         let zero: Matrix3x3<f64> = Matrix3x3::zeros();
 
         let expected = Matrix3x3::new([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]);
-        assert_eq!(compare_vecs(&zero.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&zero.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -162,7 +162,7 @@ mod test_matrix3x3 {
     #[test]
     fn test_norm2() {
         let m = Matrix3x3::new([[0.0, 1.0, 2.0], [3.0, 4.0, 5.0], [6.0, 7.0, 8.0]]);
-        assert_eq!(compare_floats(m.norm2(), 14.2828568570857), true);
+        assert!(compare_floats(m.norm2(), 14.2828568570857));
     }
 
     #[test]
@@ -171,7 +171,7 @@ mod test_matrix3x3 {
         let expected = -3.0;
         let result = m.det();
 
-        assert_eq!(compare_floats(result, expected), true);
+        assert!(compare_floats(result, expected));
     }
 
     #[test]
@@ -185,7 +185,7 @@ mod test_matrix3x3 {
         ]);
 
         if let Ok(result) = m.inverse() {
-            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+            assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
         }
     }
 }
@@ -219,7 +219,7 @@ mod test_matrix4x4 {
             [0.0, 0.0, 0.0, 1.0],
         ]);
         let result: Matrix4x4<f64> = Matrix4x4::identity();
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -245,7 +245,7 @@ mod test_matrix4x4 {
             [26.0, 28.0, 30.0, 32.0],
         ]);
         let result = m1 + m2;
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -271,7 +271,7 @@ mod test_matrix4x4 {
             [426.0, 484.0, 542.0, 600.0],
         ]);
         let result = m1 * m2;
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -299,7 +299,7 @@ mod test_matrix4x4 {
         // NOTE(elsuizo:2019-08-08): el resultado lo calculo con Julia
         let expected = 38.67815921162743;
         let result = m1.norm2();
-        assert_eq!(compare_floats(result, expected), true);
+        assert!(compare_floats(result, expected));
     }
 
     #[test]
@@ -318,7 +318,7 @@ mod test_matrix4x4 {
             [4.0, 8.0, 12.0, 16.0],
         ]);
         let result = m1.transpose();
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -330,7 +330,7 @@ mod test_matrix4x4 {
             [0.0, 0.0, 0.0, 0.0],
         ]);
         let result: Matrix4x4<f64> = Matrix4x4::zeros();
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
 
     #[test]
@@ -346,19 +346,19 @@ mod test_matrix4x4 {
 
         let expected1 = Matrix3x3::new([[6.0, 7.0, 8.0], [10.0, 11.0, 12.0], [14.0, 15.0, 16.0]]);
 
-        assert_eq!(compare_vecs(&result1.as_vec(), &expected1.as_vec()), true);
+        assert!(compare_vecs(&result1.as_vec(), &expected1.as_vec()));
 
         let result2 = m.get_submatrix((0, 1));
 
         let expected2 = Matrix3x3::new([[5.0, 7.0, 8.0], [9.0, 11.0, 12.0], [13.0, 15.0, 16.0]]);
 
-        assert_eq!(compare_vecs(&result2.as_vec(), &expected2.as_vec()), true);
+        assert!(compare_vecs(&result2.as_vec(), &expected2.as_vec()));
 
         let result3 = m.get_submatrix((0, 2));
 
         let expected3 = Matrix3x3::new([[5.0, 6.0, 8.0], [9.0, 10.0, 12.0], [13.0, 14.0, 16.0]]);
 
-        assert_eq!(compare_vecs(&result3.as_vec(), &expected3.as_vec()), true);
+        assert!(compare_vecs(&result3.as_vec(), &expected3.as_vec()));
     }
 
     #[test]
@@ -378,7 +378,7 @@ mod test_matrix4x4 {
         ]);
 
         if let Ok(result) = m.inverse() {
-            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+            assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
         }
     }
 }
@@ -401,7 +401,7 @@ mod test_matrix5x5 {
         ]);
         let result = m.det();
         let expected = 49.99999999999798;
-        assert_eq!(compare_floats(result, expected), true);
+        assert!(compare_floats(result, expected));
     }
     #[test]
     fn matrix5x5_sum_test() {
@@ -422,7 +422,7 @@ mod test_matrix5x5 {
         ]);
         let result = m + m;
 
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
     #[test]
     fn matrix5x5_product_test() {
@@ -442,7 +442,7 @@ mod test_matrix5x5 {
             [131.0, 171.0, 217.0, 217.0, 156.0],
         ]);
 
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
     #[test]
     fn matrix5x5_norm2_test() {
@@ -456,7 +456,7 @@ mod test_matrix5x5 {
 
         let result = m.norm2();
         let expected = 31.52776554086889;
-        assert_eq!(compare_floats(result, expected), true);
+        assert!(compare_floats(result, expected));
     }
     #[test]
     fn matrix5x5_const_product_test() {
@@ -476,7 +476,7 @@ mod test_matrix5x5 {
             [3.0, 4.5, 4.5, 3.5, 1.5],
             [0.5, 4.0, 4.0, 5.0, 2.5],
         ]);
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
     #[test]
     fn matrix5x5_inv_test() {
@@ -496,7 +496,7 @@ mod test_matrix5x5 {
         ]);
 
         if let Ok(result) = m.inverse() {
-            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+            assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
         }
     }
 }
@@ -521,7 +521,7 @@ mod test_matrix6x6 {
         ]);
         let result = m.det();
         let expected = 3271.9999999999723;
-        assert_eq!(compare_floats(result, expected), true);
+        assert!(compare_floats(result, expected));
     }
     #[test]
     fn matrix6x6_mul_test() {
@@ -543,7 +543,7 @@ mod test_matrix6x6 {
             [3030.0, 3225.0, 3420.0, 3615.0, 3810.0, 4005.0],
         ]);
 
-        assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+        assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
     }
     #[test]
     fn matrix6x6_norm2_test() {
@@ -557,7 +557,7 @@ mod test_matrix6x6 {
         ]);
         let result = m.norm2();
         let expected = 122.10651088291729;
-        assert_eq!(compare_floats(result, expected), true);
+        assert!(compare_floats(result, expected));
     }
     #[test]
     fn matrix6x6_inv_test() {
@@ -583,7 +583,7 @@ mod test_matrix6x6 {
         ]);
 
         if let Ok(result) = m.inverse() {
-            assert_eq!(compare_vecs(&result.as_vec(), &expected.as_vec()), true);
+            assert!(compare_vecs(&result.as_vec(), &expected.as_vec()));
         }
     }
 }
@@ -951,11 +951,11 @@ mod transformations_tests {
         let rot2 = transformations::rotx(360.0);
 
         let i = Matrix3x3::identity();
-        assert_eq!(is_rotation(rot1), true);
-        assert_eq!(is_rotation(rot2), true);
-        assert_eq!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()), true);
-        assert_eq!(compare_vecs(&i.as_vec(), &rot2.as_vec()), true);
-        assert_eq!(compare_vecs(&i.as_vec(), &rot1.as_vec()), true);
+        assert!(is_rotation(rot1));
+        assert!(is_rotation(rot2));
+        assert!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()));
+        assert!(compare_vecs(&i.as_vec(), &rot2.as_vec()));
+        assert!(compare_vecs(&i.as_vec(), &rot1.as_vec()));
     }
 
     #[test]
@@ -965,11 +965,11 @@ mod transformations_tests {
 
         let i = Matrix3x3::identity();
 
-        assert_eq!(is_rotation(rot1), true);
-        assert_eq!(is_rotation(rot2), true);
-        assert_eq!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()), true);
-        assert_eq!(compare_vecs(&i.as_vec(), &rot2.as_vec()), true);
-        assert_eq!(compare_vecs(&i.as_vec(), &rot1.as_vec()), true);
+        assert!(is_rotation(rot1));
+        assert!(is_rotation(rot2));
+        assert!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()));
+        assert!(compare_vecs(&i.as_vec(), &rot2.as_vec()));
+        assert!(compare_vecs(&i.as_vec(), &rot1.as_vec()));
     }
 
     #[test]
@@ -979,11 +979,11 @@ mod transformations_tests {
 
         let i = Matrix3x3::identity();
 
-        assert_eq!(is_rotation(rot1), true);
-        assert_eq!(is_rotation(rot2), true);
-        assert_eq!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()), true);
-        assert_eq!(compare_vecs(&i.as_vec(), &rot2.as_vec()), true);
-        assert_eq!(compare_vecs(&i.as_vec(), &rot1.as_vec()), true);
+        assert!(is_rotation(rot1));
+        assert!(is_rotation(rot2));
+        assert!(compare_vecs(&rot1.as_vec(), &rot2.as_vec()));
+        assert!(compare_vecs(&i.as_vec(), &rot2.as_vec()));
+        assert!(compare_vecs(&i.as_vec(), &rot1.as_vec()));
     }
 
     #[test]
@@ -993,7 +993,7 @@ mod transformations_tests {
 
         let i = Matrix4x4::identity();
 
-        assert_eq!(compare_vecs(&i.as_vec(), &rot_trans.as_vec()), true);
+        assert!(compare_vecs(&i.as_vec(), &rot_trans.as_vec()));
     }
 
     #[test]
@@ -1002,9 +1002,9 @@ mod transformations_tests {
         let rot = transformations::euler2rot(angles_in.0, angles_in.1, angles_in.2);
         let angles_out = transformations::rot2euler(rot);
 
-        assert_eq!(compare_floats(angles_in.0, angles_out.0), true);
-        assert_eq!(compare_floats(angles_in.1, angles_out.1), true);
-        assert_eq!(compare_floats(angles_in.2, angles_out.2), true);
+        assert!(compare_floats(angles_in.0, angles_out.0));
+        assert!(compare_floats(angles_in.1, angles_out.1));
+        assert!(compare_floats(angles_in.2, angles_out.2));
     }
 
     // TODO(elsuizo:2020-04-30): hay que ver bien porque no anda este test
@@ -1015,8 +1015,8 @@ mod transformations_tests {
         let rot = transformations::euler2rot(angles_in.0, angles_in.1, angles_in.2);
         let angles_out = transformations::rot2euler(rot);
         println!("angles_out: {:?}", angles_out);
-        assert_eq!(compare_floats(angles_in.0, angles_out.0), true);
-        assert_eq!(compare_floats(angles_in.1, angles_out.1), true);
-        assert_eq!(compare_floats(angles_in.2, angles_out.2), true);
+        assert!(compare_floats(angles_in.0, angles_out.0));
+        assert!(compare_floats(angles_in.1, angles_out.1));
+        assert!(compare_floats(angles_in.2, angles_out.2));
     }
 }
