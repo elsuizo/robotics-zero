@@ -22,7 +22,7 @@
 //
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
-use num_traits::{Float, Zero};
+use num_traits::{Float, Zero, Num};
 use std::ops::{Deref, DerefMut};
 
 use std::ops::{Add, Mul};
@@ -41,11 +41,14 @@ impl<T> Vector6<T> {
     }
 }
 
-impl<T: Float> Vector6<T> {
+impl<T: Num + Copy> Vector6<T> {
     pub fn zeros() -> Vector6<T> {
         <Vector6<T> as Zero>::zero()
     }
 
+}
+
+impl<T: Float> Vector6<T> {
     pub fn norm2(&self) -> T {
         let a = self[0];
         let b = self[1];
@@ -59,7 +62,7 @@ impl<T: Float> Vector6<T> {
 
 // TODO(elsuizo:2021-05-03): faltaria constant * Vector6
 /// Vector6 * constant
-impl<T: Float> Mul<T> for Vector6<T> {
+impl<T: Num + Copy> Mul<T> for Vector6<T> {
     type Output = Vector6<T>;
 
     fn mul(self, rhs: T) -> Vector6<T> {
@@ -73,7 +76,7 @@ impl<T: Float> Mul<T> for Vector6<T> {
     }
 }
 
-impl<T: Float> Mul for Vector6<T> {
+impl<T: Num + Copy> Mul for Vector6<T> {
     type Output = T;
 
     fn mul(self, rhs: Self) -> T {
@@ -96,7 +99,7 @@ impl<T: Float> Mul for Vector6<T> {
 }
 
 // TODO(elsuizo:2020-04-22): faltaria Matrix6x6 * Vector6
-impl<T: Float> Mul<Matrix6x6<T>> for Vector6<T> {
+impl<T: Num + Copy> Mul<Matrix6x6<T>> for Vector6<T> {
     type Output = Vector6<T>;
 
     fn mul(self, rhs: Matrix6x6<T>) -> Vector6<T> {
@@ -155,7 +158,7 @@ impl<T: Float> Mul<Matrix6x6<T>> for Vector6<T> {
     }
 }
 
-impl<T: Float> Add for Vector6<T> {
+impl<T: Num + Copy> Add for Vector6<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -177,7 +180,7 @@ impl<T: Float> Add for Vector6<T> {
     }
 }
 
-impl<T: Float> Zero for Vector6<T> {
+impl<T: Num + Copy> Zero for Vector6<T> {
     fn zero() -> Vector6<T> {
         Vector6::new([T::zero(); 6])
     }

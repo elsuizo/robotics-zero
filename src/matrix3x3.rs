@@ -29,7 +29,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 use crate::errors::LinAlgebraError;
 use crate::linear_algebra::LinearAlgebra;
-use num_traits::{Float, One, Zero};
+use num_traits::{Float, One, Zero, Num};
 
 //-------------------------------------------------------------------------
 //                        code
@@ -112,7 +112,7 @@ impl<T> Matrix3x3<T> {
     }
 }
 
-impl<T: Float> Matrix3x3<T> {
+impl<T: Num + Copy> Matrix3x3<T> {
     pub fn identity() -> Matrix3x3<T> {
         <Matrix3x3<T> as One>::one()
     }
@@ -127,7 +127,7 @@ impl<T: Float> Matrix3x3<T> {
     }
 }
 
-impl<T: Float> Add for Matrix3x3<T> {
+impl<T: Num + Copy> Add for Matrix3x3<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -151,10 +151,10 @@ impl<T: Float> Add for Matrix3x3<T> {
     }
 }
 
-impl<T: Float> Mul<T> for Matrix3x3<T> {
+impl<T: Num + Copy> Mul<T> for Matrix3x3<T> {
     type Output = Matrix3x3<T>;
 
-    fn mul(self, rhs: T) -> Matrix3x3<T> {
+    fn mul(self, rhs: T) -> Self::Output {
         let a_00 = self[(0, 0)] * rhs;
         let a_01 = self[(0, 1)] * rhs;
         let a_02 = self[(0, 2)] * rhs;
@@ -169,7 +169,7 @@ impl<T: Float> Mul<T> for Matrix3x3<T> {
     }
 }
 
-impl<T: Float> Mul for Matrix3x3<T> {
+impl<T: Num + Copy> Mul for Matrix3x3<T> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
@@ -198,7 +198,7 @@ impl<T: Float> Mul for Matrix3x3<T> {
     }
 }
 
-impl<T: Float> Zero for Matrix3x3<T> {
+impl<T: Num + Copy> Zero for Matrix3x3<T> {
     fn zero() -> Matrix3x3<T> {
         Matrix3x3::new([[T::zero(); 3]; 3])
     }
@@ -208,7 +208,7 @@ impl<T: Float> Zero for Matrix3x3<T> {
     }
 }
 
-impl<T: Float> One for Matrix3x3<T> {
+impl<T: Num + Copy> One for Matrix3x3<T> {
     /// Create an identity matrix
     fn one() -> Matrix3x3<T> {
         let one = T::one();
@@ -254,7 +254,7 @@ impl<T> IndexMut<(usize, usize)> for Matrix3x3<T> {
 //-------------------------------------------------------------------------
 //                        Display for Matrix3x3
 //-------------------------------------------------------------------------
-impl<T: Float + fmt::Display> fmt::Display for Matrix3x3<T> {
+impl<T: Num + fmt::Display> fmt::Display for Matrix3x3<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
         println!("");
         write!(

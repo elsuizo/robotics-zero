@@ -22,7 +22,7 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-use crate::errors::LinAlgebraError;
+// use crate::errors::LinAlgebraError;
 use crate::matrix2x2::Matrix2x2;
 use crate::matrix3x3::Matrix3x3;
 use crate::matrix4x4::Matrix4x4;
@@ -35,6 +35,13 @@ use num_traits::{Float, Zero};
 //-------------------------------------------------------------------------
 //                        transformations
 //-------------------------------------------------------------------------
+/// Compute rotation matrix from a angle in degrees
+pub fn rot2<T: Float>(angle: T) -> Matrix2x2<T> {
+    let c = angle.to_radians().cos();
+    let s = angle.to_radians().sin();
+    Matrix2x2::new([[c, -s], [s, c]])
+}
+
 /// brief.
 ///
 /// compute the rotation around the `x` axis(in cartesian coordinates)
@@ -285,11 +292,32 @@ pub fn skew_v6<T: Float>(v: Vector6<T>) -> Matrix4x4<T> {
 }
 
 // NOTE(elsuizo:2020-05-01): no me gusta como queda ese unwrap ahi feo...
-pub fn vex_m22<T:Float>(m: Matrix2x2<T>) -> T {
+pub fn vex_m22<T: Float>(m: Matrix2x2<T>) -> T {
     T::from(0.5).unwrap() * (m[(1, 0)] - m[(0, 1)])
 }
 
 pub fn vex_m33<T: Float>(m: Matrix3x3<T>) -> Vector3<T> {
     let constant = T::from(0.5).unwrap();
-    Vector3::new([m[(2,1)] - m[(1,2)], m[(0,2)] - m[(2,0)], m[(1,0)] - m[(0,1)]]) * constant
+    Vector3::new([
+        m[(2, 1)] - m[(1, 2)],
+        m[(0, 2)] - m[(2, 0)],
+        m[(1, 0)] - m[(0, 1)],
+    ]) * constant
+}
+
+/// Create a pose in 2D from a angle(in degrees) and a cartesian position (x, y) values
+pub fn ksi<T: Float>(angle: T, x: T, y: T) -> Matrix3x3<T> {
+    let zero = T::zero();
+    let one = T::one();
+    let c = angle.to_radians().cos();
+    let s = angle.to_radians().sin();
+
+    Matrix3x3::new([[c, -s, x], [s, c, y], [zero, zero, one]])
+}
+
+/// Create a pure translation pose
+pub fn translation<T: Float>(x: T, y: T) -> Matrix3x3<T> {
+    let zero = T::zero();
+    let one = T::one();
+    Matrix3x3::new([[one, zero, x], [zero, one, y], [zero, zero, one]])
 }

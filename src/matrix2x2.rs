@@ -32,7 +32,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 use crate::errors::LinAlgebraError;
 use crate::linear_algebra::LinearAlgebra;
-use num_traits::{Float, One, Zero};
+use num_traits::{Float, One, Zero, Num};
 
 // TODO(elsuizo:2019-09-12): estos no los estoy utilizando, deberia???
 // use std::ops::{AddAssign, DivAssign, MulAssign, SubAssign};
@@ -111,7 +111,7 @@ impl<T> Matrix2x2<T> {
     }
 }
 
-impl<T: Float> Matrix2x2<T> {
+impl<T: Num + Copy> Matrix2x2<T> {
     pub fn identity() -> Matrix2x2<T> {
         <Matrix2x2<T> as One>::one()
     }
@@ -126,7 +126,7 @@ impl<T: Float> Matrix2x2<T> {
     }
 }
 
-impl<T: Float> Mul<Vector2<T>> for Matrix2x2<T> {
+impl<T: Num + Copy> Mul<Vector2<T>> for Matrix2x2<T> {
     type Output = Vector2<T>;
 
     fn mul(self, rhs: Vector2<T>) -> Vector2<T> {
@@ -141,7 +141,7 @@ impl<T: Float> Mul<Vector2<T>> for Matrix2x2<T> {
     }
 }
 
-impl<T: Float> Add for Matrix2x2<T> {
+impl<T: Num + Copy> Add for Matrix2x2<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -158,7 +158,23 @@ impl<T: Float> Add for Matrix2x2<T> {
     }
 }
 
-impl<T: Float> Mul<T> for Matrix2x2<T> {
+// TODO(elsuizo:2020-05-05): no se bien porque no me deja hacer esto parece que no puedo???
+// impl<T: Float> Mul for T {
+//     type Output = Matrix2x2<T>;
+//
+//     fn mul(self, rhs: Matrix2x2<T>) -> Matrix2x2<T> {
+//         let a_00 = rhs[(0, 0)] * self;
+//         let a_01 = rhs[(0, 1)] * self;
+//         let a_10 = rhs[(1, 0)] * self;
+//         let a_11 = rhs[(1, 1)] * self;
+//
+//         Matrix2x2::new([[a_00, a_01], [a_10, a_11]])
+//     }
+// }
+
+// NOTE(elsuizo:2020-05-05): parece que el trait es Mul<RHS=Self> lo que significa que no
+// necesitamos hacer explicito que el resultado en este caso es la misma fucking Matrix2x2
+impl<T: Num + Copy> Mul<T> for Matrix2x2<T> {
     type Output = Matrix2x2<T>;
 
     fn mul(self, rhs: T) -> Matrix2x2<T> {
@@ -171,7 +187,7 @@ impl<T: Float> Mul<T> for Matrix2x2<T> {
     }
 }
 
-impl<T: Float> Mul for Matrix2x2<T> {
+impl<T: Num + Copy> Mul for Matrix2x2<T> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
@@ -194,7 +210,7 @@ impl<T: Float> Mul for Matrix2x2<T> {
     }
 }
 
-impl<T: Float> Zero for Matrix2x2<T> {
+impl<T: Num + Copy> Zero for Matrix2x2<T> {
     fn zero() -> Matrix2x2<T> {
         Matrix2x2::new([[T::zero(); 2]; 2])
     }
@@ -204,7 +220,7 @@ impl<T: Float> Zero for Matrix2x2<T> {
     }
 }
 
-impl<T: Float> One for Matrix2x2<T> {
+impl<T: Num + Copy> One for Matrix2x2<T> {
     /// Create an identity matrix
     fn one() -> Matrix2x2<T> {
         let one = T::one();
@@ -250,7 +266,7 @@ impl<T> IndexMut<(usize, usize)> for Matrix2x2<T> {
 //-------------------------------------------------------------------------
 //                        Display for Matrix2x2
 //-------------------------------------------------------------------------
-impl<T: Float + fmt::Display> fmt::Display for Matrix2x2<T> {
+impl<T: Num + fmt::Display> fmt::Display for Matrix2x2<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
         println!("");
         write!(dest, "|{0:<7.2} {1:>7.2}|\n", self[(0, 0)], self[(0, 1)])?;

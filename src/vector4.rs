@@ -23,7 +23,7 @@
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
 // imports
-use num_traits::{Float, Zero};
+use num_traits::{Float, Zero, Num};
 use std::ops::{Deref, DerefMut};
 
 use std::ops::{Add, Mul};
@@ -42,11 +42,14 @@ impl<T> Vector4<T> {
     }
 }
 
-impl<T: Float> Vector4<T> {
+impl<T: Num + Copy> Vector4<T> {
     pub fn zeros() -> Vector4<T> {
         <Vector4<T> as Zero>::zero()
     }
 
+}
+
+impl<T: Float> Vector4<T> {
     pub fn norm2(&self) -> T {
         let a = self[0];
         let b = self[1];
@@ -56,7 +59,7 @@ impl<T: Float> Vector4<T> {
     }
 }
 
-impl<T: Float> Mul for Vector4<T> {
+impl<T: Num + Copy> Mul for Vector4<T> {
     type Output = T;
 
     fn mul(self, rhs: Self) -> T {
@@ -76,7 +79,7 @@ impl<T: Float> Mul for Vector4<T> {
 
 // TODO(elsuizo:2020-05-01): faltaria constant * Vector4
 /// Vector4 * constant
-impl<T: Float> Mul<T> for Vector4<T> {
+impl<T: Num + Copy> Mul<T> for Vector4<T> {
     type Output = Vector4<T>;
 
     fn mul(self, rhs: T) -> Vector4<T> {
@@ -88,7 +91,7 @@ impl<T: Float> Mul<T> for Vector4<T> {
     }
 }
 
-impl<T: Float> Mul<Matrix4x4<T>> for Vector4<T> {
+impl<T: Num + Copy> Mul<Matrix4x4<T>> for Vector4<T> {
     type Output = Vector4<T>;
 
     fn mul(self, rhs: Matrix4x4<T>) -> Vector4<T> {
@@ -123,7 +126,7 @@ impl<T: Float> Mul<Matrix4x4<T>> for Vector4<T> {
     }
 }
 
-impl<T: Float> Add for Vector4<T> {
+impl<T: Num + Copy> Add for Vector4<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -141,7 +144,7 @@ impl<T: Float> Add for Vector4<T> {
     }
 }
 
-impl<T: Float> Zero for Vector4<T> {
+impl<T: Num + Copy> Zero for Vector4<T> {
     fn zero() -> Vector4<T> {
         Vector4::new([T::zero(); 4])
     }

@@ -22,7 +22,7 @@
 //
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
-use num_traits::{Float, One, Zero};
+use num_traits::{Float, One, Zero, Num};
 use std::fmt;
 use std::ops::{Add, Mul};
 use std::ops::{Deref, DerefMut, Index, IndexMut};
@@ -279,7 +279,7 @@ impl<T> Matrix5x5<T> {
     }
 }
 
-impl<T: Float> Add for Matrix5x5<T> {
+impl<T: Num + Copy> Add for Matrix5x5<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -377,7 +377,7 @@ impl<T: Float> Add for Matrix5x5<T> {
 
 // NOTE(elsuizo:2020-04-27): primero a pedal
 // despues si anda con for loops o como sea
-impl<T: Float> Mul<T> for Matrix5x5<T> {
+impl<T: Num + Copy> Mul<T> for Matrix5x5<T> {
     type Output = Matrix5x5<T>;
 
     fn mul(self, rhs: T) -> Matrix5x5<T> {
@@ -417,7 +417,7 @@ impl<T: Float> Mul<T> for Matrix5x5<T> {
     }
 }
 
-impl<T: Float> Mul for Matrix5x5<T> {
+impl<T: Num + Copy> Mul for Matrix5x5<T> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
@@ -513,7 +513,7 @@ impl<T: Float> Mul for Matrix5x5<T> {
     }
 }
 
-impl<T: Float> Zero for Matrix5x5<T> {
+impl<T: Num + Copy> Zero for Matrix5x5<T> {
     fn zero() -> Matrix5x5<T> {
         Matrix5x5::new([[T::zero(); 5]; 5])
     }
@@ -523,7 +523,7 @@ impl<T: Float> Zero for Matrix5x5<T> {
     }
 }
 
-impl<T: Float> One for Matrix5x5<T> {
+impl<T: Num + Copy> One for Matrix5x5<T> {
     /// Create an identity matrix
     fn one() -> Matrix5x5<T> {
         let one = T::one();
@@ -539,7 +539,7 @@ impl<T: Float> One for Matrix5x5<T> {
 }
 
 // NOTE(elsuizo:2020-04-26): poniendo ese Trait anda el norm2 funcional
-impl<T: Float + std::iter::Sum> Matrix5x5<T> {
+impl<T: Num + Copy + std::iter::Sum> Matrix5x5<T> {
     pub fn identity() -> Matrix5x5<T> {
         <Matrix5x5<T> as One>::one()
     }
@@ -614,7 +614,7 @@ impl<T> IndexMut<(usize, usize)> for Matrix5x5<T> {
 //-------------------------------------------------------------------------
 //                        Display for Matrix5x5
 //-------------------------------------------------------------------------
-impl<T: Float + fmt::Display> fmt::Display for Matrix5x5<T> {
+impl<T: Num + fmt::Display> fmt::Display for Matrix5x5<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
         println!("");
         write!(

@@ -28,7 +28,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 use crate::errors::LinAlgebraError;
 use crate::matrix5x5::Matrix5x5;
-use num_traits::{Float, One, Zero};
+use num_traits::{Float, One, Zero, Num};
 
 use crate::linear_algebra::LinearAlgebra;
 //-------------------------------------------------------------------------
@@ -893,6 +893,7 @@ impl<T: Float + std::iter::Sum> LinearAlgebra<T> for Matrix6x6<T> {
         }
     }
 }
+
 impl<T> Matrix6x6<T> {
     pub fn new(data_input: [[T; 6]; 6]) -> Self {
         Self(data_input)
@@ -905,7 +906,7 @@ impl<T> Matrix6x6<T> {
     }
 }
 
-impl<T: Float> Add for Matrix6x6<T> {
+impl<T: Num + Copy> Add for Matrix6x6<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -1037,7 +1038,7 @@ impl<T: Float> Add for Matrix6x6<T> {
 }
 
 // Matrix6x6 * T
-impl<T: Float> Mul<T> for Matrix6x6<T> {
+impl<T: Num + Copy> Mul<T> for Matrix6x6<T> {
     type Output = Matrix6x6<T>;
 
     fn mul(self, rhs: T) -> Matrix6x6<T> {
@@ -1089,7 +1090,7 @@ impl<T: Float> Mul<T> for Matrix6x6<T> {
     }
 }
 
-impl<T: Float> Mul for Matrix6x6<T> {
+impl<T: Num + Copy> Mul for Matrix6x6<T> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
@@ -1220,7 +1221,7 @@ impl<T: Float> Mul for Matrix6x6<T> {
     }
 }
 
-impl<T: Float + std::iter::Sum> Matrix6x6<T> {
+impl<T: Num + Copy + std::iter::Sum> Matrix6x6<T> {
     pub fn identity() -> Matrix6x6<T> {
         <Matrix6x6<T> as One>::one()
     }
@@ -1259,7 +1260,7 @@ impl<T: Float + std::iter::Sum> Matrix6x6<T> {
     }
 }
 
-impl<T: Float> Zero for Matrix6x6<T> {
+impl<T: Num + Copy> Zero for Matrix6x6<T> {
     fn zero() -> Matrix6x6<T> {
         Matrix6x6::new([[T::zero(); 6]; 6])
     }
@@ -1269,7 +1270,7 @@ impl<T: Float> Zero for Matrix6x6<T> {
     }
 }
 
-impl<T: Float> One for Matrix6x6<T> {
+impl<T: Num + Copy> One for Matrix6x6<T> {
     /// Create an identity matrix
     fn one() -> Matrix6x6<T> {
         let one = T::one();
@@ -1322,7 +1323,7 @@ impl<T> IndexMut<(usize, usize)> for Matrix6x6<T> {
 //-------------------------------------------------------------------------
 //                        Display
 //-------------------------------------------------------------------------
-impl<T: Float + fmt::Display> fmt::Display for Matrix6x6<T> {
+impl<T: Num + fmt::Display> fmt::Display for Matrix6x6<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
         println!("");
         write!(

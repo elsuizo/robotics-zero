@@ -29,7 +29,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use crate::errors::LinAlgebraError;
 use crate::linear_algebra::LinearAlgebra;
 use crate::matrix3x3::*;
-use num_traits::{Float, One, Zero};
+use num_traits::{Float, One, Zero, Num};
 
 //-------------------------------------------------------------------------
 //                        code
@@ -203,7 +203,7 @@ impl<T> Matrix4x4<T> {
     }
 }
 
-impl<T: Float> Matrix4x4<T> {
+impl<T: Num + Copy> Matrix4x4<T> {
     pub fn identity() -> Matrix4x4<T> {
         <Matrix4x4<T> as One>::one()
     }
@@ -243,7 +243,7 @@ impl<T: Float> Matrix4x4<T> {
     }
 }
 
-impl<T: Float> Add for Matrix4x4<T> {
+impl<T: Num + Copy> Add for Matrix4x4<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -288,7 +288,7 @@ impl<T: Float> Add for Matrix4x4<T> {
     }
 }
 
-impl<T: Float> Mul<T> for Matrix4x4<T> {
+impl<T: Num + Copy> Mul<T> for Matrix4x4<T> {
     type Output = Matrix4x4<T>;
 
     fn mul(self, rhs: T) -> Matrix4x4<T> {
@@ -318,7 +318,7 @@ impl<T: Float> Mul<T> for Matrix4x4<T> {
     }
 }
 
-impl<T: Float> Mul for Matrix4x4<T> {
+impl<T: Num + Copy> Mul for Matrix4x4<T> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self {
@@ -383,7 +383,7 @@ impl<T: Float> Mul for Matrix4x4<T> {
     }
 }
 
-impl<T: Float> Zero for Matrix4x4<T> {
+impl<T: Num + Copy> Zero for Matrix4x4<T> {
     fn zero() -> Matrix4x4<T> {
         Matrix4x4::new([[T::zero(); 4]; 4])
     }
@@ -393,7 +393,7 @@ impl<T: Float> Zero for Matrix4x4<T> {
     }
 }
 
-impl<T: Float> One for Matrix4x4<T> {
+impl<T: Num + Copy> One for Matrix4x4<T> {
     /// Create an identity matrix
     fn one() -> Matrix4x4<T> {
         let one = T::one();
@@ -446,7 +446,7 @@ impl<T> IndexMut<(usize, usize)> for Matrix4x4<T> {
 //-------------------------------------------------------------------------
 //                        Display
 //-------------------------------------------------------------------------
-impl<T: Float + fmt::Display> fmt::Display for Matrix4x4<T> {
+impl<T: Num + fmt::Display> fmt::Display for Matrix4x4<T> {
     fn fmt(&self, dest: &mut fmt::Formatter) -> fmt::Result {
         println!("");
         write!(

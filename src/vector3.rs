@@ -23,7 +23,7 @@
 // You should have received a copy of the GNU General Public License
 //--------------------------------------------------------------------------
 // imports
-use num_traits::{Float, Zero};
+use num_traits::{Float, Zero, Num};
 use std::ops::{Deref, DerefMut};
 
 use std::ops::{Add, Mul};
@@ -42,11 +42,14 @@ impl<T> Vector3<T> {
     }
 }
 
-impl<T: Float> Vector3<T> {
+impl<T: Num + Copy> Vector3<T> {
     pub fn zeros() -> Vector3<T> {
         <Vector3<T> as Zero>::zero()
     }
 
+}
+
+impl<T: Float> Vector3<T> {
     pub fn norm2(&self) -> T {
         let a = self[0];
         let b = self[1];
@@ -55,7 +58,7 @@ impl<T: Float> Vector3<T> {
     }
 }
 
-impl<T: Float> Mul<T> for Vector3<T> {
+impl<T: Num + Copy> Mul<T> for Vector3<T> {
     type Output = Vector3<T>;
 
     fn mul(self, rhs: T) -> Vector3<T> {
@@ -66,7 +69,7 @@ impl<T: Float> Mul<T> for Vector3<T> {
     }
 }
 
-impl<T: Float> Mul for Vector3<T> {
+impl<T: Num + Copy> Mul for Vector3<T> {
     type Output = T;
 
     fn mul(self, rhs: Self) -> T {
@@ -82,7 +85,7 @@ impl<T: Float> Mul for Vector3<T> {
     }
 }
 
-impl<T: Float> Mul<Matrix3x3<T>> for Vector3<T> {
+impl<T: Num + Copy> Mul<Matrix3x3<T>> for Vector3<T> {
     type Output = Vector3<T>;
 
     fn mul(self, rhs: Matrix3x3<T>) -> Vector3<T> {
@@ -108,7 +111,7 @@ impl<T: Float> Mul<Matrix3x3<T>> for Vector3<T> {
     }
 }
 
-impl<T: Float> Add for Vector3<T> {
+impl<T: Num + Copy> Add for Vector3<T> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
@@ -124,7 +127,7 @@ impl<T: Float> Add for Vector3<T> {
     }
 }
 
-impl<T: Float> Zero for Vector3<T> {
+impl<T: Num + Copy> Zero for Vector3<T> {
     fn zero() -> Vector3<T> {
         Vector3::new([T::zero(); 3])
     }

@@ -52,7 +52,7 @@ pub enum VectorTypes<T> {
     V2(Vector2<T>),
     V3(Vector3<T>),
     V4(Vector4<T>),
-    V5(Vector6<T>),
+    V5(Vector5<T>),
     V6(Vector6<T>),
 }
 
