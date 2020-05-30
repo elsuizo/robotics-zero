@@ -28,7 +28,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 use crate::errors::LinAlgebraError;
 use crate::matrix5x5::Matrix5x5;
-use num_traits::{Float, One, Zero, Num};
+use num_traits::{Float, Num, One, Zero};
 
 use crate::linear_algebra::LinearAlgebra;
 //-------------------------------------------------------------------------

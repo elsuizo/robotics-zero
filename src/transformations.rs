@@ -280,7 +280,7 @@ pub fn skew_v3<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
     Matrix3x3::new([[zero, -v[2], v[0]], [v[2], zero, v[1]], [zero, zero, zero]])
 }
 
-///Create augmented skew-symmetric matrix
+/// Create augmented skew-symmetric matrix
 pub fn skew_v6<T: Float>(v: Vector6<T>) -> Matrix4x4<T> {
     let zero = T::zero();
     Matrix4x4::new([
