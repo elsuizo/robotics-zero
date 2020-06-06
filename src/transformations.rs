@@ -22,24 +22,22 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-// use crate::errors::LinAlgebraError;
-use crate::matrix2x2::Matrix2x2;
-use crate::matrix3x3::Matrix3x3;
-use crate::matrix4x4::Matrix4x4;
-use crate::utils;
-use crate::vector3::Vector3;
-use crate::vector6::Vector6;
-use num_traits::{Float, Zero};
-// use crate::linear_algebra::LinearAlgebra;
+use static_math::matrix2x2::M22;
+use static_math::matrix3x3::M33;
+use static_math::matrix4x4::M44;
+use static_math::utils::nearly_equal;
+use static_math::vector3::V3;
+use static_math::vector6::V6;
+use num::{Float, Zero};
 
 //-------------------------------------------------------------------------
 //                        transformations
 //-------------------------------------------------------------------------
 /// Compute rotation matrix from a angle in degrees
-pub fn rot2<T: Float>(angle: T) -> Matrix2x2<T> {
+pub fn rot2<T: Float>(angle: T) -> M22<T> {
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix2x2::new([[c, -s], [s, c]])
+    M22::new([[c, -s], [s, c]])
 }
 
 /// brief.
@@ -50,12 +48,12 @@ pub fn rot2<T: Float>(angle: T) -> Matrix2x2<T> {
 ///
 /// * `angle` - angle of rotation in degrees
 ///
-pub fn rotx<T: Float>(angle: T) -> Matrix3x3<T> {
+pub fn rotx<T: Float>(angle: T) -> M33<T> {
     let one = T::one();
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix3x3::new([[one, zero, zero], [zero, c, -s], [zero, s, c]])
+    M33::new([[one, zero, zero], [zero, c, -s], [zero, s, c]])
 }
 
 /// Brief.
@@ -66,12 +64,12 @@ pub fn rotx<T: Float>(angle: T) -> Matrix3x3<T> {
 ///
 /// * `angle` - Angle of rotation in degrees
 ///
-pub fn roty<T: Float>(angle: T) -> Matrix3x3<T> {
+pub fn roty<T: Float>(angle: T) -> M33<T> {
     let one = T::one();
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix3x3::new([[c, zero, s], [zero, one, zero], [-s, zero, c]])
+    M33::new([[c, zero, s], [zero, one, zero], [-s, zero, c]])
 }
 
 /// Brief.
@@ -82,12 +80,12 @@ pub fn roty<T: Float>(angle: T) -> Matrix3x3<T> {
 ///
 /// * `angle` - Angle of rotation in degrees
 ///
-pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
+pub fn rotz<T: Float>(angle: T) -> M33<T> {
     let one = T::one();
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    Matrix3x3::new([[c, -s, zero], [s, c, zero], [zero, zero, one]])
+    M33::new([[c, -s, zero], [s, c, zero], [zero, zero, one]])
 }
 
 /// Brief.
@@ -95,13 +93,13 @@ pub fn rotz<T: Float>(angle: T) -> Matrix3x3<T> {
 /// Convert a Rotation Matrix to
 ///
 /// Function arguments:
-/// `r`: Matrix3x3<T>
+/// `r`: M33<T>
 ///
 /// Output:
-/// R: Matrix4x4
+/// R: M44
 ///
-pub fn rot2trans<T: Float>(r: &Matrix3x3<T>) -> Matrix4x4<T> {
-    let mut result = Matrix4x4::zero();
+pub fn rot2trans<T: Float>(r: &M33<T>) -> M44<T> {
+    let mut result = M44::zero();
     for row in 0..r.rows() {
         for column in 0..r.cols() {
             result[(row, column)] = r[(row, column)]
@@ -119,9 +117,9 @@ pub fn rot2trans<T: Float>(r: &Matrix3x3<T>) -> Matrix4x4<T> {
 ///  `angle`: Float number
 ///
 /// Output:
-/// Matrix4x4<Float>
+/// M44<Float>
 ///
-pub fn trotx<T: Float>(angle: T) -> Matrix4x4<T> {
+pub fn trotx<T: Float>(angle: T) -> M44<T> {
     rot2trans(&rotx(angle))
 }
 
@@ -133,9 +131,9 @@ pub fn trotx<T: Float>(angle: T) -> Matrix4x4<T> {
 /// `angle`: Float number
 ///
 /// Output:
-/// Matrix4x4<Float>
+/// M44<Float>
 ///
-pub fn troty<T: Float>(angle: T) -> Matrix4x4<T> {
+pub fn troty<T: Float>(angle: T) -> M44<T> {
     rot2trans(&roty(angle))
 }
 
@@ -147,9 +145,9 @@ pub fn troty<T: Float>(angle: T) -> Matrix4x4<T> {
 ///  `angle`: Float number
 ///
 /// Output:
-/// Matrix4x4<Float>
+/// M44<Float>
 ///
-pub fn trotz<T: Float>(angle: T) -> Matrix4x4<T> {
+pub fn trotz<T: Float>(angle: T) -> M44<T> {
     rot2trans(&rotz(angle))
 }
 
@@ -163,9 +161,9 @@ pub fn trotz<T: Float>(angle: T) -> Matrix4x4<T> {
 /// psi: third euler angle (Float number)
 ///
 /// Output:
-/// R: Rotation matrix(Matrix4x4<Float>)
+/// R: Rotation matrix(M44<Float>)
 ///
-pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> Matrix3x3<T> {
+pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> M33<T> {
     rotz(angle_phi) * roty(angle_theta) * rotz(angle_psi)
 }
 
@@ -175,12 +173,12 @@ pub fn euler2rot<T: Float>(angle_phi: T, angle_theta: T, angle_psi: T) -> Matrix
 ///
 /// Function arguments:
 /// theta:  angle of rotation(Float)
-/// vector: axis of rotation(Vector3<Float>)
+/// vector: axis of rotation(V3<Float>)
 ///
 /// Return:
-/// R: Rotation matrix(Matrix3x3<Float>)
+/// R: Rotation matrix(M33<Float>)
 ///
-pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> {
+pub fn angle_vector2rot<T: Float>(theta: T, vector: V3<T>) -> M33<T> {
     let c = theta.cos();
     let s = theta.sin();
     let comp = T::one() - c;
@@ -188,7 +186,7 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> 
     let v_y = vector[1];
     let v_z = vector[2];
 
-    Matrix3x3::new([
+    M33::new([
         [
             v_x * v_x * comp + c,
             v_y * v_x * comp - v_z * s,
@@ -218,8 +216,8 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: Vector3<T>) -> Matrix3x3<T> 
 /// Output:
 /// A tuple with the angles: phi, theta, psi
 ///
-pub fn rot2euler<T: Float>(r: Matrix3x3<T>) -> (T, T, T) {
-    if utils::compare_floats(r[(0, 2)], T::zero()) && utils::compare_floats(r[(1, 2)], T::zero()) {
+pub fn rot2euler<T: Float>(r: M33<T>) -> (T, T, T) {
+    if nearly_equal(r[(0, 2)], T::zero(), T::epsilon()) && nearly_equal(r[(1, 2)], T::zero(), T::epsilon()) {
         // singularity
         println!("warning singularity occurs");
         let phi = T::zero();
@@ -239,7 +237,7 @@ pub fn rot2euler<T: Float>(r: Matrix3x3<T>) -> (T, T, T) {
     }
 }
 
-pub fn rot_euler_zyx<T: Float>(phi: T, theta: T, psi: T) -> Matrix3x3<T> {
+pub fn rot_euler_zyx<T: Float>(phi: T, theta: T, psi: T) -> M33<T> {
     rotz(phi) * roty(theta) * rotx(psi)
 }
 
@@ -253,37 +251,37 @@ pub fn rot_euler_zyx<T: Float>(phi: T, theta: T, psi: T) -> Matrix3x3<T> {
 /// psi: third euler angle(Float)
 ///
 /// Output:
-/// R: Rotation matrix(Matrix3x3<Float>)
+/// R: Rotation matrix(M33<Float>)
 ///
-pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> Matrix4x4<T> {
+pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> M44<T> {
     rot2trans(&euler2rot(phi, theta, psi))
 }
 
-pub fn skew_from_vec<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
+pub fn skew_from_vec<T: Float>(v: V3<T>) -> M33<T> {
     let zero = T::zero();
-    Matrix3x3::new([
+    M33::new([
         [zero, -v[2], v[1]],
         [v[2], zero, -v[0]],
         [-v[1], v[0], zero],
     ])
 }
 
-pub fn skew_scalar<T: Float>(number: T) -> Matrix2x2<T> {
+pub fn skew_scalar<T: Float>(number: T) -> M22<T> {
     let zero = T::zero();
-    Matrix2x2::new([[zero, -number], [number, zero]])
+    M22::new([[zero, -number], [number, zero]])
 }
 
 ///
 /// Create augmented skew-symmetric matrix
-pub fn skew_v3<T: Float>(v: Vector3<T>) -> Matrix3x3<T> {
+pub fn skew_v3<T: Float>(v: V3<T>) -> M33<T> {
     let zero = T::zero();
-    Matrix3x3::new([[zero, -v[2], v[0]], [v[2], zero, v[1]], [zero, zero, zero]])
+    M33::new([[zero, -v[2], v[0]], [v[2], zero, v[1]], [zero, zero, zero]])
 }
 
 /// Create augmented skew-symmetric matrix
-pub fn skew_v6<T: Float>(v: Vector6<T>) -> Matrix4x4<T> {
+pub fn skew_v6<T: Float>(v: V6<T>) -> M44<T> {
     let zero = T::zero();
-    Matrix4x4::new([
+    M44::new([
         [zero, -v[5], v[4], v[0]],
         [v[5], zero, -v[3], v[1]],
         [-v[4], v[3], zero, v[2]],
@@ -292,13 +290,13 @@ pub fn skew_v6<T: Float>(v: Vector6<T>) -> Matrix4x4<T> {
 }
 
 // NOTE(elsuizo:2020-05-01): no me gusta como queda ese unwrap ahi feo...
-pub fn vex_m22<T: Float>(m: Matrix2x2<T>) -> T {
+pub fn vex_m22<T: Float>(m: M22<T>) -> T {
     T::from(0.5).unwrap() * (m[(1, 0)] - m[(0, 1)])
 }
 
-pub fn vex_m33<T: Float>(m: Matrix3x3<T>) -> Vector3<T> {
+pub fn vex_m33<T: Float>(m: M33<T>) -> V3<T> {
     let constant = T::from(0.5).unwrap();
-    Vector3::new([
+    V3::new([
         m[(2, 1)] - m[(1, 2)],
         m[(0, 2)] - m[(2, 0)],
         m[(1, 0)] - m[(0, 1)],
@@ -306,18 +304,18 @@ pub fn vex_m33<T: Float>(m: Matrix3x3<T>) -> Vector3<T> {
 }
 
 /// Create a pose in 2D from a angle(in degrees) and a cartesian position (x, y) values
-pub fn ksi<T: Float>(angle: T, x: T, y: T) -> Matrix3x3<T> {
+pub fn ksi<T: Float>(angle: T, x: T, y: T) -> M33<T> {
     let zero = T::zero();
     let one = T::one();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
 
-    Matrix3x3::new([[c, -s, x], [s, c, y], [zero, zero, one]])
+    M33::new([[c, -s, x], [s, c, y], [zero, zero, one]])
 }
 
 /// Create a pure translation pose
-pub fn translation<T: Float>(x: T, y: T) -> Matrix3x3<T> {
+pub fn translation<T: Float>(x: T, y: T) -> M33<T> {
     let zero = T::zero();
     let one = T::one();
-    Matrix3x3::new([[one, zero, x], [zero, one, y], [zero, zero, one]])
+    M33::new([[one, zero, x], [zero, one, y], [zero, zero, one]])
 }

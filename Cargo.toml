@@ -5,9 +5,5 @@ authors = ["elsuizo <mnoblia@disroot.org>"]
 edition = "2018"
 
 [dependencies]
-
-[dependencies.num-traits]
-version = "*"
-default-features = false
-features = ["libm"]    # <--- Uncomment if you wish to use `Float` and `Real` without `std`
-[dev-dependencies]
+static-math = {path = "/home/elsuizo/Repos/static-math"}
+num = "0.2.1"

@@ -33,36 +33,9 @@
 //
 // NOTE(elsuizo:2020-04-25): recordemos que los lifetime van antes que los Types
 // imports
-use crate::matrix2x2::Matrix2x2;
-use crate::matrix3x3::Matrix3x3;
-use crate::matrix4x4::Matrix4x4;
-use crate::matrix5x5::Matrix5x5;
-use crate::matrix6x6::Matrix6x6;
-use crate::vector2::Vector2;
-use crate::vector3::Vector3;
-use crate::vector4::Vector4;
-use crate::vector5::Vector5;
-use crate::vector6::Vector6;
 //-------------------------------------------------------------------------
 //                        custom types
 //-------------------------------------------------------------------------
-
-pub enum VectorTypes<T> {
-    Scalar(T),
-    V2(Vector2<T>),
-    V3(Vector3<T>),
-    V4(Vector4<T>),
-    V5(Vector5<T>),
-    V6(Vector6<T>),
-}
-
-pub enum MatrixTypes<T> {
-    M22(Matrix2x2<T>),
-    M33(Matrix3x3<T>),
-    M44(Matrix4x4<T>),
-    M55(Matrix5x5<T>),
-    M66(Matrix6x6<T>),
-}
 
 pub struct Point2D<'a, T> {
     pub x: T,

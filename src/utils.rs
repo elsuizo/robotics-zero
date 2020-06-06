@@ -22,32 +22,18 @@
 //
 // You should have received a copy of the GNU General Public License
 //---------------------------------------------------------------------------
-use crate::linear_algebra::LinearAlgebra;
-use crate::matrix3x3::Matrix3x3;
-use num_traits::Float;
+use static_math::traits::LinearAlgebra;
+use static_math::matrix3x3::M33;
+use static_math::utils::nearly_equal;
+use num::Float;
 
 //-------------------------------------------------------------------------
 //                        auxiliar functions
 //-------------------------------------------------------------------------
 
-// NOTE(elsuizo:2020-03-31): tuve que sacar el T::epsilon() porque era muy chico y algunos tests
-// no pasan, habria que ver otra solucion...
-pub fn compare_floats<T: Float>(num1: T, num2: T) -> bool {
-    Float::abs(num1 - num2) < T::from(1e-5).unwrap()
-}
-
-pub fn compare_vecs<T: Float>(v1: &Vec<T>, v2: &Vec<T>) -> bool {
-    let v_result: Vec<bool> = v1
-        .iter()
-        .zip(v2)
-        .map(|(a, b)| compare_floats(*a, *b))
-        .collect();
-    v_result.iter().all(|&x| x == true)
-}
-
-pub fn is_rotation<T: Float>(r: Matrix3x3<T>) -> bool {
+pub fn is_rotation<T: Float>(r: M33<T>) -> bool {
     let r2 = r * r;
-    if compare_floats(r.det(), T::one()) && compare_floats(r2.det(), T::one()) {
+    if nearly_equal(r.det(), T::one(), T::epsilon()) && nearly_equal(r2.det(), T::one(), T::epsilon()) {
         true
     } else {
         false
