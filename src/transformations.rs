@@ -252,34 +252,33 @@ pub fn euler2trans<T: Float>(phi: T, theta: T, psi: T) -> M44<T> {
 
 pub fn skew_from_vec<T: Float>(v: V3<T>) -> M33<T> {
     let zero = T::zero();
-    M33::new([
-        [zero, -v[2], v[1]],
-        [v[2], zero, -v[0]],
-        [-v[1], v[0], zero],
-    ])
+    m33_new!( zero, -v[2],  v[1];
+              v[2],  zero, -v[0];
+             -v[1],  v[0],  zero)
 }
 
 pub fn skew_scalar<T: Float>(number: T) -> M22<T> {
     let zero = T::zero();
-    M22::new([[zero, -number], [number, zero]])
+    m22_new!(  zero, -number;
+             number,    zero)
 }
 
 ///
 /// Create augmented skew-symmetric matrix
 pub fn skew_v3<T: Float>(v: V3<T>) -> M33<T> {
     let zero = T::zero();
-    M33::new([[zero, -v[2], v[0]], [v[2], zero, v[1]], [zero, zero, zero]])
+    m33_new!(zero, -v[2], v[0];
+             v[2],  zero, v[1];
+             zero,  zero, zero)
 }
 
 /// Create augmented skew-symmetric matrix
 pub fn skew_v6<T: Float>(v: V6<T>) -> M44<T> {
     let zero = T::zero();
-    M44::new([
-        [zero, -v[5], v[4], v[0]],
-        [v[5], zero, -v[3], v[1]],
-        [-v[4], v[3], zero, v[2]],
-        [zero, zero, zero, zero],
-    ])
+    m44_new!( zero, -v[5],  v[4], v[0];
+              v[5],  zero, -v[3], v[1];
+             -v[4],  v[3],  zero, v[2];
+              zero,  zero,  zero, zero)
 }
 
 // NOTE(elsuizo:2020-05-01): no me gusta como queda ese unwrap ahi feo...
