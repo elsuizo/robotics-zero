@@ -1,4 +1,5 @@
 /// A Robotics crate
+#[macro_use]
 extern crate static_math;
 pub mod errors;
 pub mod transformations;
@@ -34,7 +35,6 @@ mod types_tests {
 
 #[cfg(test)]
 mod transformations_tests {
-    use static_math::matrix3x3::M33;
     use static_math::matrix4x4::M44;
     use crate::transformations;
     use crate::utils::is_rotation;

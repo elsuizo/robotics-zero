@@ -37,7 +37,8 @@ use num::{Float, Zero};
 pub fn rot2<T: Float>(angle: T) -> M22<T> {
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    M22::new([[c, -s], [s, c]])
+    m22_new!(c, -s;
+             s,  c)
 }
 
 /// brief.
@@ -53,7 +54,9 @@ pub fn rotx<T: Float>(angle: T) -> M33<T> {
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    M33::new([[one, zero, zero], [zero, c, -s], [zero, s, c]])
+    m33_new!( one, zero, zero;
+             zero,    c,   -s;
+             zero,    s,    c)
 }
 
 /// Brief.
@@ -69,7 +72,9 @@ pub fn roty<T: Float>(angle: T) -> M33<T> {
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    M33::new([[c, zero, s], [zero, one, zero], [-s, zero, c]])
+    m33_new!(   c, zero,    s;
+             zero,  one, zero;
+               -s, zero,    c)
 }
 
 /// Brief.
@@ -85,7 +90,9 @@ pub fn rotz<T: Float>(angle: T) -> M33<T> {
     let zero = T::zero();
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
-    M33::new([[c, -s, zero], [s, c, zero], [zero, zero, one]])
+    m33_new!(   c,   -s, zero;
+                s,    c, zero;
+             zero, zero,  one)
 }
 
 /// Brief.
@@ -186,23 +193,9 @@ pub fn angle_vector2rot<T: Float>(theta: T, vector: V3<T>) -> M33<T> {
     let v_y = vector[1];
     let v_z = vector[2];
 
-    M33::new([
-        [
-            v_x * v_x * comp + c,
-            v_y * v_x * comp - v_z * s,
-            v_z * v_x * comp + v_y * s,
-        ],
-        [
-            v_x * v_y * comp + v_z * s,
-            v_y * v_y * comp + c,
-            v_z * v_y * comp - v_x * s,
-        ],
-        [
-            v_x * v_z * comp - v_y * s,
-            v_y * v_z * comp + v_x * s,
-            v_z * v_z * comp + c,
-        ],
-    ])
+    m33_new!(v_x * v_x * comp + c, v_y * v_x * comp - v_z * s, v_z * v_x * comp + v_y * s;
+             v_x * v_y * comp + v_z * s, v_y * v_y * comp + c, v_z * v_y * comp - v_x * s;
+             v_x * v_z * comp - v_y * s, v_y * v_z * comp + v_x * s, v_z * v_z * comp + c)
 }
 
 // TODO(elsuizo:2020-04-30): ver y explicar bien cuando ocurria una singularidad
@@ -310,12 +303,16 @@ pub fn ksi<T: Float>(angle: T, x: T, y: T) -> M33<T> {
     let c = angle.to_radians().cos();
     let s = angle.to_radians().sin();
 
-    M33::new([[c, -s, x], [s, c, y], [zero, zero, one]])
+    m33_new!(   c,   -s,   x;
+                s,    c,   y;
+             zero, zero, one)
 }
 
 /// Create a pure translation pose
 pub fn translation<T: Float>(x: T, y: T) -> M33<T> {
     let zero = T::zero();
     let one = T::one();
-    M33::new([[one, zero, x], [zero, one, y], [zero, zero, one]])
+    m33_new!( one, zero,   x;
+             zero,  one,   y;
+             zero, zero, one)
 }
